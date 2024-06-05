@@ -75,6 +75,8 @@ import viewAllArrow from "./assets/viewAllArrow.svg";
 import BetaEventCard from "../../../../Marketplace/components/BetaEventCard";
 import ReCaptchaV2 from "react-google-recaptcha";
 import dypius from "./assets/dypIcon.svg";
+import dypiusPremium from "./assets/dypiusPremium16.svg";
+
 import upcomingDyp from "./assets/upcomingDyp.webp";
 import upcomingDyp2 from "./assets/dypiuspopup2.png";
 import dypeventPopupImage from "./assets/dypEventImage.png";
@@ -268,6 +270,7 @@ const NewWalletBalance = ({
   openedCoreChests,
   openedVictionChests,
   openedSeiChests,
+  userRankRewards,
 }) => {
   let coingeckoLastDay = new Date("2023-12-24T16:00:00.000+02:00");
   let confluxLastDay = new Date("2023-11-06T16:00:00.000+02:00");
@@ -284,8 +287,8 @@ const NewWalletBalance = ({
 
   const dypv2 = {
     title: "Dypius Premium",
-    logo: dypius,
-    eventStatus: "Live",
+    logo: dypiusPremium,
+    eventStatus: "Expired",
     totalRewards: "$50,000 in BNB Rewards",
     myEarnings: 0.0,
     eventDate: "Feb 26, 2024",
@@ -295,7 +298,7 @@ const NewWalletBalance = ({
     chain: "BNB Chain",
     linkState: "dypius2",
     rewards: "BNB",
-    status: "Live",
+    status: "Expired",
     id: "event9",
     eventType: "Explore & Find",
     eventDuration: dypius2LastDay,
@@ -476,36 +479,6 @@ const NewWalletBalance = ({
     //     eventDate: "XXX XX, XXXX",
     //   },
     // },
-    {
-      title: "Dypius Premium",
-      logo: dypius,
-      eventStatus: "Live",
-      totalRewards: "$50,000 in BNB Rewards",
-      myEarnings: 0.0,
-      eventType: "Explore & Find",
-      eventDate: "Feb 26, 2024",
-      backgroundImage: upcomingDyp2,
-      activeTab: "dypiusv2",
-      popupInfo: {
-        title: "Dypius Premium",
-        chain: "BNB Chain",
-        linkState: "dypius",
-        rewards: "BNB",
-        status: "Live",
-        id: "event9",
-        eventType: "Explore & Find",
-        totalRewards: "$50,000 in BNB Rewards",
-        eventDuration: dypius2LastDay,
-        minRewards: "1",
-        maxRewards: "100",
-        minPoints: "5,000",
-        maxPoints: "50,000",
-        learnMore:
-          "/news/65dc8229039c5118d5c8782b/Dypius-Treasure-Hunt:-Magic-Egg-is-Live",
-        eventDate: "Feb 26, 2024",
-        activeTab: "dypiusv2",
-      },
-    },
 
     {
       title: "SKALE",
@@ -533,6 +506,36 @@ const NewWalletBalance = ({
         learnMore:
           "/news/661d1671299713edd050794b/SKALE-Treasure-Hunt-Event-Live-in-the-World-of-Dypians",
         eventDate: "Apr 15, 2024",
+      },
+    },
+    {
+      title: "Dypius Premium",
+      logo: dypiusPremium,
+      eventStatus: "Expired",
+      totalRewards: "$50,000 in BNB Rewards",
+      myEarnings: 0.0,
+      eventType: "Explore & Find",
+      eventDate: "Feb 26, 2024",
+      backgroundImage: upcomingDyp2,
+      activeTab: "dypiusv2",
+      popupInfo: {
+        title: "Dypius Premium",
+        chain: "BNB Chain",
+        linkState: "dypius",
+        rewards: "BNB",
+        status: "Expired",
+        id: "event9",
+        eventType: "Explore & Find",
+        totalRewards: "$50,000 in BNB Rewards",
+        eventDuration: dypius2LastDay,
+        minRewards: "1",
+        maxRewards: "100",
+        minPoints: "5,000",
+        maxPoints: "50,000",
+        learnMore:
+          "/news/65dc8229039c5118d5c8782b/Dypius-Treasure-Hunt:-Magic-Egg-is-Live",
+        eventDate: "Feb 26, 2024",
+        activeTab: "dypiusv2",
       },
     },
     {
@@ -797,12 +800,10 @@ const NewWalletBalance = ({
   // const skalePercentage = (skaleClaimed / 20) * 100;
 
   const totalClaimedChests =
-    claimedChests +
-    claimedPremiumChests +
-    openedSkaleChests.length 
-    // +openedCoreChests.length +
-    // openedVictionChests.length +
-    // openedSeiChests.length;
+    claimedChests + claimedPremiumChests + openedSkaleChests.length;
+  // +openedCoreChests.length +
+  // openedVictionChests.length +
+  // openedSeiChests.length;
 
   const chestPercentage = (totalClaimedChests / 40) * 100;
 
@@ -1305,7 +1306,7 @@ const NewWalletBalance = ({
                 event={dummyBetaPassData2[4].popupInfo}
                 userEarnedUsd={0}
               /> */}
-              <ActiveProfileEvent
+              {/* <ActiveProfileEvent
                 onOpenEvent={() => {
                   setDummyEvent(dypv2);
                   setEventPopup(true);
@@ -1313,7 +1314,7 @@ const NewWalletBalance = ({
                 data={dypv2}
                 event={dypv2}
                 userEarnedUsd={dypiusPremiumEarnUsd}
-              />
+              /> */}
               <ActiveProfileEvent
                 data={dummySkale}
                 event={dummySkale}
@@ -1322,6 +1323,15 @@ const NewWalletBalance = ({
                   setDummyEvent(dummySkale);
                   setEventPopup(true);
                 }}
+              />
+              <ExpiredProfileEvent
+                onOpenEvent={() => {
+                  setDummyEvent(dypv2);
+                  setEventPopup(true);
+                }}
+                data={dypv2}
+                event={dypv2}
+                userEarnedUsd={dypiusPremiumEarnUsd}
               />
               <ExpiredProfileEvent
                 onOpenEvent={() => {
@@ -1777,8 +1787,8 @@ const NewWalletBalance = ({
                           Number(dailyplayerData) +
                           Number(userRank2) +
                           Number(genesisRank2) +
-                          Number(dypiusPremiumEarnUsd) +
                           Number(treasureRewardMoney) +
+                          Number(userRankRewards) +
                           Number(skaleEarnUsd),
                         2
                       )}
@@ -2319,8 +2329,7 @@ const NewWalletBalance = ({
                       daily and venture into the CORE area to uncover hidden
                       treasures.
                     </p>
-                  )
-                  : dummyEvent.id === "event16" ? (
+                  ) : dummyEvent.id === "event16" ? (
                     <p className="popup-event-desc">
                       To participate in the event, players are required to&nbsp;
                       <b>hold a MultiversX Beta Pass NFT</b>. You can get the
@@ -2332,8 +2341,7 @@ const NewWalletBalance = ({
                       Remember to log in to the game daily and venture into the
                       MultiversX area to uncover hidden treasures.
                     </p>
-                  )
-                  : (
+                  ) : (
                     <p className="popup-event-desc">
                       To participate in the event, players are required to&nbsp;
                       <b>hold a Base Beta Pass NFT</b>. You can get the Base
@@ -2582,8 +2590,7 @@ const NewWalletBalance = ({
                 winner-take-all mentality - Core is focused instead on platform
                 growth and driving the global adoption of blockchain technology.
               </p>
-            ) 
-            : dummyEvent.id === "event16" ? (
+            ) : dummyEvent.id === "event16" ? (
               <p
                 className="popup-event-desc"
                 // style={{ fontSize: "12px", fontWeight: "500" }}
@@ -2592,8 +2599,7 @@ const NewWalletBalance = ({
                 applications. Decentralized via 3000+ nodes, scalable through
                 sharding, fast, secure & green.
               </p>
-            )
-            : dummyEvent.id === "event8" ? (
+            ) : dummyEvent.id === "event8" ? (
               <p
                 className="popup-event-desc"
                 // style={{ fontSize: "12px", fontWeight: "500" }}
@@ -2879,7 +2885,7 @@ const NewWalletBalance = ({
                   </NavLink>
                 </div>
               )}
-            {dummyEvent.id === "event9" && !isPremium && (
+            {/* {dummyEvent.id === "event9" && !isPremium && (
               <div className="w-100 d-flex justify-content-end mt-3">
                 <NavLink
                   to={`/account`}
@@ -2891,7 +2897,7 @@ const NewWalletBalance = ({
                   <button className="btn get-beta-btn">Get Premium</button>
                 </NavLink>
               </div>
-            )}
+            )} */}
           </div>
         </OutsideClickHandler>
       )}

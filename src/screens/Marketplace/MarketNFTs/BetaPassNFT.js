@@ -553,16 +553,14 @@ const BetaPassNFT = ({
     }
   }
 
-
   const handleFirstTask = async (wallet) => {
     await axios
       .get(
-        `https://api.worldofdypians.com/api/airdrop-alliance/task3/${wallet}`
+        `https://api.worldofdypians.com/api/airdrop-alliance/task5/${wallet}`
       )
       .catch((e) => {
         console.error(e);
       });
-  
   };
 
   const signWalletPublicAddress = async () => {
@@ -580,7 +578,6 @@ const BetaPassNFT = ({
       }).then(() => {
         setalreadyRegistered(true);
         handleFirstTask(coinbase);
-
       });
     } catch (error) {
       console.log("🚀 ~ file: Dashboard.js:30 ~ getTokens ~ error", error);
@@ -1315,28 +1312,52 @@ const BetaPassNFT = ({
                           </div>
                         )}
                       </div>
-                      {(mintTitle === "core" ||
-                        mintTitle === "viction" ||
-                        mintTitle === "sei" ||
+                      {(mintTitle === "sei" ||
                         mintTitle === "multiversx") && (
                         <span
                           className={`cmc-btn text-decoration-none px-3 py-2 d-flex align-items-center justify-content-center gap-2`}
                         >
                           <img
                             src={
-                              mintTitle === "core"
-                                ? coreLogo
-                                : mintTitle === "viction"
-                                ? victionLogo
-                                : mintTitle === "multiversx"
+                               mintTitle === "multiversx"
                                 ? multiversLogo
                                 : seiLogo
                             }
-                            style={{width: 20, height: 20}}
+                            style={{ width: 20, height: 20 }}
                             alt=""
                           />{" "}
                           Coming Soon
                         </span>
+                      )}
+                      {mintTitle === "core" && (
+                        <a
+                          className={`cmc-btn text-decoration-none px-3 py-2 d-flex align-items-center justify-content-center gap-2`}
+                          href="https://sweepwidget.com/c/core-wod-giveaway"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <img
+                            src={coreLogo}
+                            style={{ width: 20, height: 20 }}
+                            alt=""
+                          />{" "}
+                          CORE Giveaway
+                        </a>
+                      )}
+                      {mintTitle === "viction" && (
+                        <a
+                          className={`cmc-btn text-decoration-none px-3 py-2 d-flex align-items-center justify-content-center gap-2`}
+                          href="https://sweepwidget.com/c/viction-worldofdypians-giveaway"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <img
+                            src={victionLogo}
+                            style={{ width: 20, height: 20 }}
+                            alt=""
+                          />{" "}
+                          Viction Giveaway
+                        </a>
                       )}
                       {/* <img
                         src={
@@ -2725,7 +2746,7 @@ const BetaPassNFT = ({
                               onSuccessLogin={() => {
                                 setalreadyRegistered(true);
                                 refetchPlayer();
-                                handleFirstTask(coinbase)
+                                handleFirstTask(coinbase);
                               }}
                               mintTitle={selectedMint.cardTitle}
                               chainId={chainId}

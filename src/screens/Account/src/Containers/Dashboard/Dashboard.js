@@ -80,7 +80,9 @@ function Dashboard({
   handleOpenDomains,
   dogePrice,
   dyptokenData_old,
-  handleSwitchChain,onSubscribeSuccess
+  handleSwitchChain,
+  onSubscribeSuccess,
+  isPremium,
 }) {
   const { email, logout } = useAuth();
 
@@ -405,13 +407,13 @@ function Dashboard({
   const [skaleEarnToken, setSkaleEarnToken] = useState(0);
   const [skalePoints, setSkalePoints] = useState(0);
   const [leaderboard, setLeaderboard] = useState(false);
-  const [genesisLeaderboard, setGenesisLeaderboard] = useState(false)
+  const [genesisLeaderboard, setGenesisLeaderboard] = useState(false);
   const [syncStatus, setsyncStatus] = useState("initial");
   const [myOffers, setmyOffers] = useState([]);
   const [allActiveOffers, setallOffers] = useState([]);
   const [showSyncModal, setshowSyncModal] = useState(false);
   const [isonlink, setIsOnLink] = useState(false);
-  const [isPremium, setIsPremium] = useState(false);
+  // const [isPremium, setIsPremium] = useState(false);
   const [myRewardsPopup, setmyRewardsPopup] = useState(false);
   const [getPremiumPopup, setgetPremiumPopup] = useState(false);
   const [balancePopup, setBalancePopup] = useState(false);
@@ -509,18 +511,7 @@ function Dashboard({
   //leaderboard calls
 
   const bnbStars = ["10", "8", "5", "5", "0", "0", "0", "0", "0", "0"];
-  const bnbStarsPremium = [
-    "10",
-    "8",
-    "5",
-    "5",
-    "5",
-    "5",
-    "5",
-    "5",
-    "5",
-    "5",
-  ];
+  const bnbStarsPremium = ["10", "8", "5", "5", "5", "5", "5", "5", "5", "5"];
   const weeklyPrizesBnb = ["25", "15", "10", "8", "0", "0", "0", "0", "0", "0"];
   const weeklyPrizesGolden = [
     "25",
@@ -755,6 +746,16 @@ function Dashboard({
       const placeholderArray = placeholderplayerData.slice(itemData.length, 10);
       const finalData = [...testArray, ...placeholderArray];
       setSkalePreviousMonthlyData(finalData);
+    }
+  };
+
+  const getBundles = async (address) => {
+    if (address) {
+      const result = await axios.get(
+        `https://api3.dyp.finance/api/bundles/count/${address}`
+      );
+      const result_formatted = result.data.count;
+      setbundlesBought(result_formatted);
     }
   };
 
@@ -1132,7 +1133,7 @@ function Dashboard({
     previousVersion,
     previousWeeklyVersion,
     skalepreviousVersion,
-    userId
+    userId,
   ]);
 
   useEffect(() => {
@@ -1228,7 +1229,7 @@ function Dashboard({
         activeData: dailyrecords,
         previousData: dailyplayerData,
         player_data: userData,
-        is_active: activeSkalePlayer,
+        is_active: true, //change when apis are ready
       },
       {
         title: "WEEKLY",
@@ -1250,7 +1251,7 @@ function Dashboard({
         activeData: skaleMonthlyData,
         previousData: skalePreviousMonthlyData,
         player_data: userDataSkaleMonthly,
-        is_active: activeSkalePlayer,
+        is_active: true, //change when apis are ready
       },
     ]);
   }, [
@@ -1263,8 +1264,14 @@ function Dashboard({
     userDataSkaleMonthly,
   ]);
 
-  let oneApril = new Date("2024-04-01 11:11:00 GMT+02:00");
-  let oneMay = new Date("2024-05-01 11:11:00 GMT+02:00");
+  let today = new Date();
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth();
+
+  // Calculate the first day of the next month
+  const nextMonth = (currentMonth + 1) % 12;
+  const nextYear = currentMonth === 11 ? currentYear + 1 : currentYear;
+  const firstOfNextMonth = new Date(nextYear, nextMonth, 1, 11, 11, 0);
 
   const handleSetAvailableTime = (value) => {
     setGoldenPassRemainingTime(value);
@@ -1357,6 +1364,121 @@ function Dashboard({
     }
   };
 
+  const setlastDay = async () => {
+    const dypv1 = new window.infuraWeb3.eth.Contract(
+      DYP_700V1_ABI,
+      dyp700v1Address
+    );
+
+    const dypv2 = new window.bscWeb3.eth.Contract(DYP_700_ABI, dyp700Address);
+    const timeofDeposit = await dypv2.methods.getTimeOfDeposit(coinbase).call();
+
+    const timeofDepositv1 = await dypv1.methods
+      .getTimeOfDeposit(coinbase)
+      .call();
+
+    if (timeofDeposit !== 0 || timeofDepositv1 !== 0) {
+      const timeofDeposit_miliseconds = timeofDeposit * 1000;
+      const timeofDeposit_milisecondsv1 = timeofDepositv1 * 1000;
+
+      const timeofbundleBought_Date = new Intl.DateTimeFormat("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      }).format(timeofDeposit_miliseconds);
+
+      const timeofbundleBought_Datev1 = new Intl.DateTimeFormat("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      }).format(timeofDeposit_milisecondsv1);
+
+      const timeofbundleBought_Date_formatted = new Date(
+        timeofbundleBought_Date
+      );
+
+      const timeofbundleBought_Date_formattedv1 = new Date(
+        timeofbundleBought_Datev1
+      );
+
+      const timeofbundleBought_day =
+        timeofbundleBought_Date_formatted.getDate();
+
+      const timeofbundleBought_dayv1 =
+        timeofbundleBought_Date_formattedv1.getDate();
+
+      setdatewhenBundleBought(timeofbundleBought_day);
+      setdatewhenBundleBoughtv1(timeofbundleBought_dayv1);
+
+      const expiringTime = await dypv2.methods
+        .getTimeOfExpireBuff(coinbase)
+        .call();
+
+      const expiringTimev1 = await dypv1.methods
+        .getTimeOfExpireBuff(coinbase)
+        .call();
+
+      const expiringTime_miliseconds = expiringTime * 1000;
+      const expiringTime_milisecondsv1 = expiringTimev1 * 1000;
+
+      const expiringTime_Date = new Intl.DateTimeFormat("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      }).format(expiringTime_miliseconds);
+
+      const expiringTime_Datev1 = new Intl.DateTimeFormat("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      }).format(expiringTime_milisecondsv1);
+
+      const expiringTime_Date_formatted = new Date(expiringTime_Date);
+      const expiringTime_Date_formattedv1 = new Date(expiringTime_Datev1);
+
+      setdateofBundle(expiringTime_Date_formatted);
+      setdateofBundlev1(expiringTime_Date_formattedv1);
+
+      // const expiringTime_day = expiringTime_Date_formatted.getDate();
+      // setbundleExpireDay(expiringTime_day);
+      // setbundleExpireMiliseconds(expiringTime_miliseconds);
+
+      const timeofDeposit_Date = new Intl.DateTimeFormat("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      }).format(expiringTime_miliseconds);
+
+      const timeofDeposit_Date_formatted = new Date(timeofDeposit_Date);
+      const timeofDeposit_day = timeofDeposit_Date_formatted.getDate();
+      const timeofDeposit_Hours = timeofDeposit_Date_formatted.getHours();
+      const timeofDeposit_Minutes = timeofDeposit_Date_formatted.getMinutes();
+      const final = timeofDeposit_Hours - 11;
+      // setlastDayofBundleHours(final);
+
+      const finalMinutes = timeofDeposit_Minutes - 11;
+
+      // setlastDayofBundleMinutes(finalMinutes);
+      setdateofBundle(timeofDeposit_day);
+      // setlastDayofBundleMilliseconds(expiringTime_miliseconds);
+    }
+  };
+
   const checkBundleDates = async () => {
     //you can check how many bundles the user has bought
     //he can buy until the 22 regular bundles (7days)
@@ -1414,12 +1536,8 @@ function Dashboard({
         //     Number(remainingTime_miliseconds) +
         //     Number(additional_remaining_time_timestamp * 1000);
 
-        setcountdown700(
-          today < oneApril ? oneApril.getTime() : oneMay.getTime()
-        );
-        handleSetAvailableTime(
-          today < oneApril ? oneApril.getTime() : oneMay.getTime()
-        );
+        setcountdown700(firstOfNextMonth.getTime());
+        handleSetAvailableTime(firstOfNextMonth.getTime());
 
         // }
       } else if (
@@ -1442,12 +1560,8 @@ function Dashboard({
         //     Number(remainingTime_miliseconds2) +
         //     Number(additional_remaining_time_timestamp2 * 1000);
 
-        setcountdown700(
-          today < oneApril ? oneApril.getTime() : oneMay.getTime()
-        );
-        handleSetAvailableTime(
-          today < oneApril ? oneApril.getTime() : oneMay.getTime()
-        );
+        setcountdown700(firstOfNextMonth.getTime());
+        handleSetAvailableTime(firstOfNextMonth.getTime());
 
         // }
       } else if (
@@ -1498,12 +1612,8 @@ function Dashboard({
           today < finalDateofBundle &&
           today.getFullYear() === finalDateofBundleFormatted.getFullYear()
         ) {
-          setcountdown700(
-            today < oneApril ? oneApril.getTime() : oneMay.getTime()
-          );
-          handleSetAvailableTime(
-            today < oneApril ? oneApril.getTime() : oneMay.getTime()
-          );
+          setcountdown700(firstOfNextMonth.getTime());
+          handleSetAvailableTime(firstOfNextMonth.getTime());
 
           // if (
           //   bundlesBought <= 3 &&
@@ -1554,12 +1664,8 @@ function Dashboard({
             : datewhenBundleBoughtv1;
 
         if (today < finalDateofBundle && bundlesBought !== 0) {
-          setcountdown700(
-            today < oneApril ? oneApril.getTime() : oneMay.getTime()
-          );
-          handleSetAvailableTime(
-            today < oneApril ? oneApril.getTime() : oneMay.getTime()
-          );
+          setcountdown700(firstOfNextMonth.getTime());
+          handleSetAvailableTime(firstOfNextMonth.getTime());
         } else if (today > finalDateofBundle && bundlesBought > 0) {
           setcountdown700();
           handleSetAvailableTime();
@@ -1581,12 +1687,8 @@ function Dashboard({
 
             handleSetAvailableTime(finalDateofBundle);
           } else {
-            setcountdown700(
-              today < oneApril ? oneApril.getTime() : oneMay.getTime()
-            );
-            handleSetAvailableTime(
-              today < oneApril ? oneApril.getTime() : oneMay.getTime()
-            );
+            setcountdown700(firstOfNextMonth.getTime());
+            handleSetAvailableTime(firstOfNextMonth.getTime());
           }
         } else if (today > finalDateofBundle && bundlesBought > 0) {
           setcountdown700();
@@ -1596,14 +1698,9 @@ function Dashboard({
     } else if (today_date > 25) {
       const finalDateofBundle =
         dateofBundle >= dateofBundlev1 ? dateofBundle : dateofBundlev1;
-
-      if (today < finalDateofBundle) {
-        setcountdown700(
-          today < oneApril ? oneApril.getTime() : oneMay.getTime()
-        );
-        handleSetAvailableTime(
-          today < oneApril ? oneApril.getTime() : oneMay.getTime()
-        );
+      if (today_date < finalDateofBundle) {
+        setcountdown700(firstOfNextMonth.getTime());
+        handleSetAvailableTime(firstOfNextMonth.getTime());
       } else {
         setcountdown700();
         handleSetAvailableTime();
@@ -2024,15 +2121,16 @@ function Dashboard({
   }
 
   const handleFirstTask = async (wallet) => {
-    const result = await axios
+    const result2 = await axios
       .get(
-        `https://api.worldofdypians.com/api/airdrop-alliance/task3/${wallet}`
+        `https://api.worldofdypians.com/api/airdrop-alliance/task5/${wallet}`
       )
       .catch((e) => {
         console.error(e);
       });
-    if (result && result.status === 200) {
-      console.log(result.data.result);
+
+    if (result2 && result2.status === 200) {
+      console.log(result2.data.result);
       setTimeout(() => {
         if (isonlink) {
           window.location.reload();
@@ -2059,6 +2157,7 @@ function Dashboard({
           setshowSyncModal(false);
           setsyncStatus("initial");
         }, 1000);
+        onSubscribeSuccess(account);
 
         if (isonlink) {
           handleFirstTask(account);
@@ -2117,8 +2216,9 @@ function Dashboard({
             ? userPosition > 10
               ? 0
               : userPosition === 10
-              ? monthlyPrizes[9] + monthlyPrizesGolden[9]
-              : monthlyPrizes[userPosition] + monthlyPrizesGolden[userPosition]
+              ? Number(monthlyPrizes[9]) + Number(monthlyPrizesGolden[9])
+              : Number(monthlyPrizes[userPosition]) +
+                Number(monthlyPrizesGolden[userPosition])
             : 0
         );
       } else if (!goldenPassRemainingTime) {
@@ -2127,8 +2227,8 @@ function Dashboard({
             ? userPosition > 10
               ? 0
               : userPosition === 10
-              ? monthlyPrizes[9]
-              : monthlyPrizes[userPosition]
+              ? Number(monthlyPrizes[9])
+              : Number(monthlyPrizes[userPosition])
             : 0
         );
       }
@@ -2143,14 +2243,12 @@ function Dashboard({
 
         if (testArray.length > 0 && testArray2.length > 0) {
           setActivePlayerMonthly(true);
-        }
-
-        if (testArray.length > 0 && testArray2.length === 0) {
+          setUserDataMonthly([]);
+        } else if (testArray.length > 0 && testArray2.length === 0) {
           setActivePlayerMonthly(false);
           setUserDataMonthly(...testArray);
         }
-      }
-      if (testArray.length > 0) {
+      } else if (testArray.length > 0) {
         setActivePlayerMonthly(false);
         setUserDataMonthly(...testArray);
       }
@@ -2173,7 +2271,7 @@ function Dashboard({
       var testArray = result.data.data.leaderboard.filter(
         (item) => item.displayName === username
       );
-      
+
       setUserSkaleScore(testArray[0].statValue);
       setUserRankSkale(testArray[0].position);
       if (itemData.length > 0) {
@@ -2261,6 +2359,7 @@ function Dashboard({
 
         if (testArray.length > 0 && testArray2.length > 0) {
           setActiveSkalePlayer(true);
+          setUserDataSkale([]);
         } else if (testArray.length > 0 && testArray2.length === 0) {
           setActiveSkalePlayer(false);
           setUserDataSkale(...testArray);
@@ -2334,8 +2433,9 @@ function Dashboard({
             ? userPosition > 10
               ? 0
               : userPosition === 10
-              ? dailyPrizes[9] + dailyPrizesGolden[9]
-              : dailyPrizes[userPosition] + dailyPrizesGolden[userPosition]
+              ? Number(dailyPrizes[9]) + Number(dailyPrizesGolden[9])
+              : Number(dailyPrizes[userPosition]) +
+                Number(dailyPrizesGolden[userPosition])
             : 0
         );
       } else if (!goldenPassRemainingTime) {
@@ -2344,8 +2444,8 @@ function Dashboard({
             ? userPosition > 10
               ? 0
               : userPosition === 10
-              ? dailyPrizes[9]
-              : dailyPrizes[userPosition]
+              ? Number(dailyPrizes[9])
+              : Number(dailyPrizes[userPosition])
             : 0
         );
       }
@@ -2357,13 +2457,12 @@ function Dashboard({
 
         if (testArray.length > 0 && testArray2.length > 0) {
           setActivePlayer(true);
-        }
-        if (testArray.length > 0 && testArray2.length === 0) {
+          setUserData([]);
+        } else if (testArray.length > 0 && testArray2.length === 0) {
           setActivePlayer(false);
           setUserData(...testArray);
         }
-      }
-      if (testArray.length > 0) {
+      } else if (testArray.length > 0) {
         setActivePlayer(false);
         setUserData(...testArray);
       }
@@ -2411,8 +2510,9 @@ function Dashboard({
             ? userPosition > 10
               ? 0
               : userPosition === 10
-              ? weeklyPrizes[9] + weeklyPrizesGolden[9]
-              : weeklyPrizes[userPosition] + weeklyPrizesGolden[userPosition]
+              ? Number(weeklyPrizes[9]) + Number(weeklyPrizesGolden[9])
+              : Number(weeklyPrizes[userPosition]) +
+                Number(weeklyPrizesGolden[userPosition])
             : 0
         );
       } else if (!goldenPassRemainingTime) {
@@ -2421,8 +2521,8 @@ function Dashboard({
             ? userPosition > 10
               ? 0
               : userPosition === 10
-              ? weeklyPrizes[9]
-              : weeklyPrizes[userPosition]
+              ? Number(weeklyPrizes[9])
+              : Number(weeklyPrizes[userPosition])
             : 0
         );
       }
@@ -2434,13 +2534,12 @@ function Dashboard({
 
         if (testArray.length > 0 && testArray2.length > 0) {
           setActivePlayerWeekly(true);
-        }
-        if (testArray.length > 0 && testArray2.length === 0) {
+          setUserDataWeekly([]);
+        } else if (testArray.length > 0 && testArray2.length === 0) {
           setActivePlayerWeekly(false);
           setUserDataWeekly(...testArray);
         }
-      }
-      if (testArray.length > 0) {
+      } else if (testArray.length > 0) {
         setActivePlayerWeekly(false);
         setUserDataWeekly(...testArray);
       }
@@ -2660,182 +2759,182 @@ function Dashboard({
     }
   };
 
-  const refreshSubscription = async (addr) => {
-    const result = window.checkPremium(addr);
+  // const refreshSubscription = async (addr) => {
+  //   const result = window.checkPremium(addr);
 
-    let subscribedPlatformTokenAmountETH;
-    let subscribedPlatformTokenAmountCfx;
-    let subscribedPlatformTokenAmountBNB;
-    let subscribedPlatformTokenAmountAvax;
-    let subscribedPlatformTokenAmountBase;
-    let subscribedPlatformTokenAmountSkale;
-    let subscribedPlatformTokenAmountCore;
-    let subscribedPlatformTokenAmountViction;
-    let subscribedPlatformTokenAmountSei;
+  //   let subscribedPlatformTokenAmountETH;
+  //   let subscribedPlatformTokenAmountCfx;
+  //   let subscribedPlatformTokenAmountBNB;
+  //   let subscribedPlatformTokenAmountAvax;
+  //   let subscribedPlatformTokenAmountBase;
+  //   let subscribedPlatformTokenAmountSkale;
+  //   let subscribedPlatformTokenAmountCore;
+  //   let subscribedPlatformTokenAmountViction;
+  //   let subscribedPlatformTokenAmountSei;
 
-    const web3eth = window.infuraWeb3;
-    const web3cfx = window.confluxWeb3;
-    const web3base = window.baseWeb3;
-    const web3bnb = window.bscWeb3;
-    const web3avax = window.avaxWeb3;
-    const web3skale = window.skaleWeb3;
-    const web3core = window.coreWeb3;
-    const web3viction = window.victionWeb3;
-    const web3sei = window.seiWeb3;
+  //   const web3eth = window.infuraWeb3;
+  //   const web3cfx = window.confluxWeb3;
+  //   const web3base = window.baseWeb3;
+  //   const web3bnb = window.bscWeb3;
+  //   const web3avax = window.avaxWeb3;
+  //   const web3skale = window.skaleWeb3;
+  //   const web3core = window.coreWeb3;
+  //   const web3viction = window.victionWeb3;
+  //   const web3sei = window.seiWeb3;
 
-    const CfxABI = window.SUBSCRIPTION_CFX_ABI;
-    const BaseABI = window.SUBSCRIPTION_BASE_ABI;
-    const EthABI = window.SUBSCRIPTION_NEWETH_ABI;
-    const AvaxABI = window.SUBSCRIPTION_NEWAVAX_ABI;
-    const BnbABI = window.SUBSCRIPTION_NEWBNB_ABI;
-    const SkaleABI = window.SUBSCRIPTION_SKALE_ABI;
-    const CoreABI = window.SUBSCRIPTION_CORE_ABI;
-    const VicitonABI = window.SUBSCRIPTION_VICTION_ABI;
-    const SeiABI = window.SUBSCRIPTION_SKALE_ABI;
+  //   const CfxABI = window.SUBSCRIPTION_CFX_ABI;
+  //   const BaseABI = window.SUBSCRIPTION_BASE_ABI;
+  //   const EthABI = window.SUBSCRIPTION_NEWETH_ABI;
+  //   const AvaxABI = window.SUBSCRIPTION_NEWAVAX_ABI;
+  //   const BnbABI = window.SUBSCRIPTION_NEWBNB_ABI;
+  //   const SkaleABI = window.SUBSCRIPTION_SKALE_ABI;
+  //   const CoreABI = window.SUBSCRIPTION_CORE_ABI;
+  //   const VicitonABI = window.SUBSCRIPTION_VICTION_ABI;
+  //   const SeiABI = window.SUBSCRIPTION_SKALE_ABI;
 
-    const ethsubscribeAddress = window.config.subscription_neweth_address;
-    const cfxsubscribeAddress = window.config.subscription_cfx_address;
-    const basesubscribeAddress = window.config.subscription_base_address;
-    const bnbsubscribeAddress = window.config.subscription_newbnb_address;
-    const avaxsubscribeAddress = window.config.subscription_newavax_address;
-    const skalesubscribeAddress = window.config.subscription_skale_address;
-    const coresubscribeAddress = window.config.subscription_core_address;
-    const victionsubscribeAddress = window.config.subscription_viction_address;
-    const seisubscribeAddress = window.config.subscription_sei_address;
+  //   const ethsubscribeAddress = window.config.subscription_neweth_address;
+  //   const cfxsubscribeAddress = window.config.subscription_cfx_address;
+  //   const basesubscribeAddress = window.config.subscription_base_address;
+  //   const bnbsubscribeAddress = window.config.subscription_newbnb_address;
+  //   const avaxsubscribeAddress = window.config.subscription_newavax_address;
+  //   const skalesubscribeAddress = window.config.subscription_skale_address;
+  //   const coresubscribeAddress = window.config.subscription_core_address;
+  //   const victionsubscribeAddress = window.config.subscription_viction_address;
+  //   const seisubscribeAddress = window.config.subscription_sei_address;
 
-    const ethcontract = new web3eth.eth.Contract(EthABI, ethsubscribeAddress);
-    const cfxcontract = new web3cfx.eth.Contract(CfxABI, cfxsubscribeAddress);
-    const skalecontract = new web3skale.eth.Contract(
-      SkaleABI,
-      skalesubscribeAddress
-    );
+  //   const ethcontract = new web3eth.eth.Contract(EthABI, ethsubscribeAddress);
+  //   const cfxcontract = new web3cfx.eth.Contract(CfxABI, cfxsubscribeAddress);
+  //   const skalecontract = new web3skale.eth.Contract(
+  //     SkaleABI,
+  //     skalesubscribeAddress
+  //   );
 
-    const basecontract = new web3base.eth.Contract(
-      BaseABI,
-      basesubscribeAddress
-    );
+  //   const basecontract = new web3base.eth.Contract(
+  //     BaseABI,
+  //     basesubscribeAddress
+  //   );
 
-    const bnbcontract = new web3bnb.eth.Contract(BnbABI, bnbsubscribeAddress);
-    const avaxcontract = new web3avax.eth.Contract(
-      AvaxABI,
-      avaxsubscribeAddress
-    );
+  //   const bnbcontract = new web3bnb.eth.Contract(BnbABI, bnbsubscribeAddress);
+  //   const avaxcontract = new web3avax.eth.Contract(
+  //     AvaxABI,
+  //     avaxsubscribeAddress
+  //   );
 
-    const corecontract = new web3core.eth.Contract(
-      CoreABI,
-      coresubscribeAddress
-    );
+  //   const corecontract = new web3core.eth.Contract(
+  //     CoreABI,
+  //     coresubscribeAddress
+  //   );
 
-    const victioncontract = new web3viction.eth.Contract(
-      VicitonABI,
-      victionsubscribeAddress
-    );
+  //   const victioncontract = new web3viction.eth.Contract(
+  //     VicitonABI,
+  //     victionsubscribeAddress
+  //   );
 
-    const seicontract = new web3sei.eth.Contract(SeiABI, seisubscribeAddress);
+  //   const seicontract = new web3sei.eth.Contract(SeiABI, seisubscribeAddress);
 
-    if (addr) {
-      subscribedPlatformTokenAmountETH = await ethcontract.methods
-        .subscriptionPlatformTokenAmount(addr)
-        .call()
-        .catch((e) => {
-          console.log(e);
-          return 0;
-        });
+  //   if (addr) {
+  //     subscribedPlatformTokenAmountETH = await ethcontract.methods
+  //       .subscriptionPlatformTokenAmount(addr)
+  //       .call()
+  //       .catch((e) => {
+  //         console.log(e);
+  //         return 0;
+  //       });
 
-      subscribedPlatformTokenAmountCfx = await cfxcontract.methods
-        .subscriptionPlatformTokenAmount(addr)
-        .call()
-        .catch((e) => {
-          console.log(e);
-          return 0;
-        });
+  //     subscribedPlatformTokenAmountCfx = await cfxcontract.methods
+  //       .subscriptionPlatformTokenAmount(addr)
+  //       .call()
+  //       .catch((e) => {
+  //         console.log(e);
+  //         return 0;
+  //       });
 
-      subscribedPlatformTokenAmountBase = await basecontract.methods
-        .subscriptionPlatformTokenAmount(addr)
-        .call()
-        .catch((e) => {
-          console.log(e);
-          return 0;
-        });
+  //     subscribedPlatformTokenAmountBase = await basecontract.methods
+  //       .subscriptionPlatformTokenAmount(addr)
+  //       .call()
+  //       .catch((e) => {
+  //         console.log(e);
+  //         return 0;
+  //       });
 
-      subscribedPlatformTokenAmountBNB = await bnbcontract.methods
-        .subscriptionPlatformTokenAmount(addr)
-        .call()
-        .catch((e) => {
-          console.log(e);
-          return 0;
-        });
+  //     subscribedPlatformTokenAmountBNB = await bnbcontract.methods
+  //       .subscriptionPlatformTokenAmount(addr)
+  //       .call()
+  //       .catch((e) => {
+  //         console.log(e);
+  //         return 0;
+  //       });
 
-      subscribedPlatformTokenAmountAvax = await avaxcontract.methods
-        .subscriptionPlatformTokenAmount(addr)
-        .call()
-        .catch((e) => {
-          console.log(e);
-          return 0;
-        });
+  //     subscribedPlatformTokenAmountAvax = await avaxcontract.methods
+  //       .subscriptionPlatformTokenAmount(addr)
+  //       .call()
+  //       .catch((e) => {
+  //         console.log(e);
+  //         return 0;
+  //       });
 
-      subscribedPlatformTokenAmountSkale = await skalecontract.methods
-        .subscriptionPlatformTokenAmount(addr)
-        .call()
-        .catch((e) => {
-          console.log(e);
-          return 0;
-        });
+  //     subscribedPlatformTokenAmountSkale = await skalecontract.methods
+  //       .subscriptionPlatformTokenAmount(addr)
+  //       .call()
+  //       .catch((e) => {
+  //         console.log(e);
+  //         return 0;
+  //       });
 
-      subscribedPlatformTokenAmountCore = await corecontract.methods
-        .subscriptionPlatformTokenAmount(addr)
-        .call()
-        .catch((e) => {
-          console.log(e);
-          return 0;
-        });
+  //     subscribedPlatformTokenAmountCore = await corecontract.methods
+  //       .subscriptionPlatformTokenAmount(addr)
+  //       .call()
+  //       .catch((e) => {
+  //         console.log(e);
+  //         return 0;
+  //       });
 
-      subscribedPlatformTokenAmountViction = await victioncontract.methods
-        .subscriptionPlatformTokenAmount(addr)
-        .call()
-        .catch((e) => {
-          console.log(e);
-          return 0;
-        });
+  //     subscribedPlatformTokenAmountViction = await victioncontract.methods
+  //       .subscriptionPlatformTokenAmount(addr)
+  //       .call()
+  //       .catch((e) => {
+  //         console.log(e);
+  //         return 0;
+  //       });
 
-      subscribedPlatformTokenAmountSei = await seicontract.methods
-        .subscriptionPlatformTokenAmount(addr)
-        .call()
-        .catch((e) => {
-          console.log(e);
-          return 0;
-        });
+  //     subscribedPlatformTokenAmountSei = await seicontract.methods
+  //       .subscriptionPlatformTokenAmount(addr)
+  //       .call()
+  //       .catch((e) => {
+  //         console.log(e);
+  //         return 0;
+  //       });
 
-      if (
-        subscribedPlatformTokenAmountCfx == "0" &&
-        subscribedPlatformTokenAmountETH == "0" &&
-        subscribedPlatformTokenAmountBase == "0" &&
-        subscribedPlatformTokenAmountBNB == "0" &&
-        subscribedPlatformTokenAmountAvax == "0" &&
-        subscribedPlatformTokenAmountCore == "0" &&
-        subscribedPlatformTokenAmountViction == "0" &&
-        subscribedPlatformTokenAmountSkale == "0" &&
-        subscribedPlatformTokenAmountSei == "0" &&
-        result === false
-      ) {
-        setIsPremium(false);
-      }
-      if (
-        subscribedPlatformTokenAmountCfx != "0" ||
-        subscribedPlatformTokenAmountETH != "0" ||
-        subscribedPlatformTokenAmountBase != "0" ||
-        subscribedPlatformTokenAmountBNB != "0" ||
-        subscribedPlatformTokenAmountAvax != "0" ||
-        subscribedPlatformTokenAmountCore != "0" ||
-        subscribedPlatformTokenAmountViction != "0" ||
-        subscribedPlatformTokenAmountSkale != "0" ||
-        subscribedPlatformTokenAmountSei != "0" ||
-        result === true
-      ) {
-        setIsPremium(true);
-      }
-    }
-  };
+  //     if (
+  //       subscribedPlatformTokenAmountCfx == "0" &&
+  //       subscribedPlatformTokenAmountETH == "0" &&
+  //       subscribedPlatformTokenAmountBase == "0" &&
+  //       subscribedPlatformTokenAmountBNB == "0" &&
+  //       subscribedPlatformTokenAmountAvax == "0" &&
+  //       subscribedPlatformTokenAmountCore == "0" &&
+  //       subscribedPlatformTokenAmountViction == "0" &&
+  //       subscribedPlatformTokenAmountSkale == "0" &&
+  //       subscribedPlatformTokenAmountSei == "0" &&
+  //       result === false
+  //     ) {
+  //       setIsPremium(false);
+  //     }
+  //     if (
+  //       subscribedPlatformTokenAmountCfx != "0" ||
+  //       subscribedPlatformTokenAmountETH != "0" ||
+  //       subscribedPlatformTokenAmountBase != "0" ||
+  //       subscribedPlatformTokenAmountBNB != "0" ||
+  //       subscribedPlatformTokenAmountAvax != "0" ||
+  //       subscribedPlatformTokenAmountCore != "0" ||
+  //       subscribedPlatformTokenAmountViction != "0" ||
+  //       subscribedPlatformTokenAmountSkale != "0" ||
+  //       subscribedPlatformTokenAmountSei != "0" ||
+  //       result === true
+  //     ) {
+  //       setIsPremium(true);
+  //     }
+  //   }
+  // };
 
   const getOpenedChestPerWallet = async () => {
     if (email) {
@@ -2851,7 +2950,7 @@ function Dashboard({
           setCanBuy(true);
         } else if (
           claimedChests + claimedPremiumChests === 20 &&
-          claimedSkaleChests + claimedSkalePremiumChests === 20 
+          claimedSkaleChests + claimedSkalePremiumChests === 20
           // &&
           // claimedCoreChests + claimedCorePremiumChests === 20 &&
           // claimedVictionChests + claimedVictionPremiumChests === 20 &&
@@ -2862,7 +2961,7 @@ function Dashboard({
       } else if (!isPremium) {
         if (
           claimedChests < 10 ||
-          claimedSkaleChests < 10 
+          claimedSkaleChests < 10
           // ||
           // claimedCoreChests < 10 ||
           // claimedVictionChests < 10 ||
@@ -3202,8 +3301,8 @@ function Dashboard({
       setmyCoreNfts(NFTS)
     );
 
-    getMyNFTS(userWallet !== "" ? userWallet : coinbase, "viction").then((NFTS) =>
-      setmyVictionNfts(NFTS)
+    getMyNFTS(userWallet !== "" ? userWallet : coinbase, "viction").then(
+      (NFTS) => setmyVictionNfts(NFTS)
     );
 
     getMyNFTS(userWallet !== "" ? userWallet : coinbase, "skale").then((NFTS) =>
@@ -3912,7 +4011,7 @@ function Dashboard({
           }, 2000);
         }
         setloadspinnerSub(false);
-        setIsPremium(true);
+        onSubscribeSuccess();
         handleUpdatePremiumUser(coinbase);
         setapproveStatus("successsubscribe");
         await axios
@@ -3933,7 +4032,6 @@ function Dashboard({
           setapproveStatus("initial");
           setstatus("");
           setgetPremiumPopup(false);
-          onSubscribeSuccess();
         }, 5000);
         // this.props.onSubscribe();
         // window.location.href = "https://app.dypius.com/account";
@@ -4141,8 +4239,10 @@ function Dashboard({
   useEffect(() => {
     if (coinbase) {
       getRankData();
+      getBundles(coinbase);
+      setlastDay();
     }
-  }, [coinbase]);
+  }, [coinbase, bundlesBought]);
 
   useEffect(() => {
     fetchSkalePrice();
@@ -4153,7 +4253,7 @@ function Dashboard({
 
   useEffect(() => {
     checkBundleDates();
-  }, [bundlesBought, coinbase]);
+  }, [bundlesBought, coinbase, dateofBundle, dateofBundlev1]);
 
   useEffect(() => {
     if (
@@ -4235,7 +4335,7 @@ function Dashboard({
     //   handleSubscriptionTokenChange(wseiAddress);
     //   handleCheckIfAlreadyApproved(wseiAddress);
     // }
-     else if (chainId === 56) {
+    else if (chainId === 56) {
       setChainDropdown(chainDropdowns[1]);
       setdropdownIcon("usdt");
       setdropdownTitle("USDT");
@@ -4350,19 +4450,33 @@ function Dashboard({
     }
   }, [dataNonce]);
 
-  useEffect(() => {
-    if (
-      data &&
-      data.getPlayer &&
-      data.getPlayer.wallet &&
-      data.getPlayer.wallet.publicAddress &&
-      email
-    ) {
-      fetchTreasureHuntData(email, data.getPlayer.wallet.publicAddress);
-      refreshSubscription(data.getPlayer.wallet.publicAddress);
-      setuserWallet(data.getPlayer.wallet.publicAddress);
-    }
-  }, [data, email]);
+  // useEffect(() => {
+  //   if (
+  //     data &&
+  //     data.getPlayer &&
+  //     data.getPlayer.wallet &&
+  //     data.getPlayer.wallet.publicAddress &&
+  //     email &&
+  //     isConnected
+  //   ) {
+  //     fetchTreasureHuntData(email, data.getPlayer.wallet.publicAddress);
+  //     refreshSubscription(data.getPlayer.wallet.publicAddress);
+  //     setuserWallet(data.getPlayer.wallet.publicAddress);
+  //   } else if (coinbase && isConnected) {
+  //     refreshSubscription(coinbase);
+  //   } else if (
+  //     data &&
+  //     data.getPlayer &&
+  //     data.getPlayer.wallet &&
+  //     data.getPlayer.wallet.publicAddress &&
+  //     email &&
+  //     !isConnected
+  //   ) {
+  //     refreshSubscription(data.getPlayer.wallet.publicAddress);
+  //   } else {
+  //     setIsPremium(false);
+  //   }
+  // }, [data, email, coinbase, isConnected]);
 
   useEffect(() => {
     if (
@@ -4374,32 +4488,31 @@ function Dashboard({
       data.getPlayer.wallet.publicAddress &&
       email
     ) {
-      fetchMonthlyRecordsAroundPlayer(
-        data.getPlayer.playerId,
-        data.getPlayer.displayName
-      );
-      fetchSkaleRecordsAroundPlayer(
-        data.getPlayer.playerId,
-        data.getPlayer.displayName
-      );
+      fetchMonthlyRecordsAroundPlayer(monthlyrecords);
+      fetchSkaleRecordsAroundPlayer(skaleRecords);
       fetchGenesisAroundPlayer(
         data.getPlayer.playerId,
         data.getPlayer.displayName
       );
-      fetchWeeklyRecordsAroundPlayer(
-        data.getPlayer.playerId,
-        data.getPlayer.displayName
-      );
-      fetchDailyRecordsAroundPlayer(
-        data.getPlayer.playerId,
-        data.getPlayer.displayName
-      );
+      fetchWeeklyRecordsAroundPlayer(weeklyrecords);
+      fetchDailyRecordsAroundPlayer(dailyrecords);
       fetchKittyDashAroundPlayer(
         data.getPlayer.playerId,
         data.getPlayer.displayName
       );
     }
-  }, [data, email, count, goldenPassRemainingTime]);
+  }, [
+    data,
+    email,
+    weeklyrecords,
+    skaleRecords,
+    count,
+    goldenPassRemainingTime,
+    monthlyrecords,
+    dailyrecords,
+    userId,
+    username,
+  ]);
 
   useEffect(() => {
     if (
@@ -4457,8 +4570,11 @@ function Dashboard({
     window.scrollTo(0, 0);
     getTokenDatabnb();
     fetchCFXPrice();
-    refetchPlayer();
   }, []);
+
+  useEffect(() => {
+    refetchPlayer();
+  }, [email]);
 
   useEffect(() => {
     if (
@@ -4492,15 +4608,11 @@ function Dashboard({
     }
   }, [email, count]);
 
-  // useEffect(() => {
-  //   if (window.ethereum && !window.coin98) {
-  //     if (window.ethereum.isConnected() === true) {
-  //       localStorage.setItem("logout", "false");
-  //     } else {
-  //       localStorage.setItem("logout", "true");
-  //     }
-  //   }
-  // }, [coinbase, chainId]);
+  useEffect(() => {
+    if (bundlesBought === 4) {
+      handleSetAvailableTime(firstOfNextMonth.getTime());
+    }
+  }, [bundlesBought]);
 
   const onOpenLeaderboard = () => {
     setLeaderboard(true);
@@ -4592,7 +4704,8 @@ function Dashboard({
                         onSigninClick={onSigninClick}
                         onLogoutClick={() => {
                           logout();
-                          setIsPremium(false);
+                          // refreshSubscription(coinbase);
+                          onSubscribeSuccess();
                           setclaimedChests(0);
                           setclaimedPremiumChests(0);
                           setclaimedCorePremiumChests(0);
@@ -4739,6 +4852,7 @@ function Dashboard({
                           setgetPremiumPopup(true);
                         }}
                         cawsPremiumRewards={cawsPremiumRewards}
+                        userRankRewards={userRankRewards}
                       />
                     </div>
                     <WalletBalance
@@ -4779,7 +4893,6 @@ function Dashboard({
                       myCmcNfts={myCmcNfts}
                       myCoreNfts={myCoreNfts}
                       myVictionNfts={myVictionNfts}
-
                       mySkaleNfts={mySkaleNfts}
                       latestBoughtNFTS={latest20BoughtNFTS}
                       myOffers={myOffers}
@@ -5012,7 +5125,7 @@ function Dashboard({
                       </OutsideClickHandler>
                     )}
 
-{genesisLeaderboard && (
+                    {genesisLeaderboard && (
                       <OutsideClickHandler
                         onOutsideClick={() => setGenesisLeaderboard(false)}
                       >
@@ -5030,7 +5143,7 @@ function Dashboard({
                               </mark>{" "}
                               Leaderboard
                             </h2>
-                        
+
                             <img
                               src={xMark}
                               onClick={() => setGenesisLeaderboard(false)}
@@ -5038,7 +5151,7 @@ function Dashboard({
                               style={{ cursor: "pointer" }}
                             />
                           </div>
-                        
+
                           <GenesisLeaderboard
                             username={data?.getPlayer?.displayName}
                             userId={data?.getPlayer?.playerId}
@@ -5057,7 +5170,6 @@ function Dashboard({
                         </div>
                       </OutsideClickHandler>
                     )}
-
 
                     {myRewardsPopup && (
                       <OutsideClickHandler
@@ -5126,6 +5238,7 @@ function Dashboard({
                             kittyDashRecords={kittyDashRecords}
                             userRankRewards={userRankRewards}
                             cawsPremiumRewards={cawsPremiumRewards}
+                            genesisRank2={genesisRank2}
                           />
                         </div>
                       </OutsideClickHandler>
@@ -5329,117 +5442,118 @@ function Dashboard({
                               </div>
                             </div>{" "}
                             <hr className="form-divider my-4" />
-                            <div className="d-flex mt-4 mb-4 align-items-end justify-content-between flex-column-reverse flex-lg-row w-100">
-                              <div className="d-flex flex-column gap-3 subscribe-input-container">
-                                <span className="token-amount-placeholder">
-                                  Select chain
-                                </span>
-                                <div className="dropdown position relative">
-                                  <button
-                                    class={`btn launchpad-dropdown d-flex justify-content-between align-items-center dropdown-toggle`}
-                                    type="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                  >
-                                    <div
-                                      className="d-flex align-items-center gap-2"
-                                      style={{ color: "#fff" }}
+                            {isConnected && (
+                              <div className="d-flex mt-4 mb-4 align-items-end justify-content-between flex-column-reverse flex-lg-row w-100">
+                                <div className="d-flex flex-column gap-3 subscribe-input-container">
+                                  <span className="token-amount-placeholder">
+                                    Select chain
+                                  </span>
+                                  <div className="dropdown position relative">
+                                    <button
+                                      class={`btn launchpad-dropdown d-flex justify-content-between align-items-center dropdown-toggle`}
+                                      type="button"
+                                      data-bs-toggle="dropdown"
+                                      aria-expanded="false"
                                     >
-                                      <img
-                                        src={require(`../../Images/premium/tokens/${chainDropdown.symbol}Icon.svg`)}
-                                        alt=""
-                                        style={{ width: 18, height: 18 }}
-                                      />
-                                      {chainDropdown.name}
-                                    </div>
-                                    <img src={launchpadIndicator} alt="" />
-                                  </button>
-                                  <ul className="dropdown-menu w-100">
-                                    <li
-                                      className="dropdown-item launchpad-item d-flex align-items-center gap-2"
-                                      onClick={handleEthPool}
-                                    >
-                                      <img
-                                        src={
-                                          require(`../../Images/premium/tokens/ethIcon.svg`)
-                                            .default
-                                        }
-                                        style={{ width: 18, height: 18 }}
-                                        alt=""
-                                      />
-                                      Ethereum
-                                    </li>
-                                    <li
-                                      className="dropdown-item launchpad-item d-flex align-items-center gap-2"
-                                      onClick={handleBnbPool}
-                                    >
-                                      <img
-                                        src={
-                                          require(`../../Images/premium/tokens/wbnbIcon.svg`)
-                                            .default
-                                        }
-                                        style={{ width: 18, height: 18 }}
-                                        alt=""
-                                      />
-                                      BNB Chain
-                                    </li>
-                                    <li
-                                      className="dropdown-item launchpad-item d-flex align-items-center gap-2"
-                                      onClick={handleAvaxPool}
-                                    >
-                                      <img
-                                        src={
-                                          require(`../../Images/premium/tokens/wavaxIcon.svg`)
-                                            .default
-                                        }
-                                        style={{ width: 18, height: 18 }}
-                                        alt=""
-                                      />
-                                      Avalanche
-                                    </li>
-                                    <li
-                                      className="dropdown-item launchpad-item d-flex align-items-center gap-2"
-                                      onClick={handleBasePool}
-                                    >
-                                      <img
-                                        src={baseLogo}
-                                        alt=""
-                                        style={{
-                                          width: "18px",
-                                          height: "18px",
-                                        }}
-                                      />
-                                      Base Network
-                                    </li>
-                                    <li
-                                      className="dropdown-item launchpad-item d-flex align-items-center gap-2"
-                                      onClick={handleConfluxPool}
-                                    >
-                                      <img
-                                        src={conflux}
-                                        alt=""
-                                        style={{
-                                          width: "18px",
-                                          height: "18px",
-                                        }}
-                                      />
-                                      Conflux Network
-                                    </li>
-                                    <li
-                                      className="dropdown-item launchpad-item d-flex align-items-center gap-2"
-                                      onClick={handleSkalePool}
-                                    >
-                                      <img
-                                        src={skaleIcon}
-                                        alt=""
-                                        style={{
-                                          width: "18px",
-                                          height: "18px",
-                                        }}
-                                      />
-                                      SKALE
-                                    </li>
-                                    {/* <li
+                                      <div
+                                        className="d-flex align-items-center gap-2"
+                                        style={{ color: "#fff" }}
+                                      >
+                                        <img
+                                          src={require(`../../Images/premium/tokens/${chainDropdown.symbol}Icon.svg`)}
+                                          alt=""
+                                          style={{ width: 18, height: 18 }}
+                                        />
+                                        {chainDropdown.name}
+                                      </div>
+                                      <img src={launchpadIndicator} alt="" />
+                                    </button>
+                                    <ul className="dropdown-menu w-100">
+                                      <li
+                                        className="dropdown-item launchpad-item d-flex align-items-center gap-2"
+                                        onClick={handleEthPool}
+                                      >
+                                        <img
+                                          src={
+                                            require(`../../Images/premium/tokens/ethIcon.svg`)
+                                              .default
+                                          }
+                                          style={{ width: 18, height: 18 }}
+                                          alt=""
+                                        />
+                                        Ethereum
+                                      </li>
+                                      <li
+                                        className="dropdown-item launchpad-item d-flex align-items-center gap-2"
+                                        onClick={handleBnbPool}
+                                      >
+                                        <img
+                                          src={
+                                            require(`../../Images/premium/tokens/wbnbIcon.svg`)
+                                              .default
+                                          }
+                                          style={{ width: 18, height: 18 }}
+                                          alt=""
+                                        />
+                                        BNB Chain
+                                      </li>
+                                      <li
+                                        className="dropdown-item launchpad-item d-flex align-items-center gap-2"
+                                        onClick={handleAvaxPool}
+                                      >
+                                        <img
+                                          src={
+                                            require(`../../Images/premium/tokens/wavaxIcon.svg`)
+                                              .default
+                                          }
+                                          style={{ width: 18, height: 18 }}
+                                          alt=""
+                                        />
+                                        Avalanche
+                                      </li>
+                                      <li
+                                        className="dropdown-item launchpad-item d-flex align-items-center gap-2"
+                                        onClick={handleBasePool}
+                                      >
+                                        <img
+                                          src={baseLogo}
+                                          alt=""
+                                          style={{
+                                            width: "18px",
+                                            height: "18px",
+                                          }}
+                                        />
+                                        Base Network
+                                      </li>
+                                      <li
+                                        className="dropdown-item launchpad-item d-flex align-items-center gap-2"
+                                        onClick={handleConfluxPool}
+                                      >
+                                        <img
+                                          src={conflux}
+                                          alt=""
+                                          style={{
+                                            width: "18px",
+                                            height: "18px",
+                                          }}
+                                        />
+                                        Conflux Network
+                                      </li>
+                                      <li
+                                        className="dropdown-item launchpad-item d-flex align-items-center gap-2"
+                                        onClick={handleSkalePool}
+                                      >
+                                        <img
+                                          src={skaleIcon}
+                                          alt=""
+                                          style={{
+                                            width: "18px",
+                                            height: "18px",
+                                          }}
+                                        />
+                                        SKALE
+                                      </li>
+                                      {/* <li
                                       className="dropdown-item launchpad-item d-flex align-items-center gap-2"
                                       onClick={handleCorePool}
                                     >
@@ -5481,297 +5595,312 @@ function Dashboard({
                                       />
                                       SEI
                                     </li> */}
-                                  </ul>
+                                    </ul>
+                                  </div>
                                 </div>
-                              </div>
-                              <div className="d-flex flex-column gap-3 subscribe-input-container"></div>
-                              <div className="d-flex flex-column align-items-end gap-3">
-                                <span className="my-premium-balance-text mb-0">
-                                  My balance:{" "}
-                                  {getFormattedNumber(
-                                    tokenBalance / 10 ** tokenDecimals,
-                                    3
-                                  )}{" "}
-                                  {dropdownIcon.toUpperCase()}
-                                </span>
-                                <div
-                                  className="premium-benefits-wrapper p-2 d-flex align-items-center gap-4"
-                                  style={{ height: "34px" }}
-                                >
-                                  <span className="subscription-price-text mb-0">
-                                    Subscription Price:
+                                <div className="d-flex flex-column gap-3 subscribe-input-container"></div>
+                                <div className="d-flex flex-column align-items-end gap-3">
+                                  <span className="my-premium-balance-text mb-0">
+                                    My balance:{" "}
+                                    {getFormattedNumber(
+                                      tokenBalance / 10 ** tokenDecimals,
+                                      3
+                                    )}{" "}
+                                    {dropdownIcon.toUpperCase()}
                                   </span>
+                                  <div
+                                    className="premium-benefits-wrapper p-2 d-flex align-items-center gap-4"
+                                    style={{ height: "34px" }}
+                                  >
+                                    <span className="subscription-price-text mb-0">
+                                      Subscription Price:
+                                    </span>
 
-                                  <div className="d-flex align-items-center gap-2">
-                                    <div className="dropdown position relative">
-                                      <button
-                                        class={`btn launchpad-dropdown d-flex gap-1 justify-content-between align-items-center dropdown-toggle2 w-100`}
-                                        type="button"
-                                        data-bs-toggle="dropdown"
-                                        aria-expanded="false"
-                                      >
-                                        <div
-                                          className="d-flex align-items-center gap-2"
-                                          style={{ color: "#fff" }}
+                                    <div className="d-flex align-items-center gap-2">
+                                      <div className="dropdown position relative">
+                                        <button
+                                          class={`btn launchpad-dropdown d-flex gap-1 justify-content-between align-items-center dropdown-toggle2 w-100`}
+                                          type="button"
+                                          data-bs-toggle="dropdown"
+                                          aria-expanded="false"
                                         >
-                                          <img
-                                            src={require(`../../Images/premium/tokens/${dropdownIcon.toLowerCase()}Icon.svg`)}
-                                            alt=""
-                                            style={{ width: 18, height: 18 }}
-                                          />
-                                          {/* {dropdownTitle} */}
-                                        </div>
-                                        <img src={launchpadIndicator} alt="" />
-                                      </button>
-                                      <ul className="dropdown-menu w-100">
-                                        {Object.keys(
-                                          chainId === 1
-                                            ? window.config
-                                                .subscriptioneth_tokens
-                                            : chainId === 56
-                                            ? window.config
-                                                .subscriptionbnb_tokens
-                                            : chainId === 1030
-                                            ? window.config
-                                                .subscriptioncfx_tokens
-                                            : chainId === 43114
-                                            ? window.config.subscription_tokens
-                                            : chainId === 8453
-                                            ? window.config
-                                                .subscriptionbase_tokens
-                                            : chainId === 1482601649
-                                            ? window.config
-                                                .subscriptionskale_tokens
-                                            : chainId === 88
-                                            ? window.config
-                                                .subscriptionviction_tokens
-                                            : chainId === 1116
-                                            ? window.config
-                                                .subscriptioncore_tokens
-                                            : chainId === 713715
-                                            ? window.config
-                                                .subscriptionsei_tokens
-                                            : window.config.subscription_tokens
-                                        ).map((t, i) => (
-                                          <li
-                                            key={i}
-                                            className="dropdown-item launchpad-item d-flex align-items-center gap-2"
-                                            onClick={() => {
-                                              window.cached_contracts =
-                                                Object.create(null);
-                                              setTimeout(() => {
-                                                setdropdownIcon(
-                                                  chainId === 1
-                                                    ? window.config
-                                                        .subscriptioneth_tokens[
-                                                        t
-                                                      ]?.symbol
-                                                    : chainId === 56
-                                                    ? window.config
-                                                        .subscriptionbnb_tokens[
-                                                        t
-                                                      ]?.symbol
-                                                    : chainId === 43114
-                                                    ? window.config
-                                                        .subscription_tokens[t]
-                                                        ?.symbol
-                                                    : chainId === 8453
-                                                    ? window.config
-                                                        .subscriptionbase_tokens[
-                                                        t
-                                                      ]?.symbol
-                                                    : chainId === 1030
-                                                    ? window.config
-                                                        .subscriptioncfx_tokens[
-                                                        t
-                                                      ]?.symbol
-                                                    : chainId === 1482601649
-                                                    ? window.config
-                                                        .subscriptionskale_tokens[
-                                                        t
-                                                      ]?.symbol
-                                                    : chainId === 88
-                                                    ? window.config
-                                                        .subscriptionviction_tokens[
-                                                        t
-                                                      ]?.symbol
-                                                    : chainId === 1116
-                                                    ? window.config
-                                                        .subscriptioncore_tokens[
-                                                        t
-                                                      ]?.symbol
-                                                    : chainId === 713715
-                                                    ? window.config
-                                                        .subscriptionsei_tokens[
-                                                        t
-                                                      ]?.symbol
-                                                    : window.config
-                                                        .subscription_tokens[t]
-                                                        ?.symbol
-                                                );
-                                                setdropdownTitle(
-                                                  chainId === 1
-                                                    ? window.config
-                                                        .subscriptioneth_tokens[
-                                                        t
-                                                      ]?.symbol
-                                                    : chainId === 56
-                                                    ? window.config
-                                                        .subscriptionbnb_tokens[
-                                                        t
-                                                      ]?.symbol
-                                                    : chainId === 43114
-                                                    ? window.config
-                                                        .subscription_tokens[t]
-                                                        ?.symbol
-                                                    : chainId === 8453
-                                                    ? window.config
-                                                        .subscriptionbase_tokens[
-                                                        t
-                                                      ]?.symbol
-                                                    : chainId === 1030
-                                                    ? window.config
-                                                        .subscriptioncfx_tokens[
-                                                        t
-                                                      ]?.symbol
-                                                    : chainId === 1482601649
-                                                    ? window.config
-                                                        .subscriptionskale_tokens[
-                                                        t
-                                                      ]?.symbol
-                                                    : chainId === 88
-                                                    ? window.config
-                                                        .subscriptionviction_tokens[
-                                                        t
-                                                      ]?.symbol
-                                                    : chainId === 713715
-                                                    ? window.config
-                                                        .subscriptionsei_tokens[
-                                                        t
-                                                      ]?.symbol
-                                                    : chainId === 1116
-                                                    ? window.config
-                                                        .subscriptionsei_tokens[
-                                                        t
-                                                      ]?.symbol
-                                                    : window.config
-                                                        .subscription_tokens[t]
-                                                        ?.symbol
-                                                );
-
-                                                // console.log(t);
-                                                handleSubscriptionTokenChange(
-                                                  t
-                                                );
-                                                handleCheckIfAlreadyApproved(t);
-                                              }, 200);
-                                            }}
+                                          <div
+                                            className="d-flex align-items-center gap-2"
+                                            style={{ color: "#fff" }}
                                           >
                                             <img
-                                              src={
-                                                chainId === 1
-                                                  ? require(`../../Images/premium/tokens/${window.config.subscriptioneth_tokens[
-                                                      t
-                                                    ]?.symbol.toLowerCase()}Icon.svg`)
-                                                  : chainId === 56
-                                                  ? require(`../../Images/premium/tokens/${window.config.subscriptionbnb_tokens[
-                                                      t
-                                                    ]?.symbol.toLowerCase()}Icon.svg`)
-                                                  : chainId === 43114
-                                                  ? require(`../../Images/premium/tokens/${window.config.subscription_tokens[
-                                                      t
-                                                    ]?.symbol.toLowerCase()}Icon.svg`)
-                                                  : chainId === 1030
-                                                  ? require(`../../Images/premium/tokens/${window.config.subscriptioncfx_tokens[
-                                                      t
-                                                    ]?.symbol.toLowerCase()}Icon.svg`)
-                                                  : chainId === 8453
-                                                  ? require(`../../Images/premium/tokens/${window.config.subscriptionbase_tokens[
-                                                      t
-                                                    ]?.symbol.toLowerCase()}Icon.svg`)
-                                                  : chainId === 1482601649
-                                                  ? require(`../../Images/premium/tokens/${window.config.subscriptionskale_tokens[
-                                                      t
-                                                    ]?.symbol.toLowerCase()}Icon.svg`)
-                                                  : chainId === 1116
-                                                  ? require(`../../Images/premium/tokens/${window.config.subscriptioncore_tokens[
-                                                      t
-                                                    ]?.symbol.toLowerCase()}Icon.svg`)
-                                                  : chainId === 88
-                                                  ? require(`../../Images/premium/tokens/${window.config.subscriptionviction_tokens[
-                                                      t
-                                                    ]?.symbol.toLowerCase()}Icon.svg`)
-                                                  : chainId === 713715
-                                                  ? require(`../../Images/premium/tokens/${window.config.subscriptionsei_tokens[
-                                                      t
-                                                    ]?.symbol.toLowerCase()}Icon.svg`)
-                                                  : require(`../../Images/premium/tokens/${window.config.subscription_tokens[
-                                                      t
-                                                    ]?.symbol.toLowerCase()}Icon.svg`)
-                                              }
+                                              src={require(`../../Images/premium/tokens/${dropdownIcon.toLowerCase()}Icon.svg`)}
                                               alt=""
                                               style={{ width: 18, height: 18 }}
                                             />
-                                            {chainId === 1
+                                            {/* {dropdownTitle} */}
+                                          </div>
+                                          <img
+                                            src={launchpadIndicator}
+                                            alt=""
+                                          />
+                                        </button>
+                                        <ul className="dropdown-menu w-100">
+                                          {Object.keys(
+                                            chainId === 1
                                               ? window.config
-                                                  .subscriptioneth_tokens[t]
-                                                  ?.symbol
+                                                  .subscriptioneth_tokens
                                               : chainId === 56
                                               ? window.config
-                                                  .subscriptionbnb_tokens[t]
-                                                  ?.symbol
-                                              : chainId === 43114
-                                              ? window.config
-                                                  .subscription_tokens[t]
-                                                  ?.symbol
+                                                  .subscriptionbnb_tokens
                                               : chainId === 1030
                                               ? window.config
-                                                  .subscriptioncfx_tokens[t]
-                                                  ?.symbol
+                                                  .subscriptioncfx_tokens
+                                              : chainId === 43114
+                                              ? window.config
+                                                  .subscription_tokens
                                               : chainId === 8453
                                               ? window.config
-                                                  .subscriptionbase_tokens[t]
-                                                  ?.symbol
+                                                  .subscriptionbase_tokens
                                               : chainId === 1482601649
                                               ? window.config
-                                                  .subscriptionskale_tokens[t]
-                                                  ?.symbol
-                                              : chainId === 1116
-                                              ? window.config
-                                                  .subscriptioncore_tokens[t]
-                                                  ?.symbol
+                                                  .subscriptionskale_tokens
                                               : chainId === 88
                                               ? window.config
-                                                  .subscriptionviction_tokens[t]
-                                                  ?.symbol
+                                                  .subscriptionviction_tokens
+                                              : chainId === 1116
+                                              ? window.config
+                                                  .subscriptioncore_tokens
                                               : chainId === 713715
                                               ? window.config
-                                                  .subscriptionsei_tokens[t]
-                                                  ?.symbol
+                                                  .subscriptionsei_tokens
                                               : window.config
-                                                  .subscription_tokens[t]
-                                                  ?.symbol}
-                                          </li>
-                                        ))}
-                                      </ul>
-                                    </div>
-                                    {/* <img
+                                                  .subscription_tokens
+                                          ).map((t, i) => (
+                                            <li
+                                              key={i}
+                                              className="dropdown-item launchpad-item d-flex align-items-center gap-2"
+                                              onClick={() => {
+                                                window.cached_contracts =
+                                                  Object.create(null);
+                                                setTimeout(() => {
+                                                  setdropdownIcon(
+                                                    chainId === 1
+                                                      ? window.config
+                                                          .subscriptioneth_tokens[
+                                                          t
+                                                        ]?.symbol
+                                                      : chainId === 56
+                                                      ? window.config
+                                                          .subscriptionbnb_tokens[
+                                                          t
+                                                        ]?.symbol
+                                                      : chainId === 43114
+                                                      ? window.config
+                                                          .subscription_tokens[
+                                                          t
+                                                        ]?.symbol
+                                                      : chainId === 8453
+                                                      ? window.config
+                                                          .subscriptionbase_tokens[
+                                                          t
+                                                        ]?.symbol
+                                                      : chainId === 1030
+                                                      ? window.config
+                                                          .subscriptioncfx_tokens[
+                                                          t
+                                                        ]?.symbol
+                                                      : chainId === 1482601649
+                                                      ? window.config
+                                                          .subscriptionskale_tokens[
+                                                          t
+                                                        ]?.symbol
+                                                      : chainId === 88
+                                                      ? window.config
+                                                          .subscriptionviction_tokens[
+                                                          t
+                                                        ]?.symbol
+                                                      : chainId === 1116
+                                                      ? window.config
+                                                          .subscriptioncore_tokens[
+                                                          t
+                                                        ]?.symbol
+                                                      : chainId === 713715
+                                                      ? window.config
+                                                          .subscriptionsei_tokens[
+                                                          t
+                                                        ]?.symbol
+                                                      : window.config
+                                                          .subscription_tokens[
+                                                          t
+                                                        ]?.symbol
+                                                  );
+                                                  setdropdownTitle(
+                                                    chainId === 1
+                                                      ? window.config
+                                                          .subscriptioneth_tokens[
+                                                          t
+                                                        ]?.symbol
+                                                      : chainId === 56
+                                                      ? window.config
+                                                          .subscriptionbnb_tokens[
+                                                          t
+                                                        ]?.symbol
+                                                      : chainId === 43114
+                                                      ? window.config
+                                                          .subscription_tokens[
+                                                          t
+                                                        ]?.symbol
+                                                      : chainId === 8453
+                                                      ? window.config
+                                                          .subscriptionbase_tokens[
+                                                          t
+                                                        ]?.symbol
+                                                      : chainId === 1030
+                                                      ? window.config
+                                                          .subscriptioncfx_tokens[
+                                                          t
+                                                        ]?.symbol
+                                                      : chainId === 1482601649
+                                                      ? window.config
+                                                          .subscriptionskale_tokens[
+                                                          t
+                                                        ]?.symbol
+                                                      : chainId === 88
+                                                      ? window.config
+                                                          .subscriptionviction_tokens[
+                                                          t
+                                                        ]?.symbol
+                                                      : chainId === 713715
+                                                      ? window.config
+                                                          .subscriptionsei_tokens[
+                                                          t
+                                                        ]?.symbol
+                                                      : chainId === 1116
+                                                      ? window.config
+                                                          .subscriptionsei_tokens[
+                                                          t
+                                                        ]?.symbol
+                                                      : window.config
+                                                          .subscription_tokens[
+                                                          t
+                                                        ]?.symbol
+                                                  );
+
+                                                  // console.log(t);
+                                                  handleSubscriptionTokenChange(
+                                                    t
+                                                  );
+                                                  handleCheckIfAlreadyApproved(
+                                                    t
+                                                  );
+                                                }, 200);
+                                              }}
+                                            >
+                                              <img
+                                                src={
+                                                  chainId === 1
+                                                    ? require(`../../Images/premium/tokens/${window.config.subscriptioneth_tokens[
+                                                        t
+                                                      ]?.symbol.toLowerCase()}Icon.svg`)
+                                                    : chainId === 56
+                                                    ? require(`../../Images/premium/tokens/${window.config.subscriptionbnb_tokens[
+                                                        t
+                                                      ]?.symbol.toLowerCase()}Icon.svg`)
+                                                    : chainId === 43114
+                                                    ? require(`../../Images/premium/tokens/${window.config.subscription_tokens[
+                                                        t
+                                                      ]?.symbol.toLowerCase()}Icon.svg`)
+                                                    : chainId === 1030
+                                                    ? require(`../../Images/premium/tokens/${window.config.subscriptioncfx_tokens[
+                                                        t
+                                                      ]?.symbol.toLowerCase()}Icon.svg`)
+                                                    : chainId === 8453
+                                                    ? require(`../../Images/premium/tokens/${window.config.subscriptionbase_tokens[
+                                                        t
+                                                      ]?.symbol.toLowerCase()}Icon.svg`)
+                                                    : chainId === 1482601649
+                                                    ? require(`../../Images/premium/tokens/${window.config.subscriptionskale_tokens[
+                                                        t
+                                                      ]?.symbol.toLowerCase()}Icon.svg`)
+                                                    : chainId === 1116
+                                                    ? require(`../../Images/premium/tokens/${window.config.subscriptioncore_tokens[
+                                                        t
+                                                      ]?.symbol.toLowerCase()}Icon.svg`)
+                                                    : chainId === 88
+                                                    ? require(`../../Images/premium/tokens/${window.config.subscriptionviction_tokens[
+                                                        t
+                                                      ]?.symbol.toLowerCase()}Icon.svg`)
+                                                    : chainId === 713715
+                                                    ? require(`../../Images/premium/tokens/${window.config.subscriptionsei_tokens[
+                                                        t
+                                                      ]?.symbol.toLowerCase()}Icon.svg`)
+                                                    : require(`../../Images/premium/tokens/${window.config.subscription_tokens[
+                                                        t
+                                                      ]?.symbol.toLowerCase()}Icon.svg`)
+                                                }
+                                                alt=""
+                                                style={{
+                                                  width: 18,
+                                                  height: 18,
+                                                }}
+                                              />
+                                              {chainId === 1
+                                                ? window.config
+                                                    .subscriptioneth_tokens[t]
+                                                    ?.symbol
+                                                : chainId === 56
+                                                ? window.config
+                                                    .subscriptionbnb_tokens[t]
+                                                    ?.symbol
+                                                : chainId === 43114
+                                                ? window.config
+                                                    .subscription_tokens[t]
+                                                    ?.symbol
+                                                : chainId === 1030
+                                                ? window.config
+                                                    .subscriptioncfx_tokens[t]
+                                                    ?.symbol
+                                                : chainId === 8453
+                                                ? window.config
+                                                    .subscriptionbase_tokens[t]
+                                                    ?.symbol
+                                                : chainId === 1482601649
+                                                ? window.config
+                                                    .subscriptionskale_tokens[t]
+                                                    ?.symbol
+                                                : chainId === 1116
+                                                ? window.config
+                                                    .subscriptioncore_tokens[t]
+                                                    ?.symbol
+                                                : chainId === 88
+                                                ? window.config
+                                                    .subscriptionviction_tokens[
+                                                    t
+                                                  ]?.symbol
+                                                : chainId === 713715
+                                                ? window.config
+                                                    .subscriptionsei_tokens[t]
+                                                    ?.symbol
+                                                : window.config
+                                                    .subscription_tokens[t]
+                                                    ?.symbol}
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                      {/* <img
                                       src={require(`../../Images/premium/tokens/${dropdownIcon.toLowerCase()}Icon.svg`)}
                                       height={16}
                                       width={16}
                                       alt="usdt"
                                     /> */}
-                                    <span className="subscription-price-token mb-0">
-                                      {formattedPrice.slice(0, 5)}
+                                      <span className="subscription-price-token mb-0">
+                                        {formattedPrice.slice(0, 5)}
+                                      </span>
+                                    </div>
+                                    <span className="subscription-price-usd mb-0">
+                                      $100
                                     </span>
                                   </div>
-                                  <span className="subscription-price-usd mb-0">
-                                    $100
-                                  </span>
                                 </div>
-                              </div>
 
-                              {/* <div className="d-flex flex-column align-items-end justify-content-lg-end">
+                                {/* <div className="d-flex flex-column align-items-end justify-content-lg-end">
                                 <span className="token-balance-placeholder">
                                   Token Balance
                                 </span>
@@ -5783,7 +5912,8 @@ function Dashboard({
                                   )}
                                 </h6>
                               </div> */}
-                            </div>
+                              </div>
+                            )}
                             {/* <div
                               className="subscription-token-wrapper  p-2 d-flex align-items-center justify-content-between  mt-3"
                               style={{ width: "100%" }}
@@ -5821,99 +5951,116 @@ function Dashboard({
                                 </div>
                               </div>
                             )}
-                            <div className="d-flex align-items-center gap-3 justify-content-center">
-                              <div
-                                className={` ${
-                                  approveStatus === "fail" ||
-                                  !coinbase ||
-                                  isApproved
-                                    ? "linear-border-disabled"
-                                    : "linear-border"
-                                }`}
-                              >
-                                <button
-                                  className={`btn ${
+                            {isConnected ? (
+                              <div className="d-flex align-items-center gap-3 justify-content-center">
+                                <div
+                                  className={` ${
                                     approveStatus === "fail" ||
                                     !coinbase ||
                                     isApproved
-                                      ? "outline-btn-disabled"
-                                      : "filled-btn"
-                                  } px-4`}
-                                  disabled={
-                                    approveStatus === "fail" ||
-                                    !coinbase ||
-                                    isApproved
-                                      ? true
-                                      : false
-                                  }
-                                  onClick={(e) => handleApprove(e)}
+                                      ? "linear-border-disabled"
+                                      : "linear-border"
+                                  }`}
                                 >
-                                  {loadspinner === false &&
-                                  (approveStatus === "initial" ||
-                                    approveStatus === "deposit" ||
-                                    approveStatus === "failsubscribe" ||
-                                    approveStatus === "successsubscribe") ? (
-                                    "Approve"
-                                  ) : loadspinner === false &&
-                                    approveStatus === "fail" ? (
-                                    "Failed"
-                                  ) : (
-                                    <div
-                                      className="spinner-border "
-                                      role="status"
-                                      style={{
-                                        height: "1rem",
-                                        width: "1rem",
-                                      }}
-                                    ></div>
-                                  )}
-                                </button>
-                              </div>
-                              <div
-                                className={` ${
-                                  isApproved === false
-                                    ? "linear-border-disabled"
-                                    : "linear-border"
-                                }`}
-                              >
-                                <button
-                                  className={`btn ${
+                                  <button
+                                    className={`btn ${
+                                      approveStatus === "fail" ||
+                                      !coinbase ||
+                                      isApproved
+                                        ? "outline-btn-disabled"
+                                        : "filled-btn"
+                                    } px-4`}
+                                    disabled={
+                                      approveStatus === "fail" ||
+                                      !coinbase ||
+                                      isApproved
+                                        ? true
+                                        : false
+                                    }
+                                    onClick={(e) => handleApprove(e)}
+                                  >
+                                    {loadspinner === false &&
+                                    (approveStatus === "initial" ||
+                                      approveStatus === "deposit" ||
+                                      approveStatus === "failsubscribe" ||
+                                      approveStatus === "successsubscribe") ? (
+                                      "Approve"
+                                    ) : loadspinner === false &&
+                                      approveStatus === "fail" ? (
+                                      "Failed"
+                                    ) : (
+                                      <div
+                                        className="spinner-border "
+                                        role="status"
+                                        style={{
+                                          height: "1rem",
+                                          width: "1rem",
+                                        }}
+                                      ></div>
+                                    )}
+                                  </button>
+                                </div>
+                                <div
+                                  className={` ${
                                     isApproved === false
-                                      ? "outline-btn-disabled"
-                                      : "filled-btn"
-                                  } px-4`}
-                                  onClick={() => handleSubscribe()}
+                                      ? "linear-border-disabled"
+                                      : "linear-border"
+                                  }`}
                                 >
-                                  {loadspinnerSub === false &&
-                                  (approveStatus === "initial" ||
-                                    approveStatus === "fail" ||
-                                    approveStatus === "deposit") ? (
-                                    "Buy"
-                                  ) : loadspinnerSub === false &&
-                                    approveStatus === "successsubscribe" ? (
-                                    "Success"
-                                  ) : loadspinnerSub === false &&
-                                    approveStatus === "failsubscribe" ? (
-                                    "Failed"
-                                  ) : (
-                                    <div
-                                      className="spinner-border "
-                                      role="status"
-                                      style={{
-                                        height: "1rem",
-                                        width: "1rem",
-                                      }}
-                                    ></div>
-                                  )}
+                                  <button
+                                    className={`btn ${
+                                      isApproved === false
+                                        ? "outline-btn-disabled"
+                                        : "filled-btn"
+                                    } px-4`}
+                                    onClick={() => handleSubscribe()}
+                                  >
+                                    {loadspinnerSub === false &&
+                                    (approveStatus === "initial" ||
+                                      approveStatus === "fail" ||
+                                      approveStatus === "deposit") ? (
+                                      "Buy"
+                                    ) : loadspinnerSub === false &&
+                                      approveStatus === "successsubscribe" ? (
+                                      "Success"
+                                    ) : loadspinnerSub === false &&
+                                      approveStatus === "failsubscribe" ? (
+                                      "Failed"
+                                    ) : (
+                                      <div
+                                        className="spinner-border "
+                                        role="status"
+                                        style={{
+                                          height: "1rem",
+                                          width: "1rem",
+                                        }}
+                                      ></div>
+                                    )}
+                                  </button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div
+                                className={`d-flex align-items-center justify-content-center mb-2`}
+                              >
+                                <button
+                                  className="d-flex gap-2 px-3 py-1 align-items-center pill-btn"
+                                  onClick={() => {
+                                    setshowWalletModal(true);
+                                    setgetPremiumPopup(false);
+                                  }}
+                                  style={{
+                                    width: "fit-content",
+                                    whiteSpace: "nowrap",
+                                    fontSize: 14,
+                                  }}
+                                >
+                                  Connect wallet
                                 </button>
                               </div>
-                            </div>
+                            )}
                             <div
-                              className={`d-flex align-items-center ${
-                                !coinbase
-                                  ? "justify-content-between"
-                                  : "justify-content-end"
-                              }`}
+                              className={`d-flex align-items-center justify-content-center`}
                             >
                               {!coinbase && (
                                 <span style={{ color: "rgb(227, 6 ,19)" }}>

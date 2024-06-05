@@ -46,10 +46,10 @@ const MintPopup = ({ active, onClose, data }) => {
          <div className="d-flex align-items-center justify-content-center">
             <div className="pulsatingDot"></div>
             <h6 className="mint-popup-title  mb-0" style={{ color: "#18FFFF" }}>
-            150,000 WOD Tokens
+            200,000 WOD Tokens
             </h6>
           </div>
-          <h6 className="mint-popup-title m-0">$50,000 Premium Subscriptions</h6>
+          <h6 className="mint-popup-title m-0">$75,000 Premium Subscriptions</h6>
          </div>
         </div>
         </>
@@ -62,6 +62,16 @@ const MintPopup = ({ active, onClose, data }) => {
             </h6>
           </div>
           <h6 className="mint-popup-title">DogeCoin Beta Pass</h6>
+        </>
+      ): data.title === "VICTION" ? (
+        <>
+          <div className="d-flex align-items-center justify-content-center">
+            <div className="pulsatingDot"></div>
+            <h6 className="mint-popup-title  mb-0" style={{ color: "#18FFFF" }}>
+              Live Giveaway
+            </h6>
+          </div>
+          <h6 className="mint-popup-title">VICTION Beta Pass NFT</h6>
         </>
       ) : data.title === "CoinMarketCap" ? (
         <>
@@ -149,6 +159,15 @@ const MintPopup = ({ active, onClose, data }) => {
             </span>
           )}
         </div>
+      ) : data.title === "VICTION" ? (
+        <div className="available-mint-bg d-flex align-items-center justify-content-center px-2 py-1">
+          {data.title === "VICTION" && (
+            <span className="popup-available-mint">
+              Get access to the game and a unique event filled with surprises
+              and rewards!
+            </span>
+          )}
+        </div>
       ): data.title === "CoinMarketCap" ? (
         <div className="available-mint-bg d-flex align-items-center justify-content-center px-2 py-1">
           {data.title === "CoinMarketCap" && (
@@ -165,7 +184,7 @@ const MintPopup = ({ active, onClose, data }) => {
           //   Explore the downtown area and use your <img src={whiteExplore} className="white-explore" alt=""/> to generate rewards!
           // </span>
           <span className="popup-available-mint">
-       Participate in the BNB Chain Airdrop Alliance Program and complete the tasks to receive WOD tokens airdrop.
+      Participate in the BNB Chain Airdrop Alliance Program and complete the tasks to receive WOD tokens airdrop.
         </span>
         )}
       </div>
@@ -189,10 +208,19 @@ const MintPopup = ({ active, onClose, data }) => {
           >
             <button className="btn filled-btn px-4">More</button>
           </Link>
+        ) : data.title === "VICTION" ? (
+          <Link
+            onClick={onClose}
+            to={"/marketplace/beta-pass/viction"}
+            state={{ event: data.state }}
+            className="linear-border"
+          >
+            <button className="btn filled-btn px-4">More</button>
+          </Link>
         ) : data.title === "SKALE" ? (
           <a
             onClick={onClose}
-            href="https://dappbay.bnbchain.org/campaign/bnb-chain-airdrop-alliance-program/103-daily-game-delight"
+            href="https://dappbay.bnbchain.org/campaign/bnb-chain-airdrop-alliance-program/104-dypians-discovery-quest"
             target="_blank"
             className="linear-border"
           >

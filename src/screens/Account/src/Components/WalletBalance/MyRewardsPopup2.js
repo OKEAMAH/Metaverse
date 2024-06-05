@@ -73,6 +73,7 @@ const MyRewardsPopupNew = ({
   allCoreChests,
   allVictionChests,
   allSeiChests,
+  genesisRank2,
 }) => {
   const label = { inputProps: { "aria-label": "Switch demo" } };
   const [previousRewards, setPreviousRewards] = useState(false);
@@ -115,6 +116,8 @@ const MyRewardsPopupNew = ({
 
   const [gateRewardsUSD, setGateRewardsUSD] = useState(0);
   const [baseRewardsUSD, setBaseRewardsUSD] = useState(0);
+  const [dypPremiumUSD, setdypPremiumUSD] = useState(0);
+  const [pastUserRankUsd, setpastUserRankUsd] = useState(0);
 
   const [userSocialRewardsCached, setuserSocialRewardsCached] = useState(0);
 
@@ -135,26 +138,6 @@ const MyRewardsPopupNew = ({
 
     if (cachedUserSocialRewards) {
       setuserSocialRewardsCached(cachedUserSocialRewards);
-    }
-  };
-
-  const fetchMonthlyGenesisRecordsAroundPlayer = async () => {
-    const data = {
-      StatisticName: "GenesisLandRewards",
-      MaxResultsCount: 6,
-      PlayerId: userId,
-    };
-    if (userId) {
-      const result = await axios.post(
-        `${backendApi}/auth/GetLeaderboardAroundPlayer`,
-        data
-      );
-      var testArray = result.data.data.leaderboard.filter(
-        (item) => item.displayName === username
-      );
-
-      const userPosition = testArray[0].statValue;
-      setgenesisData(userPosition);
     }
   };
 
@@ -219,6 +202,18 @@ const MyRewardsPopupNew = ({
       });
   };
 
+  const fetchDypiusPremiumUSDRewards = async (addr) => {
+    await axios
+      .get(`https://api.worldofdypians.com/api/dyp-treasure/${addr}`)
+      .then((data) => {
+        if (data.data.userRewards) {
+          setdypPremiumUSD(data.data.userRewards);
+        } else {
+          setdypPremiumUSD(0);
+        }
+      });
+  };
+
   const fetchPastSpecialRewards = async (addr) => {
     await axios
       .get(`https://api.worldofdypians.com/api/special_r/${addr}`)
@@ -227,6 +222,18 @@ const MyRewardsPopupNew = ({
           setpastSpecialRewards(data.data.userRewards);
         } else {
           setpastSpecialRewards(0);
+        }
+      });
+  };
+
+  const fetchPastUserRankRewards = async (addr) => {
+    await axios
+      .get(`https://api.worldofdypians.com/api/past-user-rank-rewards/${addr}`)
+      .then((data) => {
+        if (data.data.userRewards) {
+          setpastUserRankUsd(data.data.userRewards);
+        } else {
+          setpastUserRankUsd(0);
         }
       });
   };
@@ -545,10 +552,6 @@ const MyRewardsPopupNew = ({
   };
 
   useEffect(() => {
-    fetchMonthlyGenesisRecordsAroundPlayer();
-  }, [userId, bundlesBought]);
-
-  useEffect(() => {
     getTreasureChestsInfo();
   }, [openedChests, openedSkaleChests]);
 
@@ -564,8 +567,10 @@ const MyRewardsPopupNew = ({
     fetchGateUSDRewards(address);
     fetchBaseUSDRewards(address);
     fetchDypiusUSDRewards(address);
+    fetchDypiusPremiumUSDRewards(address);
     fetchCoingeckoUSDRewards(address);
     fetchPastSpecialRewards(address);
+    fetchPastUserRankRewards(address);
     fetchPastDailyBonusMoney(address);
     fetchPastDailyBonusBetaPass(address);
     fetchPastDailyBonusCaws(address);
@@ -594,6 +599,7 @@ const MyRewardsPopupNew = ({
                 Number(cawsRewards) +
                 Number(pasttreasureRewardMoney) +
                 Number(gemRewards) +
+                Number(pastUserRankUsd) +
                 Number(leaderboardTotalData) +
                 Number(leaderboardSkaleTotalData) +
                 Number(baseRewardsUSD) +
@@ -602,7 +608,8 @@ const MyRewardsPopupNew = ({
                 Number(gateRewardsUSD) +
                 Number(confluxRewardsUSD) +
                 Number(dogeRewardsUSD) +
-                Number(cmcRewardsUSD),
+                Number(cmcRewardsUSD) +
+                Number(dypPremiumUSD),
               2
             )}
           </span>
@@ -675,6 +682,7 @@ const MyRewardsPopupNew = ({
                     Number(wodRewards) +
                       Number(wodCawsRewards) +
                       Number(cawsRewards) +
+                      Number(pastUserRankUsd) +
                       Number(pasttreasureRewardMoney) +
                       Number(gemRewards) +
                       Number(leaderboardTotalData) +
@@ -685,7 +693,8 @@ const MyRewardsPopupNew = ({
                       Number(gateRewardsUSD) +
                       Number(confluxRewardsUSD) +
                       Number(dogeRewardsUSD) +
-                      Number(cmcRewardsUSD),
+                      Number(cmcRewardsUSD) +
+                      Number(dypPremiumUSD),
                     2
                   )
                 : getFormattedNumber(
@@ -701,9 +710,9 @@ const MyRewardsPopupNew = ({
                       Number(dailyplayerData) +
                       Number(weeklyplayerData) +
                       Number(userRank2) +
-                      Number(genesisData) +
+                      Number(genesisRank2) +
                       Number(userRankRewards) +
-                      Number(dypiusPremiumEarnUsd) +
+                      Number(userSocialRewardsCached) +
                       Number(cawsPremiumRewards),
                     2
                   )}
@@ -874,7 +883,7 @@ const MyRewardsPopupNew = ({
                     Number(dailyplayerData) +
                       Number(weeklyplayerData) +
                       Number(userRank2) +
-                      Number(genesisData),
+                      Number(genesisRank2),
                     2
                   )}
             </span>
@@ -933,12 +942,12 @@ const MyRewardsPopupNew = ({
                       Number(gateRewardsUSD) +
                       Number(confluxRewardsUSD) +
                       Number(dogeRewardsUSD) +
-                      Number(cmcRewardsUSD),
+                      Number(cmcRewardsUSD) +
+                      Number(dypPremiumUSD),
                     2
                   )
                 : getFormattedNumber(
                     Number(skaleEarnUsd) +
-                      Number(dypiusPremiumEarnUsd) +
                       Number(coreEarnUsd) +
                       Number(seiEarnUsd) +
                       Number(victionEarnUsd),
@@ -994,7 +1003,10 @@ const MyRewardsPopupNew = ({
             >
               $
               {previousRewards
-                ? getFormattedNumber(pastSpecialRewards, 2)
+                ? getFormattedNumber(
+                    Number(pastUserRankUsd) + Number(pastSpecialRewards),
+                    2
+                  )
                 : getFormattedNumber(
                     Number(userSocialRewardsCached) + Number(userRankRewards),
                     2
@@ -1111,7 +1123,6 @@ const MyRewardsPopupNew = ({
                     : getFormattedNumber(treasureRewardMoney, 2)}
                 </span>
               </div>
-             
 
               {/* <div className="d-flex w-100 justify-content-between gap-2">
                 <span className="item-name-left">CORE</span>
@@ -1125,7 +1136,7 @@ const MyRewardsPopupNew = ({
             </div>
 
             <div className="d-flex flex-column gap-2 w-50">
-               <div className="d-flex w-100 justify-content-between gap-2">
+              <div className="d-flex w-100 justify-content-between gap-2">
                 <span className="item-name-left">SKALE</span>
                 <span className="item-name-right">
                   $
@@ -1227,7 +1238,7 @@ const MyRewardsPopupNew = ({
                   $
                   {previousRewards
                     ? getFormattedNumber(gemRewards, 2)
-                    : getFormattedNumber(genesisData, 2)}
+                    : getFormattedNumber(genesisRank2, 2)}
                 </span>
               </div>
               <div className="d-flex w-100 justify-content-between gap-2">
@@ -1273,33 +1284,7 @@ const MyRewardsPopupNew = ({
             <div className="treasure-hunt-item-wrapper-active">
               <div className="d-flex justify-content-between gap-4 align-items-start">
                 <div className="d-flex flex-column gap-2 w-50">
-         
                   <div className="d-flex w-100 justify-content-between gap-2">
-                    <span className="d-flex align-items-center gap-2 item-name-left">
-                      <img src={dypiusPremium} alt="" />
-                      Premium
-                    </span>
-                    <span className="item-name-right">
-                      ${getFormattedNumber(dypiusPremiumEarnUsd, 2)}
-                    </span>
-                  </div>
-                  {/* <div className="d-flex w-100 justify-content-between gap-2">
-                    <span className="d-flex align-items-center gap-2 item-name-left">
-                      <img
-                        src={coreIcon}
-                        alt=""
-                        style={{ width: 16, height: 16 }}
-                      />
-                      CORE
-                    </span>
-                    <span className="item-name-right">
-                      ${getFormattedNumber(coreEarnUsd, 2)}
-                    </span>
-                  </div> */}
-                </div>
-
-                <div className="d-flex flex-column gap-2 w-50">
-                   <div className="d-flex w-100 justify-content-between gap-2">
                     <span className="d-flex align-items-center gap-2 item-name-left">
                       <img src={skale} alt="" />
                       SKALE
@@ -1336,6 +1321,7 @@ const MyRewardsPopupNew = ({
                     </span>
                   </div> */}
                 </div>
+                <div className="d-flex flex-column gap-2 w-50"></div>
               </div>
             </div>
           </div>
@@ -1362,6 +1348,30 @@ const MyRewardsPopupNew = ({
               <div className="d-flex flex-column gap-2">
                 <div className="d-flex gap-2 align-items-center justify-content-between">
                   <span className="d-flex align-items-center gap-2 item-name-left">
+                    <img src={dypiusPremium} alt="" />
+                    Premium
+                  </span>
+                  <span className="item-name-right">
+                    ${getFormattedNumber(dypPremiumUSD, 2)}
+                  </span>
+                </div>
+
+                {/* <div className="d-flex w-100 justify-content-between gap-2">
+           <span className="d-flex align-items-center gap-2 item-name-left">
+             <img
+               src={coreIcon}
+               alt=""
+               style={{ width: 16, height: 16 }}
+             />
+             CORE
+           </span>
+           <span className="item-name-right">
+             ${getFormattedNumber(coreEarnUsd, 2)}
+           </span>
+         </div> */}
+
+                <div className="d-flex gap-2 align-items-center justify-content-between">
+                  <span className="d-flex align-items-center gap-2 item-name-left">
                     <img src={base} alt="" />
                     Base
                   </span>
@@ -1377,16 +1387,6 @@ const MyRewardsPopupNew = ({
                   </span>
                   <span className="item-name-right">
                     ${getFormattedNumber(coingeckoRewardsUSD, 2)}
-                  </span>
-                </div>
-                <div className="d-flex gap-2 align-items-center justify-content-between">
-                  <span className="d-flex align-items-center gap-2 item-name-left">
-                    <img src={cmc} alt="" />
-                    CMC
-                  </span>
-                  <span className="item-name-right">
-                    {" "}
-                    ${getFormattedNumber(cmcRewardsUSD, 2)}
                   </span>
                 </div>
               </div>
@@ -1409,6 +1409,16 @@ const MyRewardsPopupNew = ({
                   </span>
                   <span className="item-name-right">
                     ${getFormattedNumber(gateRewardsUSD, 2)}
+                  </span>
+                </div>
+                <div className="d-flex gap-2 align-items-center justify-content-between">
+                  <span className="d-flex align-items-center gap-2 item-name-left">
+                    <img src={cmc} alt="" />
+                    CMC
+                  </span>
+                  <span className="item-name-right">
+                    {" "}
+                    ${getFormattedNumber(cmcRewardsUSD, 2)}
                   </span>
                 </div>
               </div>
@@ -1473,469 +1483,13 @@ const MyRewardsPopupNew = ({
               <span className="item-name-right">
                 $
                 {previousRewards
-                  ? getFormattedNumber(0, 2)
+                  ? getFormattedNumber(pastUserRankUsd, 2)
                   : getFormattedNumber(userRankRewards, 2)}
               </span>
             </div>
           </div>
         </div>
       </div>
-      {/* <div className="d-grid rewardstable-wrapper">
-        <table className="myrewards-table table">
-          <thead>
-            <tr>
-              <th className="col-3 myrewards-th border-0">Reward Category</th>
-              <th className="col-3 myrewards-th border-0 text-center position-relative">
-                Available Rewards
-              </th>
-              <th className="col-3 myrewards-th border-0 text-center position-relative">
-                Reward Type
-              </th>
-              <th className="col-3 myrewards-th border-0 text-center position-relative">
-                Total Earned
-              </th>
-            </tr>
-          </thead>
-
-          <tbody className="position-relative myrewards-tbody">
-            <tr>
-              <td className="myrewards-td-main border-0">
-                <img src={nftStake} alt="" style={{ width: 24, height: 24 }} />{" "}
-                NFT Staking
-              </td>
-              <td className="myrewards-td-second border-0"></td>
-              <td className="myrewards-td-second border-0"></td>
-              <td className="myrewards-td-second border-0 previousRewardsText"></td>
-            </tr>
-            <div className="table-separator"></div>
-
-            <tr>
-              <td className="myrewards-td-second border-0 paddingLeftCell">
-                Genesis Land
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                {previousRewards ? "-" : `$${getFormattedNumber(0, 2)}`}
-              </td>
-              <td className="myrewards-td-second border-0 specialCell topborder text-center">
-                {previousRewards ? "-" : `${getFormattedNumber(0, 4)} WETH`}
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                ${getFormattedNumber(wodRewards, 2)}
-              </td>
-            </tr>
-            <tr>
-              <td className="myrewards-td-second border-0 paddingLeftCell">
-                WoD Land & CAWS{" "}
-              </td>
-
-              <td className="myrewards-td-second border-0 text-center">
-                {previousRewards ? "-" : `$${getFormattedNumber(0, 2)}`}
-              </td>
-              <td className="myrewards-td-second border-0 specialCell text-center">
-                {previousRewards ? "-" : `${getFormattedNumber(0, 4)} WETH`}
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                ${getFormattedNumber(wodCawsRewards, 2)}
-              </td>
-            </tr>
-
-            <tr>
-              <td className="myrewards-td-second border-0 paddingLeftCell">
-                CAWS{" "}
-              </td>
-
-              <td className="myrewards-td-second border-0 text-center">
-                {`$${getFormattedNumber(0, 2)}`}
-              </td>
-              <td className="myrewards-td-second border-0 specialCell bottomborder text-center">
-                {getFormattedNumber(0, 4)} WETH
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                ${getFormattedNumber(cawsRewards, 2)}
-              </td>
-            </tr>
-
-            <tr>
-              <td className="myrewards-td-main border-0">
-                {" "}
-                <img
-                  src={treasureHunt}
-                  alt=""
-                  style={{ width: 24, height: 24 }}
-                />
-                Treasure Hunt
-              </td>
-              <td className="myrewards-td-second border-0"></td>
-              <td className="myrewards-td-second border-0"></td>
-              <td className="myrewards-td-second border-0 previousRewardsText">
-                {previousRewards &&
-                  `$${getFormattedNumber(
-                    userEarnUsd + confluxRewardsUSD + gateRewardsUSD,
-                    2
-                  )}`}
-              </td>
-            </tr>
-            <div className="table-separator"></div>
-
-            <tr>
-              <td className="myrewards-td-second border-0 paddingLeftCell">
-                CoinGecko
-              </td>
-              <td className="myrewards-td-second border-0 specialCell topborder text-center">
-                {previousRewards ? "-" : `$${getFormattedNumber(0, 2)}`}
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                {previousRewards ? "-" : `${getFormattedNumber(0, 4)} WBNB`}
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                {previousRewards
-                  ? "-"
-                  : `$${getFormattedNumber(coingeckoRewardsUSD, 2)}`}
-              </td>
-            </tr>
-            <tr>
-              <td className="myrewards-td-second border-0 paddingLeftCell">
-                Conflux Network
-              </td>
-              <td className="myrewards-td-second border-0 specialCell text-center">
-                {previousRewards ? "-" : `$${getFormattedNumber(0, 2)}`}
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                {previousRewards
-                  ? "-"
-                  : `${getFormattedNumber(0 / cfxPrice, 4)} CFX`}
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                {previousRewards
-                  ? "-"
-                  : `$${getFormattedNumber(confluxRewardsUSD, 2)}`}
-              </td>
-            </tr>
-            <tr>
-              <td className="myrewards-td-second border-0 paddingLeftCell">
-                Gate.io
-              </td>
-              <td className="myrewards-td-second border-0 specialCell text-center">
-                {previousRewards ? "-" : `$${getFormattedNumber(0, 2)}`}
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                {previousRewards ? "-" : `${getFormattedNumber(0, 4)} WBNB`}
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                {previousRewards
-                  ? "-"
-                  : `$${getFormattedNumber(gateRewardsUSD, 2)}`}
-              </td>
-            </tr>
-            <tr>
-              <td className="myrewards-td-second border-0 paddingLeftCell">
-                Base
-              </td>
-              <td className="myrewards-td-second border-0 specialCell text-center">
-                ${getFormattedNumber(0, 2)}
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                {getFormattedNumber(0, 4)} WETH
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                ${getFormattedNumber(baseRewardsUSD, 2)}
-              </td>
-            </tr>
-            <tr>
-              <td className="myrewards-td-second border-0 paddingLeftCell">
-                Dypius
-              </td>
-              <td className="myrewards-td-second border-0 specialCell text-center">
-                ${getFormattedNumber(0, 2)}
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                {getFormattedNumber(0, 4)} DYP
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                ${getFormattedNumber(dypiusRewardsUSD, 2)}
-              </td>
-            </tr>
-            <tr>
-              <td className="myrewards-td-second border-0 paddingLeftCell">
-                Dogecoin
-              </td>
-              <td className="myrewards-td-second border-0 specialCell text-center">
-                ${getFormattedNumber(dogeEarnUSD, 2)}
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                {getFormattedNumber(dogeEarnBNB, 2)} DOGE
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                ${getFormattedNumber(0, 2)}
-              </td>
-            </tr>
-
-            <tr>
-              <td className="myrewards-td-second border-0 paddingLeftCell">
-                CoinMarketCap
-              </td>
-              <td className="myrewards-td-second border-0 specialCell text-center">
-                ${getFormattedNumber(cmcuserEarnUsd, 2)}
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                {getFormattedNumber(cmcuserEarnETH, 4)} WBNB
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                ${getFormattedNumber(0, 2)}
-              </td>
-            </tr>
-
-            <tr>
-              <td className="myrewards-td-second border-0 paddingLeftCell">
-                Dypius Premium
-              </td>
-              <td className="myrewards-td-second border-0 specialCell bottomborder text-center">
-                ${getFormattedNumber(dypiusPremiumEarnUsd, 2)}
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                {getFormattedNumber(dypiusPremiumEarnTokens, 4)} WBNB
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                ${getFormattedNumber(0, 2)}
-              </td>
-            </tr>
-
-            <tr>
-              <td className="myrewards-td-main border-0">
-                {" "}
-                <img
-                  src={leaderboard}
-                  alt=""
-                  style={{ width: 24, height: 24 }}
-                />
-                Leaderboard
-              </td>
-              <td className="myrewards-td-second border-0"></td>
-              <td className="myrewards-td-second border-0"></td>
-              <td className="myrewards-td-second border-0 previousRewardsText"></td>
-            </tr>
-            <div className="table-separator"></div>
-
-            <tr>
-              <td className="myrewards-td-second border-0 paddingLeftCell">
-                Daily/Weekly/Monthly
-              </td>
-              <td className="myrewards-td-second border-0 specialCell topbottom-border text-center">
-                {previousRewards
-                  ? "-"
-                  : `$${getFormattedNumber(
-                      dailyplayerData + weeklyplayerData + userRank2,
-                      2
-                    )}`}
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                {previousRewards
-                  ? "-"
-                  : `${getFormattedNumber(
-                      (dailyplayerData + weeklyplayerData + userRank2) /
-                        bnbPrice,
-                      4
-                    )} WBNB`}
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                ${getFormattedNumber(leaderboardTotalData, 2)}
-              </td>
-            </tr>
-
-            <tr>
-              <td className="myrewards-td-main border-0">
-                <img
-                  src={dailyBonus}
-                  alt=""
-                  style={{ width: 24, height: 24 }}
-                />
-                Daily Bonus
-              </td>
-              <td className="myrewards-td-second border-0"></td>
-              <td className="myrewards-td-second border-0"></td>
-              <td className="myrewards-td-second border-0 previousRewardsText"></td>
-            </tr>
-            <div className="table-separator"></div>
-
-            <tr>
-              <td className="myrewards-td-second border-0  paddingLeftCell">
-                BNB Chain Treasure Chests
-              </td>
-              <td className="myrewards-td-second border-0 specialCell topborder text-center">
-                {"$" + getFormattedNumber(treasureRewardMoney, 2)}
-                
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                USD
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                {"$" + getFormattedNumber(pasttreasureRewardMoney, 2)}
-               
-              </td>
-            </tr>
-
-            <tr>
-              <td className="myrewards-td-second border-0 paddingLeftCell">
-                SKALE Treasure Chests
-              </td>
-              <td className="myrewards-td-second border-0 specialCell bottomborder text-center">
-                {"$" + getFormattedNumber(treasureRewardMoneySkale, 2)}
-                
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                USD
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                {"$" + getFormattedNumber(0, 2)}
-                
-              </td>
-            </tr>
-
-
-            <tr>
-              <td className="myrewards-td-main border-0">
-                <img
-                  src={specialRewards}
-                  alt=""
-                  style={{ width: 24, height: 24 }}
-                />
-                Special Rewards
-              </td>
-              <td className="myrewards-td-second border-0"></td>
-              <td className="myrewards-td-second border-0"></td>
-              <td className="myrewards-td-second border-0 previousRewardsText"></td>
-            </tr>
-            
-            <div className="table-separator"></div>
-
-            <tr>
-              <td className="myrewards-td-second border-0 paddingLeftCell">
-                Social Bonus
-              </td>
-              <td className="myrewards-td-second border-0 specialCell topborder text-center">
-                ${getFormattedNumber(userSocialRewardsCached, 2)}
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                {getFormattedNumber(userSocialRewardsCached / bnbPrice, 4)} WBNB
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                ${getFormattedNumber(pastSpecialRewards, 2)}
-              </td>
-
-              
-            </tr>
-
-            <tr>
-              <td className="myrewards-td-second border-0 paddingLeftCell">
-                Rank Bonus
-              </td>
-              <td className="myrewards-td-second border-0 specialCell bottomborder text-center">
-                ${getFormattedNumber(0, 2)}
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                {getFormattedNumber(0, 4)} WBNB
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                ${getFormattedNumber(0, 2)}
-              </td>
-
-              
-            </tr>
-            <tr>
-              <td className="myrewards-td-main border-0">
-                {" "}
-                <img
-                  src={criticalHit}
-                  alt=""
-                  style={{ width: 24, height: 24 }}
-                />
-                Critical Hit
-              </td>
-              <td className="myrewards-td-second border-0"></td>
-              <td className="myrewards-td-second border-0"></td>
-              <td className="myrewards-td-second border-0 previousRewardsText">
-                {previousRewards && "$500.00"}
-              </td>
-            </tr>
-            <div className="table-separator"></div>
-
-            <tr>
-              <td className="myrewards-td-second border-0 paddingLeftCell">
-                Genesis Gem
-              </td>
-              <td className="myrewards-td-second border-0 specialCell topbottom-border text-center">
-                {previousRewards
-                  ? "-"
-                  : `$${getFormattedNumber(genesisData, 2)}`}
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                {previousRewards
-                  ? "-"
-                  : `${getFormattedNumber(genesisData / bnbPrice, 4)} WBNB`}
-              </td>
-              <td className="myrewards-td-second border-0 text-center">
-                ${getFormattedNumber(gemRewards, 2)}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div className="table-separator"></div>
-      <div className="d-flex align-items-center gap-2 justify-content-between">
-        <div className="d-flex flex-column gap-2">
-          <div className="d-flex align-items-center gap-2 justify-content-start">
-            <span className="leftbold-text">Available Rewards:</span>
-            <span className="rightlight-text">
-              The amount of rewards available to be withdrawn.
-            </span>
-          </div>
-          <div className="d-flex align-items-center gap-2 justify-content-start">
-            <span className="leftbold-text">Reward Type:</span>
-            <span className="rightlight-text">
-              The type of reward distribution.
-            </span>
-          </div>
-          <div className="d-flex align-items-center gap-2 justify-content-start">
-            <span className="leftbold-text ">Total Earned:</span>
-            <span className="rightlight-text">
-              The total rewards already distributed.
-            </span>
-          </div>
-        </div>
-        <div className="d-flex flex-column">
-          <h4
-            className={
-              previousRewards ? "all-past-total-earned" : "all-total-earned"
-            }
-          >
-            $
-            {getFormattedNumber(
-              Number(gemRewards) +
-                Number(leaderboardTotalData) +
-                Number(gateRewardsUSD) +
-                Number(confluxRewardsUSD) +
-                Number(dypiusRewardsUSD) +
-                Number(pastSpecialRewards) +
-                Number(coingeckoRewardsUSD) +
-                Number(baseRewardsUSD) +
-                Number(cawsRewards) +
-                Number(wodCawsRewards) +
-                Number(pasttreasureRewardMoney) +
-                Number(wodRewards),
-              2
-            )}
-          </h4>
-          <span
-            className={
-              previousRewards
-                ? "all-past-total-earned-subtitle"
-                : "all-total-earned-subtitle"
-            }
-          >
-            Total Earned
-          </span>
-        </div>
-      </div> */}
     </div>
   );
 };
