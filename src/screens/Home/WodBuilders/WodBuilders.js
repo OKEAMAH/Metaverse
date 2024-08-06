@@ -51,6 +51,13 @@ const WodBuilders = () => {
       link: "https://twitter.com/SkaleNetwork/status/1777372050832658644",
     },
     {
+      name: "Manta",
+      icon: "manta",
+      banner: "mantaBanner.webp",
+      link: "https://x.com/MantaNetwork/status/1819260085945749903",
+    },
+
+    {
       name: "Conflux",
       icon: "confluxIcon",
       banner: "confluxBanner.png",
@@ -99,6 +106,7 @@ const WodBuilders = () => {
       banner: "easy2stakeBanner.png",
       link: "https://twitter.com/Easy2Stake/status/1654120741221326850",
     },
+
     {
       name: "KuCoin",
       icon: "kucoinIcon",
@@ -110,7 +118,14 @@ const WodBuilders = () => {
       icon: "seiLogo",
       banner: "seiBanner.webp",
       link: "https://x.com/worldofdypians/status/1795177907821617607",
+    }, 
+    {
+      name: "Immutable",
+      icon: "immutable",
+      banner: "immutableBanner.png",
+      link: "https://x.com/Immutable/status/1813966964957884795",
     },
+
     {
       name: "Midle",
       icon: "midle",
@@ -126,6 +141,33 @@ const WodBuilders = () => {
       icon: "cookie3",
       banner: "kucoinBanner.png",
     },
+    {
+      name: "KlapAI",
+      icon: "klapai",
+      banner: "kucoinBanner.png",
+    },
+    {
+      name: "Magic Store",
+      icon: "magic",
+      banner: "kucoinBanner.png",
+    },
+    {
+      name: "GGPLAY",
+      icon: "ggplay",
+      banner: "kucoinBanner.png",
+      link:'https://x.com/GGPlayOfficial/status/1801263235221647731'
+    },
+    {
+      name: "KAPGAMES",
+      icon: "kapgames",
+      banner: "kucoinBanner.png",
+    },
+    {
+      name: "Micro3",
+      icon: "micro3",
+      banner: "kucoinBanner.png",
+    },
+  
   ];
 
   useEffect(() => {
@@ -158,7 +200,12 @@ const WodBuilders = () => {
                 alt=""
               />
               <div className="d-flex align-items-center gap-2">
-                <img src={require(`./assets/${item.icon}.svg`)} alt="" />
+              {item.icon === "klapai" || item.icon === "manta" ?
+                <img src={require(`./assets/${item.icon}.png`)} width={24} height={24} alt="" />
+                :
+                <img src={require(`./assets/${item.icon}.svg`)} width={24} height={24} alt="" />
+              
+              }
 
                 <span className="builder-title mb-0">{item.name}</span>
               </div>
@@ -169,7 +216,7 @@ const WodBuilders = () => {
           <div className="d-flex justify-content-center mt-3">
             <div
               className="linear-border"
-              onClick={() => (slice === 2 ? setSlice(17) : setSlice(2))}
+              onClick={() => (slice === 2 ? setSlice(19) : setSlice(2))}
             >
               <button className="btn filled-btn px-5">
                 {slice === 2 ? "View More" : "View Less"}
@@ -180,7 +227,7 @@ const WodBuilders = () => {
           <div className="d-flex justify-content-center mt-3">
             <div
               className="linear-border"
-              onClick={() => (slice === 8 ? setSlice(17) : setSlice(8))}
+              onClick={() => (slice === 8 ? setSlice(19) : setSlice(8))}
             >
               <button className="btn filled-btn px-5">
                 {slice === 8 ? "View More" : "View Less"}
@@ -200,7 +247,12 @@ const WodBuilders = () => {
               <div className="builders-second-half">
                 {builders.map((item, index) => (
                   <div key={index} className="d-flex align-items-center gap-2">
-                    <img src={require(`./assets/${item.icon}.svg`)} alt="" />
+                 {item.icon === "klapai"|| item.icon === "manta" ?
+                <img src={require(`./assets/${item.icon}.png`)} width={24} height={24} alt="" />
+                :
+                <img src={require(`./assets/${item.icon}.svg`)} width={24} height={24} alt="" />
+              
+              }
 
                     <span
                       className="builder-title mb-0"

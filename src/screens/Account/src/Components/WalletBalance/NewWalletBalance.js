@@ -45,10 +45,13 @@ import gateUpcoming from "../../../../Marketplace/assets/gateUpcoming.webp";
 import eventPopupImage from "./assets/eventPopupImage.png";
 import coin98Upcoming from "./assets/coin98Upcoming.png";
 import victionThumb from "./assets/victionThumb.png";
+import mantaThumb from "./assets/mantaThumb.png";
+
 import seiThumb from "./assets/seiThumb.png";
 import multiversThumb from "./assets/multiversThumb.png";
 import immutableThumb from "./assets/immutableThumb.png";
 import coreThumb from "./assets/coreThumb.png";
+import bnbPopupImage from "./assets/bnbPopupImage.png";
 
 import coingeckoUpcoming from "../../../../Marketplace/assets/coingeckoUpcoming.png";
 import baseUpcoming from "../../../../Marketplace/assets/baseUpcoming.webp";
@@ -63,6 +66,7 @@ import discord from "./assets/greenDiscord.svg";
 import grayDollar from "./assets/grayDollar.svg";
 import eventsArrow from "./assets/eventsArrow.svg";
 import mageStarter from "./assets/mageStarter.png";
+import globe from "./newAssets/globe.png";
 import mageGoing from "./assets/mageGoing.png";
 import mageFinish from "./assets/mageFinish.png";
 import infoIcon from "../../../../Marketplace/assets/infoIcon.svg";
@@ -90,6 +94,8 @@ import multiversBg from "./assets/multiversBg.webp";
 import seiLogo from "./assets/seiLogo.svg";
 import seiBg from "./assets/seiBg.webp";
 import coreLogo from "./assets/coreLogo.svg";
+import mantaLogo from "./assets/mantaLogo2.png";
+import bnbLogo from "./assets/bnbIcon.svg";
 import coreBg from "./assets/coreBg.webp";
 import immutableLogo from "./assets/immutableLogo.svg";
 import immutableBg from "./assets/immutableBg.webp";
@@ -180,40 +186,21 @@ const renderer2 = ({ hours, minutes }) => {
 const NewWalletBalance = ({
   dypBalance,
   weeklyplayerData,
-  dailyplayerData,
   address,
   coinbase,
-  dypBalancebnb,
-  dypBalanceavax,
-  isVerified,
   email,
   // handleConnectWallet,
   handleShowWalletPopup,
-  idypBalance,
-  idypBalancebnb,
-  idypBalanceavax,
   userId,
   username,
-  listedNFTS,
-  landStaked,
-  myCawsWodStakes,
-  myWodWodStakes,
-  myCawsCollected,
-  myCawsOldCollected,
-  myLandCollected,
-  myTimepieceCollected,
-  myBoughtNfts,
-  isConnected,
-  handleConnect,
-  ethTokenData,
-  dypTokenData,
-  favoritesArray,
-  latestBoughtNFTS,
-  myOffers,
-  allActiveOffers,
-  myNFTSCoingecko,
-  myGateNfts,
-  myConfluxNfts,
+  weeklyDataAmountCore,
+  monthlyDataAmountCore,
+  dailyDataAmountViction,
+  weeklyDataAmountViction,
+  monthlyDataAmountViction,
+  dailyDataAmountSkale,
+  weeklyDataAmountSkale,
+  monthlyDataAmountSkale,
   onDailyRewardsPopupOpen,
   onOpenLeaderboard,
   isPremium,
@@ -221,9 +208,6 @@ const NewWalletBalance = ({
   onBalanceClick,
   claimedChests,
   claimedPremiumChests,
-  claimedSkaleChests,
-  claimedSkalePremiumChests,
-  availableTime,
   canBuy,
   rewardsPopup,
   dailyPopup,
@@ -263,14 +247,26 @@ const NewWalletBalance = ({
   skaleEarnToken,
   skaleEarnUsd,
   skalePoints,
-  claimedCoreChests,
-  claimedCorePremiumChests,
-  claimedVictionChests,
-  claimedVictionPremiumChests,
   openedCoreChests,
   openedVictionChests,
   openedSeiChests,
   userRankRewards,
+  onOpenGenesisLeaderboard,
+  coreEarnUsd,
+  victionEarnUsd,
+  adClicked,
+  corePoints,
+  victionPoints,
+  bnbPoints,
+  bnbEarnUsd,
+  bnbEarnToken,
+  coreEarnToken,
+  victionEarnToken,
+  onClearAd,
+  multiversPoints,
+  multiversEarnToken,
+  multiversEarnUsd,
+  kittyDashRecords, weeklyDataAmountManta, monthlyDataAmountManta, mantaEarnUsd, openedMantaChests,mantaPoints, mantaEarnToken,userDataStar
 }) => {
   let coingeckoLastDay = new Date("2023-12-24T16:00:00.000+02:00");
   let confluxLastDay = new Date("2023-11-06T16:00:00.000+02:00");
@@ -281,55 +277,13 @@ const NewWalletBalance = ({
   let cmcLastDay = new Date("2024-04-11T13:00:00.000+02:00");
   let dypius2LastDay = new Date("2024-05-27T16:00:00.000+02:00");
   let skaleLastDay = new Date("2024-07-14T13:00:00.000+02:00");
+  let bnbLastDay = new Date("2024-09-10T13:00:00.000+02:00");
+  let coreLastDay = new Date("2024-10-01T14:00:00.000+02:00");
+  let mantaLastDay = new Date("2024-10-30T14:00:00.000+02:00");
+
 
   let now = new Date().getTime();
   const midnight = new Date(now).setUTCHours(24, 0, 0, 0);
-
-  const dypv2 = {
-    title: "Dypius Premium",
-    logo: dypiusPremium,
-    eventStatus: "Expired",
-    totalRewards: "$50,000 in BNB Rewards",
-    myEarnings: 0.0,
-    eventDate: "Feb 26, 2024",
-    date: "Feb 26, 2024",
-    backgroundImage: upcomingDyp2,
-    activeTab: "dypiusv2",
-    chain: "BNB Chain",
-    linkState: "dypius2",
-    rewards: "BNB",
-    status: "Expired",
-    id: "event9",
-    eventType: "Explore & Find",
-    eventDuration: dypius2LastDay,
-    minRewards: "1",
-    maxRewards: "100",
-    minPoints: "5,000",
-    maxPoints: "50,000",
-    learnMore:
-      "/news/65dc8229039c5118d5c8782b/Dypius-Treasure-Hunt:-Magic-Egg-is-Live",
-  };
-
-  const dummyCmc = {
-    title: "CoinMarketCap",
-    chain: "BNB Chain",
-    linkState: "coinmarketcap",
-    rewards: "BNB",
-    status: "Expired",
-    id: "event8",
-    eventType: "Explore & Mine",
-    eventDate: "Dec 26, 2023",
-    date: "Dec 26, 2023",
-    logo: cmc,
-    totalRewards: "$20,000 in BNB Rewards",
-    eventDuration: cmcLastDay,
-    minRewards: "1",
-    maxRewards: "100",
-    minPoints: "5,000",
-    maxPoints: "50,000",
-    learnMore:
-      "/news/658ae3cc148c5ffee9c4ffa7/CoinMarketCap-Treasure-Hunt-Event",
-  };
 
   const dummySkale = {
     title: "SKALE",
@@ -352,67 +306,217 @@ const NewWalletBalance = ({
       "/news/658ae3cc148c5ffee9c4ffa7/CoinMarketCap-Treasure-Hunt-Event",
   };
 
+
+      
+
+  const dummyViction = {
+    title: "VICTION",
+    chain: "VICTION Chain",
+    linkState: "viction",
+    rewards: "VIC",
+    status: "Live",
+    id: "event14",
+    eventType: "Explore & Find",
+    eventDate: "Jul 01, 2024",
+    date: "Jul 01, 2024",
+    logo: victionLogo,
+    totalRewards: "$20,000 in VIC Rewards",
+    eventDuration: coreLastDay,
+    minRewards: "0.5",
+    maxRewards: "20",
+    minPoints: "5,000",
+    maxPoints: "50,000",
+    learnMore:
+      "/news/658ae3cc148c5ffee9c4ffa7/CoinMarketCap-Treasure-Hunt-Event",
+  };
+
+  const dummyCore = {
+    title: "CORE",
+    logo: coreLogo,
+    eventStatus: "Live",
+    totalRewards: "$20,000 in CORE Rewards",
+    myEarnings: 0.0,
+    backgroundImage: coreBg,
+    eventDate: "Jul 01, 2024",
+    date: "Jul 01, 2024",
+
+    id: "event12",
+    eventType: "Explore & Mine",
+    eventDuration: coreLastDay,
+    minRewards: "0.5",
+    maxRewards: "20",
+    minPoints: "5,000",
+    maxPoints: "50,000",
+    learnMore: "",
+
+    chain: "CORE Chain",
+    linkState: "core",
+    rewards: "CORE",
+    status: "Live",
+  };
+  const dummyManta = {
+    title: "Manta",
+    logo: mantaLogo,
+    eventStatus: "Live",
+    totalRewards: "$20,000 in MANTA Rewards",
+    myEarnings: 0.0,
+    eventDate: "Aug 01, 2024",
+    date: "Aug 01, 2024",
+    id: "event21",
+    eventType: "Explore & Mine",
+    eventDuration: mantaLastDay,
+    minRewards: "0.5",
+    maxRewards: "20",
+    minPoints: "5,000",
+    maxPoints: "50,000",
+    learnMore: "",
+
+    chain: "Manta",
+    linkState: "manta",
+    rewards: "MANTA",
+    status: "Live",
+  };
+
+  const dummyBNB = {
+    title: "BNB Chain",
+    chain: "BNB Chain",
+    linkState: "bnb",
+    rewards: "BNB",
+    status: "Live",
+    id: "event20",
+    eventType: "Explore & Mine",
+    eventDate: "Jun 12, 2024",
+    date: "Jun 12, 2024",
+    logo: bnbLogo,
+    totalRewards: "$20,000 in BNB Rewards",
+    eventDuration: bnbLastDay,
+    minRewards: "0.5",
+    maxRewards: "20",
+    minPoints: "5,000",
+    maxPoints: "50,000",
+    learnMore: "/news",
+  };
+
   const dummyBetaPassData2 = [
     // {
     //   title: "MultiversX",
     //   logo: multiversLogo,
-    //   eventStatus: "Coming Soon",
+    //   eventStatus: "Live",
     //   totalRewards: "$20,000 in EGLD Rewards",
     //   myEarnings: 0.0,
     //   eventType: "Explore & Find",
-    //   eventDate: "XXX XX, XXXX",
+    //   eventDate: "Jul 01, 2024",
     //   backgroundImage: multiversBg,
     //   popupInfo: {
     //     title: "MultiversX",
     //     chain: "MultiversX Chain",
     //     linkState: "multiversx",
     //     rewards: "EGLD",
-    //     status: "Coming Soon",
+    //     status: "Live",
     //     id: "event16",
     //     eventType: "Explore & Find",
     //     totalRewards: "$20,000 in EGLD Rewards",
-    //     eventDuration: dypius2LastDay,
+    //     eventDuration: coreLastDay,
     //     minRewards: "1",
     //     maxRewards: "100",
     //     minPoints: "5,000",
     //     maxPoints: "50,000",
     //     learnMore:
-    //       "/news/65dc8229039c5118d5c8782b/Dypius-Treasure-Hunt:-Magic-Egg-is-Live",
-    //     eventDate: "XXX XX, XXXX",
+    //       "",
+    //     eventDate: "Jul 01, 2024",
     //   },
     // },
     // {
-    //   title: "VICTION",
-    //   logo: victionLogo,
-    //   eventStatus: "Coming Soon",
-    //   totalRewards: "$20,000 in VIC Rewards",
+    //   title: "Manta",
+    //   logo: mantaLogo,
+    //   eventStatus: "Live",
+    //   totalRewards: "$20,000 in MANTA Rewards",
     //   myEarnings: 0.0,
-    //   eventType: "Explore & Find",
-    //   eventDate: "XXX XX, XXXX",
-    //   backgroundImage: victionBg,
+    //   eventType: "Explore & Mine",
+    //   eventDate: "Aug 01, 2024",
     //   popupInfo: {
-    //     title: "VICTION",
-    //     chain: "VICTION Chain",
-    //     linkState: "viction",
-    //     rewards: "VIC",
-    //     status: "Coming Soon",
-    //     logo: victionLogo,
-    //     backgroundImage: victionBg,
-    //     date: "XXX XX, XXXX",
-
-    //     id: "event14",
-    //     eventType: "Explore & Find",
-    //     totalRewards: "$20,000 in VIC Rewards",
-    //     eventDuration: dypius2LastDay,
-    //     minRewards: "1",
-    //     maxRewards: "100",
+    //     title: "Manta",
+    //     chain: "Manta",
+    //     linkState: "manta",
+    //     rewards: "MANTA",
+    //     status: "Live",
+    //     logo: mantaLogo,
+    //     date: "Aug 01, 2024",
+    //     id: "event21",
+    //     eventType: "Explore & Mine",
+    //     totalRewards: "$20,000 in MANTA Rewards",
+    //     eventDuration: mantaLastDay,
+    //     minRewards: "0.5",
+    //     maxRewards: "20",
     //     minPoints: "5,000",
     //     maxPoints: "50,000",
-    //     learnMore:
-    //       "/news/65dc8229039c5118d5c8782b/Dypius-Treasure-Hunt:-Magic-Egg-is-Live",
-    //     eventDate: "XXX XX, XXXX",
+    //     learnMore: "",
+    //     eventDate: "Aug 01, 2024",
     //   },
     // },
+    {
+      title: "CORE",
+      logo: coreLogo,
+      eventStatus: "Live",
+      totalRewards: "$20,000 in CORE Rewards",
+      myEarnings: 0.0,
+      eventType: "Explore & Mine",
+      backgroundImage: coreBg,
+      eventDate: "Jul 01, 2024",
+
+      popupInfo: {
+        title: "CORE",
+        chain: "CORE Chain",
+        linkState: "core",
+        rewards: "CORE",
+        status: "Live",
+        backgroundImage: coreBg,
+        logo: coreLogo,
+        date: "Jul 01, 2024",
+
+        id: "event12",
+        eventType: "Explore & Mine",
+        totalRewards: "$20,000 in CORE Rewards",
+        eventDuration: coreLastDay,
+        minRewards: "0.5",
+        maxRewards: "20",
+        minPoints: "5,000",
+        maxPoints: "50,000",
+        learnMore: "",
+        eventDate: "Jul 01, 2024",
+      },
+    },
+    {
+      title: "VICTION",
+      logo: victionLogo,
+      eventStatus: "Live",
+      totalRewards: "$20,000 in VIC Rewards",
+      myEarnings: 0.0,
+      eventType: "Explore & Find",
+      eventDate: "Jul 01, 2024",
+      backgroundImage: victionBg,
+      popupInfo: {
+        title: "VICTION",
+        chain: "VICTION Chain",
+        linkState: "viction",
+        rewards: "VIC",
+        status: "Live",
+        logo: victionLogo,
+        backgroundImage: victionBg,
+        date: "Jul 01, 2024",
+
+        id: "event14",
+        eventType: "Explore & Find",
+        totalRewards: "$20,000 in VIC Rewards",
+        eventDuration: coreLastDay,
+        minRewards: "0.5",
+        maxRewards: "20",
+        minPoints: "5,000",
+        maxPoints: "50,000",
+        learnMore: "",
+        eventDate: "Jul 01, 2024",
+      },
+    },
     // {
     //   title: "SEI",
     //   logo: seiLogo,
@@ -445,45 +549,39 @@ const NewWalletBalance = ({
     //     eventDate: "XXX XX, XXXX",
     //   },
     // },
-    // {
-    //   title: "CORE",
-    //   logo: coreLogo,
-    //   eventStatus: "Coming Soon",
-    //   totalRewards: "$20,000 in CORE Rewards",
-    //   myEarnings: 0.0,
-    //   eventType: "Explore & Find",
-    //   eventDate: "XXX XX, XXXX",
-    //   backgroundImage: coreBg,
-    //   eventDate: "XXX XX, XXXX",
 
-    //   popupInfo: {
-    //     title: "CORE",
-    //     chain: "CORE Chain",
-    //     linkState: "core",
-    //     rewards: "CORE",
-    //     status: "Coming Soon",
-    //     backgroundImage: coreBg,
-    //     logo: coreLogo,
-    //     date: "XXX XX, XXXX",
-
-    //     id: "event12",
-    //     eventType: "Explore & Find",
-    //     totalRewards: "$20,000 in SEI Rewards",
-    //     eventDuration: dypius2LastDay,
-    //     minRewards: "1",
-    //     maxRewards: "100",
-    //     minPoints: "5,000",
-    //     maxPoints: "50,000",
-    //     learnMore:
-    //       "/news/65dc8229039c5118d5c8782b/Dypius-Treasure-Hunt:-Magic-Egg-is-Live",
-    //     eventDate: "XXX XX, XXXX",
-    //   },
-    // },
-
+    {
+      title: "BNB Chain",
+      logo: bnbLogo,
+      eventStatus: "Live",
+      totalRewards: "$20,000 in BNB Rewards",
+      myEarnings: 0.0,
+      eventType: "Explore & Mine",
+      eventDate: "Jun 12, 2024",
+      backgroundImage: upcomingSkale,
+      popupInfo: {
+        title: "BNB Chain",
+        chain: "BNB Chain",
+        linkState: "bnb",
+        rewards: "BNB",
+        status: "Live",
+        id: "event20",
+        eventType: "Explore & Mine",
+        totalRewards: "$20,000 in BNB Rewards",
+        eventDuration: bnbLastDay,
+        minRewards: "0.5",
+        maxRewards: "20",
+        minPoints: "5,000",
+        maxPoints: "30,000",
+        learnMore:
+          "/news/661d1671299713edd050794b/SKALE-Treasure-Hunt-Event-Live-in-the-World-of-Dypians",
+        eventDate: "Jun 12, 2024",
+      },
+    },
     {
       title: "SKALE",
       logo: skaleLogo,
-      eventStatus: "Live",
+      eventStatus: "Expired",
       totalRewards: "$20,000 in SKL Rewards",
       myEarnings: 0.0,
       eventType: "Explore & Mine",
@@ -494,7 +592,7 @@ const NewWalletBalance = ({
         chain: "SKALE Nebula Hub",
         linkState: "skale",
         rewards: "SKL",
-        status: "Live",
+        status: "Expired",
         id: "event11",
         eventType: "Explore & Mine",
         totalRewards: "$20,000 in SKL Rewards",
@@ -508,6 +606,7 @@ const NewWalletBalance = ({
         eventDate: "Apr 15, 2024",
       },
     },
+
     {
       title: "Dypius Premium",
       logo: dypiusPremium,
@@ -800,12 +899,14 @@ const NewWalletBalance = ({
   // const skalePercentage = (skaleClaimed / 20) * 100;
 
   const totalClaimedChests =
-    claimedChests + claimedPremiumChests + openedSkaleChests.length;
-  // +openedCoreChests.length +
-  // openedVictionChests.length +
-  // openedSeiChests.length;
+    claimedChests +
+    claimedPremiumChests +
+    openedSkaleChests.length +
+    openedCoreChests.length +
+    openedVictionChests.length
+     + openedMantaChests.length;
 
-  const chestPercentage = (totalClaimedChests / 40) * 100;
+  const chestPercentage = (totalClaimedChests / 100) * 100;
 
   const dummyEvents = [
     {
@@ -904,6 +1005,63 @@ const NewWalletBalance = ({
 
     if (openedSkaleChests && openedSkaleChests.length > 0) {
       openedSkaleChests.forEach((chest) => {
+        if (chest.isOpened === true) {
+          if (chest.rewards.length > 1) {
+            chest.rewards.forEach((innerChest) => {
+              if (
+                innerChest.rewardType === "Money" &&
+                innerChest.status !== "Unclaimed" &&
+                innerChest.status !== "Unclaimable" &&
+                innerChest.status === "Claimed"
+              ) {
+                moneyResult += Number(innerChest.reward);
+              }
+            });
+          }
+        }
+      });
+    }
+
+    if (openedCoreChests && openedCoreChests.length > 0) {
+      openedCoreChests.forEach((chest) => {
+        if (chest.isOpened === true) {
+          if (chest.rewards.length > 1) {
+            chest.rewards.forEach((innerChest) => {
+              if (
+                innerChest.rewardType === "Money" &&
+                innerChest.status !== "Unclaimed" &&
+                innerChest.status !== "Unclaimable" &&
+                innerChest.status === "Claimed"
+              ) {
+                moneyResult += Number(innerChest.reward);
+              }
+            });
+          }
+        }
+      });
+    }
+
+    if (openedVictionChests && openedVictionChests.length > 0) {
+      openedVictionChests.forEach((chest) => {
+        if (chest.isOpened === true) {
+          if (chest.rewards.length > 1) {
+            chest.rewards.forEach((innerChest) => {
+              if (
+                innerChest.rewardType === "Money" &&
+                innerChest.status !== "Unclaimed" &&
+                innerChest.status !== "Unclaimable" &&
+                innerChest.status === "Claimed"
+              ) {
+                moneyResult += Number(innerChest.reward);
+              }
+            });
+          }
+        }
+      });
+    }
+
+    if (openedMantaChests && openedMantaChests.length > 0) {
+      openedMantaChests.forEach((chest) => {
         if (chest.isOpened === true) {
           if (chest.rewards.length > 1) {
             chest.rewards.forEach((innerChest) => {
@@ -1267,14 +1425,33 @@ const NewWalletBalance = ({
 
   useEffect(() => {
     getTreasureChestsInfo();
-  }, [openedChests, address]);
+  }, [
+    openedChests,
+    address,
+    openedCoreChests,
+    openedVictionChests,
+    openedSkaleChests,openedMantaChests
+  ]);
 
   useEffect(() => {
     fetchUsersocialRewards();
   }, [userSocialRewards]);
 
-  const recaptchaRef = useRef(null);
+  useEffect(() => {
+    if (adClicked && adClicked !== "" && adClicked !== "premium") {
+      const result = dummyBetaPassData2.filter((item) => {
+        return item.title.toLowerCase() === adClicked;
+      });
 
+      if (result) {
+        setDummyEvent(result[0].popupInfo);
+        setEventPopup(true);
+      }
+    }
+  }, [adClicked]);
+
+  const recaptchaRef = useRef(null);
+  const kittyDashRewards = [30, 20, 10, 10, 5, 5, 5, 5, 5, 5];
   return (
     <>
       <div className="container px-0">
@@ -1288,101 +1465,42 @@ const NewWalletBalance = ({
               >
                 Treasure Hunt
               </h6>{" "}
-              {/* <UpcomingProfileEvent
-                onOpenEvent={() => {
-                  setDummyEvent(dummyBetaPassData2[1].popupInfo);
-                  setEventPopup(true);
-                }}
-                data={dummyBetaPassData2[1].popupInfo}
-                event={dummyBetaPassData2[1].popupInfo}
-                userEarnedUsd={0}
-              />
-              <UpcomingProfileEvent
-                onOpenEvent={() => {
-                  setDummyEvent(dummyBetaPassData2[4].popupInfo);
-                  setEventPopup(true);
-                }}
-                data={dummyBetaPassData2[4].popupInfo}
-                event={dummyBetaPassData2[4].popupInfo}
-                userEarnedUsd={0}
-              /> */}
-              {/* <ActiveProfileEvent
-                onOpenEvent={() => {
-                  setDummyEvent(dypv2);
-                  setEventPopup(true);
-                }}
-                data={dypv2}
-                event={dypv2}
-                userEarnedUsd={dypiusPremiumEarnUsd}
-              /> */}
               <ActiveProfileEvent
-                data={dummySkale}
-                event={dummySkale}
-                userEarnedUsd={skaleEarnUsd}
+                data={dummyBNB}
+                event={dummyBNB}
+                userEarnedUsd={0}
                 onOpenEvent={() => {
-                  setDummyEvent(dummySkale);
+                  setDummyEvent(dummyBNB);
                   setEventPopup(true);
                 }}
               />
-              <ExpiredProfileEvent
+              <ActiveProfileEvent
+                data={dummyViction}
+                event={dummyViction}
+                userEarnedUsd={victionEarnUsd}
                 onOpenEvent={() => {
-                  setDummyEvent(dypv2);
+                  setDummyEvent(dummyViction);
                   setEventPopup(true);
                 }}
-                data={dypv2}
-                event={dypv2}
-                userEarnedUsd={dypiusPremiumEarnUsd}
               />
-              <ExpiredProfileEvent
+              <ActiveProfileEvent
+                data={dummyCore}
+                event={dummyCore}
+                userEarnedUsd={coreEarnUsd}
                 onOpenEvent={() => {
-                  setDummyEvent(dummyCmc);
+                  setDummyEvent(dummyCore);
                   setEventPopup(true);
                 }}
-                data={dummyCmc}
-                event={dummyCmc}
-                userEarnedUsd={cmcuserEarnUsd}
               />
               {/* <ExpiredProfileEvent
                 onOpenEvent={() => {
-                  setDummyEvent(dummyBase);
+                  setDummyEvent(dypv2);
                   setEventPopup(true);
                 }}
-                data={dummyBase}
-                event={dummyBase}
-                userEarnedUsd={baseEarnUSD}
+                data={dypv2}
+                event={dypv2}
+                userEarnedUsd={dypiusPremiumEarnUsd}
               /> */}
-              {/* <ActiveProfileEvent
-                onOpenEvent={() => {
-                  setDummyEvent(dummyBase);
-                  setEventPopup(true);
-                }}
-                data={dummyBase}
-                event={dummyBase}
-                userEarnedUsd={baseEarnUSD}
-              /> */}
-              {/* <img
-                src={eventSkeleton}
-                className="profile-event-item"
-                style={{
-                  background: "none",
-                  borderBottom: "none",
-                  transform: "translateX(0px)",
-                }}
-                alt=""
-              /> */}
-              {/* <img
-                src={eventSkeleton}
-                className="profile-event-item"
-                style={{
-                  background: "none",
-                  borderBottom: "none",
-                  transform: "translateX(0px)",
-                }}
-                alt=""
-              /> */}
-              {/* <div className="d-flex w-100 justify-content-center">
-                <span className="seller-addr">Special events comming soon</span>
-                </div> */}
               {dummyBetaPassData2.length > 3 && (
                 <div
                   className="d-flex align-items-center justify-content-center gap-2"
@@ -1443,6 +1561,12 @@ const NewWalletBalance = ({
                           ? dogeEarnUSD
                           : item.title === "SKALE"
                           ? skaleEarnUsd
+                          : item.title === "VICTION"
+                          ? victionEarnUsd
+                          : item.title === "Manta"
+                          ? mantaEarnUsd
+                          : item.title === "CORE"
+                          ? coreEarnUsd
                           : item.title === "CMC" ||
                             item.title === "CoinMarketCap"
                           ? cmcuserEarnUsd
@@ -1700,7 +1824,6 @@ const NewWalletBalance = ({
                     <div
                       className="d-flex flex-column align-items-center"
                       style={{ width: "fit-content" }}
-                      // onClick={onDailyRewardsPopupOpen}
                     >
                       <div
                         className="position-relative"
@@ -1755,58 +1878,6 @@ const NewWalletBalance = ({
               </div>
               <div className="col-12 col-lg-4">
                 <div
-                  className="profile-staking-wrapper d-flex"
-                  onClick={() => setStakePopup(true)}
-                >
-                  <div className="green-div"></div>
-                  <img src={stakeNft} alt="" className="profile-staking-img" />
-                  <div className="d-flex flex-column gap-3 h-100 p-3 justify-content-between">
-                    <h6 className="profile-div-title mb-0">Stake NFT</h6>
-                    <p className="profile-div-desc mb-0">
-                      Earn ETH daily rewards by staking your NFTs
-                    </p>
-
-                    <div className="d-flex align-items-center gap-2 green-link">
-                      <img src={arrowCircle} alt="" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="row gap-3 gap-lg-0">
-              <div className="col-12 col-lg-8" onClick={onRewardsClick}>
-                <div className="my-rewards-wrapper">
-                  <div className="green-div"></div>
-
-                  <div className="my-total-rewards-wrapper d-flex flex-column align-items-center gap-2">
-                    <h6 className="my-total-rewards mb-0 font-iceland">
-                      $
-                      {getFormattedNumber(
-                        Number(userSocialRewardsCached) +
-                          Number(weeklyplayerData) +
-                          Number(dailyplayerData) +
-                          Number(userRank2) +
-                          Number(genesisRank2) +
-                          Number(treasureRewardMoney) +
-                          Number(userRankRewards) +
-                          Number(skaleEarnUsd),
-                        2
-                      )}
-                    </h6>
-                    <span className="my-total-earned mb-0 font-iceland">
-                      Total Available
-                    </span>
-                  </div>
-                  <div className="d-flex flex-column justify-content-between h-100 p-3">
-                    <h6 className="profile-div-title mb-0 ">My Rewards</h6>
-                    <div className="view-rewards-btn">
-                      <span className="instaketxt2 mb-0">View All</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-12 col-lg-4">
-                <div
                   className="special-rewards-wrapper"
                   onClick={() => setSpecialRewardsPopup(true)}
                 >
@@ -1833,6 +1904,73 @@ const NewWalletBalance = ({
                     </div>
                     <div className="instakeWrapper3">
                       <span className="instaketxt2 mb-0">Submit</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row gap-3 gap-lg-0">
+              <div className="col-12 col-lg-8" onClick={onRewardsClick}>
+                <div className="my-rewards-wrapper">
+                  <div className="green-div"></div>
+
+                  <div className="my-total-rewards-wrapper d-flex flex-column align-items-center gap-2">
+                    <h6 className="my-total-rewards mb-0 font-iceland">
+                      $
+                      {getFormattedNumber(
+                        Number(userSocialRewardsCached) +
+                          Number(weeklyplayerData) +
+                          // Number(dailyplayerData) +
+                          Number(userRank2) +
+                          Number(genesisRank2) +
+                          Number(treasureRewardMoney) +
+                          Number(userRankRewards) +
+                          // Number(dailyDataAmountCore) +
+                          Number(weeklyDataAmountCore) +
+                          Number(monthlyDataAmountCore) +
+                          // Number(dailyDataAmountSkale) +
+                          Number(weeklyDataAmountSkale) +Number(weeklyDataAmountManta) +Number(monthlyDataAmountManta) +
+                          (kittyDashRecords[0] ? kittyDashRecords[0]?.position+1 > 10 ? 0 : kittyDashRewards[kittyDashRecords[0]?.position] : 0) +
+                          +Number(monthlyDataAmountSkale) +
+                          Number(userDataStar) +
+                          Number(weeklyDataAmountViction) +
+                          Number(monthlyDataAmountViction) +
+                          Number(skaleEarnUsd) +
+                          Number(coreEarnUsd) +
+                          Number(victionEarnUsd)+
+                          Number(mantaEarnUsd),
+                        2
+                      )}
+                    </h6>
+                    <span className="my-total-earned mb-0 font-iceland">
+                      Total Available
+                    </span>
+                  </div>
+                  <div className="d-flex flex-column justify-content-between h-100 p-3">
+                    <h6 className="profile-div-title mb-0 ">My Rewards</h6>
+                    <div className="view-rewards-btn">
+                      <span className="instaketxt2 mb-0">View All</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-12 col-lg-4">
+                <div
+                  className="profile-staking-wrapper d-flex"
+                  // onClick={onOpenGenesisLeaderboard}
+                  onClick={() => setStakePopup(true)}
+                >
+                  <div className="green-div"></div>
+                  <img src={stakeNft} alt="" className="profile-staking-img" />
+                  <div className="d-flex flex-column gap-3 h-100 p-3 justify-content-between">
+                    <h6 className="profile-div-title mb-0">Stake NFT</h6>
+                    <p className="profile-div-desc mb-0">
+                      Earn monthly rewards by staking your NFT's
+                    </p>
+
+                    <div className="d-flex align-items-center gap-2 green-link">
+                      <img src={arrowCircle} alt="" />
                     </div>
                   </div>
                 </div>
@@ -2065,7 +2203,10 @@ const NewWalletBalance = ({
                 src={require("./assets/closeMark.svg").default}
                 alt=""
                 style={{ cursor: "pointer" }}
-                onClick={() => setEventPopup(false)}
+                onClick={() => {
+                  setEventPopup(false);
+                  onClearAd();
+                }}
               />
             </div>
             <div className="profile-event-popup-wrapper mb-3 p-2 p-lg-3 h-auto">
@@ -2079,6 +2220,8 @@ const NewWalletBalance = ({
                         ? upcomingDyp2
                         : dummyEvent?.id === "event11"
                         ? upcomingSkale
+                        : dummyEvent?.id === "event20"
+                        ? bnbPopupImage
                         : dummyEvent?.linkState === "coingecko"
                         ? eventPopupImageGecko
                         : dummyEvent.linkState === "gate"
@@ -2099,6 +2242,10 @@ const NewWalletBalance = ({
                         ? victionThumb
                         : dummyEvent.linkState === "multiversx"
                         ? multiversThumb
+                        : dummyEvent.linkState === "bnb"
+                        ? bnbPopupImage
+                        : dummyEvent.linkState === "manta"
+                        ? mantaThumb
                         : eventPopupImage
                     }
                     alt=""
@@ -2150,7 +2297,7 @@ const NewWalletBalance = ({
             </div>
             <div className="d-flex align-items-center justify-content-between mb-3">
               <h6 className="how-it-works mb-0">How it works?</h6>
-              {dummyEvent.status === "Live" && (
+              {dummyEvent.status === "Live" && dummyEvent.learnMore !== "" && (
                 <NavLink
                   to={dummyEvent.learnMore}
                   className="events-page-details d-flex align-items-center gap-2"
@@ -2175,6 +2322,18 @@ const NewWalletBalance = ({
                       points for their placement on the global leaderboard.
                       Remember to log in to the game daily and venture into the
                       Conflux area to uncover hidden treasures.
+                    </p>
+                  ) : dummyEvent.id === "event20" ? (
+                    <p className="popup-event-desc">
+                      To participate in the event, players are required to&nbsp;
+                      <b>hold a BNB Chain Beta Pass NFT</b>. You can get the BNB
+                      Chain Beta Pass NFT from the World of Dypians Marketplace.
+                      By engaging in the game on a daily basis and exploring the
+                      BNB Chain area, players not only stand a chance to secure
+                      daily rewards in BNB, but also earn points for their
+                      placement on the global leaderboard. Remember to log in to
+                      the game daily and venture into the BNB Chain area to
+                      uncover hidden treasures.
                     </p>
                   ) : dummyEvent.id === "event2" ? (
                     <p className="popup-event-desc">
@@ -2341,6 +2500,18 @@ const NewWalletBalance = ({
                       Remember to log in to the game daily and venture into the
                       MultiversX area to uncover hidden treasures.
                     </p>
+                  )  : dummyEvent.id === "event21" ? (
+                    <p className="popup-event-desc">
+                      To participate in the event, players are required to&nbsp;
+                      <b>hold a Manta Beta Pass NFT</b>. You can get the
+                      Manta Beta Pass NFT from the World of Dypians
+                      Marketplace. By engaging in the game on a daily basis and
+                      exploring the Manta area, players not only stand a
+                      chance to secure daily rewards in MANTA, but also earn
+                      points for their placement on the global leaderboard.
+                      Remember to log in to the game daily and venture into the
+                      Manta area to uncover hidden treasures.
+                    </p>
                   ) : (
                     <p className="popup-event-desc">
                       To participate in the event, players are required to&nbsp;
@@ -2390,7 +2561,8 @@ const NewWalletBalance = ({
                           ? "DYP"
                           : dummyEvent.id === "event6" ||
                             dummyEvent.id === "event8" ||
-                            dummyEvent.id === "event9"
+                            dummyEvent.id === "event9" ||
+                            dummyEvent.id === "event20"
                           ? "BNB"
                           : dummyEvent.id === "event7"
                           ? "DOGE"
@@ -2405,7 +2577,9 @@ const NewWalletBalance = ({
                           : dummyEvent.id === "event12"
                           ? "CORE"
                           : dummyEvent.id === "event16"
-                          ? "ELGD"
+                          ? "EGLD"
+                          : dummyEvent.id === "event21"
+                          ? "MANTA"
                           : "ETH"}{" "}
                         rewards
                       </li>
@@ -2455,6 +2629,10 @@ const NewWalletBalance = ({
                 ? "CORE"
                 : dummyEvent.id === "event16"
                 ? "MultiversX"
+                : dummyEvent.id === "event20"
+                ? "BNB Chain"
+                : dummyEvent.id === "event21"
+                ? "Manta"
                 : "Base Network"}
             </h6>
             {dummyEvent.id === "event1" ? (
@@ -2519,6 +2697,22 @@ const NewWalletBalance = ({
                 committed to complying with the applicable laws where it
                 operates.
               </p>
+            ) : dummyEvent.id === "event20" ? (
+              <p
+                className="popup-event-desc"
+                // style={{ fontSize: "12px", fontWeight: "500" }}
+              >
+                BNB Chain is a high-performance blockchain designed to support
+                the expansive growth of decentralized applications. It offers a
+                robust infrastructure that combines high throughput, low
+                latency, and low fees, making it the ideal platform for DeFi,
+                NFTs, and gaming. With BNB Chain, developers can leverage
+                advanced functionalities such as cross-chain compatibility,
+                on-chain governance, and scalable smart contracts. The ecosystem
+                empowers projects to build and scale efficiently, ensuring fast,
+                secure, and decentralized solutions without compromising on user
+                experience or innovation.
+              </p>
             ) : dummyEvent.id === "event7" ? (
               <p
                 className="popup-event-desc"
@@ -2532,7 +2726,23 @@ const NewWalletBalance = ({
                 public ledger that is maintained by a network of computers
                 called nodes.
               </p>
-            ) : dummyEvent.id === "event11" ? (
+            )  : dummyEvent.id === "event21" ? (
+              <p
+                className="popup-event-desc"
+                // style={{ fontSize: "12px", fontWeight: "500" }}
+              >
+                Manta is the multi-modular ecosystem for zero-knowledge
+                (ZK) applications. Manta was created by a team of
+                experienced founders from prestigious institutions, including
+                Harvard, MIT, and Algorand. Manta has received
+                investments from many top web3 investment funds, including
+                Binance Labs and Polychain Capital. It has grown through
+                participation in the best web3 accelerators, including Alliance
+                DAO and Berkeley Blockchain Xcelerator. Manta is poised
+                to bring the next generation of web3 users and usher in a new
+                chapter of web3 zkApp applications.
+              </p>
+            ): dummyEvent.id === "event11" ? (
               <p
                 className="popup-event-desc"
                 // style={{ fontSize: "12px", fontWeight: "500" }}
@@ -2647,12 +2857,16 @@ const NewWalletBalance = ({
                     ? "https://viction.link/twitter"
                     : dummyEvent.id === "event15"
                     ? "https://twitter.com/Immutable"
+                    : dummyEvent.id === "event20"
+                    ? "https://x.com/BNBChain"
                     : dummyEvent.id === "event13"
                     ? "https://twitter.com/SeiNetwork"
                     : dummyEvent.id === "event12"
                     ? "https://twitter.com/Coredao_Org"
                     : dummyEvent.id === "event16"
                     ? "https://twitter.com/MultiversX"
+                    : dummyEvent.id === "event21"
+                    ? "https://x.com/mantanetwork"
                     : "https://twitter.com/buildonbase"
                 }
                 target="_blank"
@@ -2682,12 +2896,16 @@ const NewWalletBalance = ({
                     ? "https://viction.link/telegram"
                     : dummyEvent.id === "event15"
                     ? "https://discord.gg/CYsjMdctsP"
+                    : dummyEvent.id === "event20"
+                    ? "https://t.me/bnbchain"
                     : dummyEvent.id === "event13"
                     ? "https://t.me/seinetwork?ref=blog.sei.io"
                     : dummyEvent.id === "event12"
                     ? "https://t.me/CoreDAOTelegram"
                     : dummyEvent.id === "event16"
                     ? "https://t.me/MultiversX"
+                    : dummyEvent.id === "event21"
+                    ? "https://www.t.me/mantanetworkofficial"
                     : "https://base.org/discord"
                 }
                 target="_blank"
@@ -2724,6 +2942,8 @@ const NewWalletBalance = ({
                     ? "https://skale.space/"
                     : dummyEvent.id === "event14"
                     ? "https://www.viction.xyz/"
+                    : dummyEvent.id === "event20"
+                    ? "https://www.bnbchain.org/en"
                     : dummyEvent.id === "event15"
                     ? "https://www.immutable.com/"
                     : dummyEvent.id === "event13"
@@ -2732,6 +2952,8 @@ const NewWalletBalance = ({
                     ? "https://coredao.org/"
                     : dummyEvent.id === "event16"
                     ? "https://multiversx.com/"
+                    : dummyEvent.id === "event21"
+                    ? "https://manta.network/"
                     : "https://base.org/"
                 }
                 target="_blank"
@@ -2770,6 +2992,16 @@ const NewWalletBalance = ({
                         ? dypiusPremiumPoints
                         : dummyEvent.id === "event11"
                         ? skalePoints
+                        : dummyEvent.id === "event20"
+                        ? bnbPoints
+                        : dummyEvent.id === "event14"
+                        ? victionPoints
+                        : dummyEvent.id === "event12"
+                        ? corePoints
+                        : dummyEvent.id === "event16"
+                        ? multiversPoints
+                        : dummyEvent.id === "event21"
+                        ? mantaPoints
                         : 0,
                       0
                     )}
@@ -2807,6 +3039,16 @@ const NewWalletBalance = ({
                         ? dypiusPremiumEarnUsd
                         : dummyEvent.id === "event11"
                         ? skaleEarnUsd
+                        : dummyEvent.id === "event12"
+                        ? coreEarnUsd
+                        : dummyEvent.id === "event14"
+                        ? victionEarnUsd
+                        : dummyEvent.id === "event20"
+                        ? bnbEarnUsd
+                        : dummyEvent.id === "event16"
+                        ? multiversEarnUsd
+                        : dummyEvent.id === "event21"
+                        ? mantaEarnUsd
                         : 0,
                       2
                     )}
@@ -2830,6 +3072,16 @@ const NewWalletBalance = ({
                               ? dypiusPremiumEarnTokens
                               : dummyEvent.id === "event11"
                               ? skaleEarnToken
+                              : dummyEvent.id === "event12"
+                              ? coreEarnToken
+                              : dummyEvent.id === "event14"
+                              ? victionEarnToken
+                              : dummyEvent.id === "event20"
+                              ? bnbEarnToken
+                              : dummyEvent.id === "event16"
+                              ? multiversEarnToken
+                              : dummyEvent.id === "event21"
+                              ? mantaEarnToken
                               : 0,
                             2
                           )}
@@ -2843,7 +3095,8 @@ const NewWalletBalance = ({
                             ? "DYP"
                             : dummyEvent.id === "event6" ||
                               dummyEvent.id === "event8" ||
-                              dummyEvent.id === "event9"
+                              dummyEvent.id === "event9" ||
+                              dummyEvent.id === "event20"
                             ? "BNB"
                             : dummyEvent.id === "event7"
                             ? "DOGE"
@@ -2858,7 +3111,9 @@ const NewWalletBalance = ({
                             : dummyEvent.id === "event12"
                             ? "CORE"
                             : dummyEvent.id === "event16"
-                            ? "ELGD"
+                            ? "EGLD"
+                             : dummyEvent.id === "event21"
+                            ? "MANTA"
                             : "ETH"}
                         </>
                       )}

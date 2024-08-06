@@ -29,7 +29,10 @@ import epicwhite from "./assets/epicwhite.svg";
 import wodAnimalsBanner from './assets/wodAnimalsBanner.png';
 import wodLeaderBoardBanner from './assets/wodLeaderboardBanner.png';
 import dailyBonusBanner from './assets/dailyBonusBanner.png';
-import premiumBanner from './assets/premiumsubscBanner.png'
+import premiumBanner from './assets/premiumsubscBanner.png';
+import uiDevelopment from './assets/uiDevelopment.png';
+import trackingRewards from './assets/trackingRewards.png';
+import myRank from './assets/myRank.png';
 
 const Roadmap = () => {
   useEffect(() => {
@@ -383,7 +386,7 @@ const Roadmap = () => {
         {
           title: "Launch Mobile App",
           desc: "Release a mobile application to provide users with a more convenient way to access the platform and its features.",
-          completed: false,
+          completed: true,
         },
        
       ],
@@ -396,24 +399,9 @@ const Roadmap = () => {
         {
           title: "New Game UI Development",
           desc: "Develop a new user interface to improve navigation and accessibility within the game.",
-          completed: false,
+          completed: true,
         },
 
-        {
-          title: "Multiplayer Social Hub",
-          desc: "Create a social hub where players can interact, form communities, and engage in multiplayer activities.",
-          completed: false,
-        },
-        {
-          title: "Introduction of Character Customization",
-          desc: "Allow players to personalize their main avatar/character with facial and body features.",
-          completed: false,
-        },
-        {
-          title: "Addition of Game Currency",
-          desc: "Introduce a new in-game currency to enhance the game's economy and provide more options for players.",
-          completed: false,
-        },
 
         // {
         //   title: "Introduction of Shop v1",
@@ -421,19 +409,34 @@ const Roadmap = () => {
         //   completed: false,
         // },
         {
+          title: "Challenger Features",
+          desc: "Exciting and engaging new in-game challenger events to enhance overall gameplay experience.",
+          completed: true,
+        },
+        {
           title: "Improving Tracking Rewards",
           desc: "Enhance the tracking of historic data rewards earned by players to improve their gaming experience.",
-          completed: false,
+          completed: true,
         },
         {
           title: "Personalized Game Domain",
           desc: "Enable players to create personalized web3 names with a customized domain name.",
-          completed: false,
+          completed: true,
+        },
+        {
+          title: "CAWS Staking Pool",
+          desc: "The launch of a new NFT staking pool for CAWS NFT holders that is accessible only to Premium Subscribers.",
+          completed: true,
+        },
+        {
+          title: "My Rank Introduction",
+          desc: "Introducing My Rank, a new feature that allows players to track their progress and achievements within the game.",
+          completed: true,
         },
         {
           title: "Partnership Development",
           desc: "Continuously add new features and partners, such as AI NPCs, advertising opportunities, user rewards, airdrops, and more, to enhance the user experience.",
-          completed: false,
+          completed: true,
         },
       ],
     },
@@ -447,12 +450,12 @@ const Roadmap = () => {
           desc: "Introduce a museum within the game where players can explore and learn about cryptocurrencies.",
           completed: false,
         },
+       
         {
-          title: "Introduction of Character NFT Generation",
-          desc: "Generate the main character in the game as an NFT item, adding value and uniqueness to the player's experience.",
+          title: "Introduction of Character Customization",
+          desc: "Allow players to personalize their main avatar/character with facial and body features.",
           completed: false,
         },
-
         {
           title: "Expanding with a New Environment",
           desc: "Create a new environment, such as an island, for players to explore, complete tasks, and engage in battles.",
@@ -466,6 +469,17 @@ const Roadmap = () => {
         {
           title: "Introduction of Shop v1",
           desc: "Launch the first version of the in-game shop where players can buy items, loot, weapons, and equipment.",
+          completed: false,
+        },
+        {
+          title: "Multiplayer Social Hub",
+          desc: "Create a social hub where players can interact, form communities, and engage in multiplayer activities.",
+          completed: false,
+        },
+      
+        {
+          title: "Addition of Game Currency",
+          desc: "Introduce a new in-game currency to enhance the game's economy and provide more options for players.",
           completed: false,
         },
         {
@@ -498,6 +512,11 @@ const Roadmap = () => {
         {
           title: "Full Release of the Multiplayer PvP",
           desc: "Launch the full version of the multiplayer player-versus-player mode for competitive gameplay.",
+          completed: false,
+        },
+        {
+          title: "Introduction of Character NFT Generation",
+          desc: "Generate the main character in the game as an NFT item, adding value and uniqueness to the player's experience.",
           completed: false,
         },
         {
@@ -539,6 +558,21 @@ const Roadmap = () => {
 
   const mainUpdate = [
 
+    {
+      title: "Improving Tracking Rewards",
+      date: "June 2024",
+      image: trackingRewards,
+    },
+    {
+      title: "New Game UI Development",
+      date: "May 2024",
+      image: uiDevelopment,
+    },
+    {
+      title: "My Rank Introduction",
+      date: "April 2024",
+      image: myRank,
+    },
     {
       title: "Addition of New Game Creatures",
       date: "March 2024",
@@ -922,7 +956,26 @@ const Roadmap = () => {
                   ))}
                 </div>
                 <div className="d-flex flex-column gap-3">
-                  {mainUpdate.slice(21, mainUpdate.length).map((item) => (
+                  {mainUpdate.slice(21, 24).map((item) => (
+                    <div className="roadmap-main-update position-relative">
+                      <img
+                        src={item.image}
+                        className="main-update-image"
+                        alt=""
+                      />
+                      <div className="main-update-title-wrapper w-100">
+                        <span className="font-organetto main-update-date">
+                          {item.date}
+                        </span>
+                        <h6 className="main-update-title mb-0 font-organetto">
+                          {item.title}
+                        </h6>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="d-flex flex-column gap-3">
+                  {mainUpdate.slice(24, mainUpdate.length).map((item) => (
                     <div className="roadmap-main-update position-relative">
                       <img
                         src={item.image}

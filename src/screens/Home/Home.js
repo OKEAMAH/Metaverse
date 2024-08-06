@@ -22,10 +22,12 @@ import dailyGameDelightBanner from "../../components/TimepieceMint/assets/dailyG
 import dypiansDiscoveryQuest from "../../components/TimepieceMint/assets/dypiansDiscoveryQuest.webp";
 
 import dogePopup from "../../components/TimepieceMint/assets/dogePopup.png";
+import mantaPopup from "../../components/TimepieceMint/assets/mantaPopup.png";
 import gatePopup from "../../components/TimepieceMint/assets/gatePopup.webp";
 import cmcPopup from "../../components/TimepieceMint/assets/cmcPopup.webp";
 
 import dypiusPopup from "../../components/TimepieceMint/assets/dypiuspremiumPopup.webp";
+import opbnbPopup from "../../components/TimepieceMint/assets/opbnbPopup.webp";
 
 import coingeckoPopup from "../../components/TimepieceMint/assets/coingeckoPopup.png";
 import treasureHuntPopup from "../../components/TimepieceMint/assets/treasureHuntPopup.png";
@@ -37,8 +39,12 @@ import skalePopup from "../../components/TimepieceMint/assets/skalePopup.webp";
 import cmcTreasureHuntPopup from "../../components/TimepieceMint/assets/cmcTreasureHunt.webp";
 import corePopupBg from "../../components/TimepieceMint/assets/corePopupBg.webp";
 import victionPopupBg from "../../components/TimepieceMint/assets/victionPopupBg.webp";
+import immutablePopup from "../../components/TimepieceMint/assets/immutablePopup.webp";
+import bnbcampaign from "../../components/TimepieceMint/assets/bnbcampaign.webp";
 
 
+import multiversXPopupBg from "../../components/TimepieceMint/assets/multiversXPopupBg.webp";
+import bnbPhase4 from "./WodBuilders/assets/bnbPhase4.png";
 
 import confluxTreasureHunt from "../../components/TimepieceMint/assets/confluxTreasureHunt.png";
 import LiveEvents from "./LiveEvents/LiveEvents";
@@ -50,7 +56,9 @@ const Home = ({
   coinbase,
   ethTokenData,
   dyptokenDatabnb,
-  idyptokenDatabnb,dyptokenDatabnb_old
+  allStarData,
+  idyptokenDatabnb,
+  dyptokenDatabnb_old,
 }) => {
   const avaxPopupInfo = {
     title: "Avalanche",
@@ -96,23 +104,31 @@ const Home = ({
     state: "skale",
   };
 
-
-
   const treasureHuntPopupInfo = {
     title: "Treasure Hunt",
     img: dypiusPopup,
     state: "dypius",
   };
-  const dypiusPopupInfo = {
-    title: "Treasure Hunt",
-    img: dypiusPopup,
-    state: "dyp",
+  const immutablePopupInfo = {
+    title: "Immutable",
+    img: immutablePopup,
+    state: "immutable",
   };
 
   const corePopupInfo = {
-    title: "VICTION",
-    img: victionPopupBg,
-    state: "viction",
+    title: "CORE",
+    img: corePopupBg,
+    state: "core",
+  };
+  const opbnbInfo = {
+    title: "opBNB",
+    img: bnbcampaign,
+    state: "opbnb",
+  };
+  const mantaInfo = {
+    title: "Manta",
+    img: mantaPopup,
+    state: "manta",
   };
 
   const [activePopup, setActivePopup] = useState(false);
@@ -126,14 +142,13 @@ const Home = ({
     }, 500);
   }, []);
 
-  useEffect(() => {
-    if (activePopup) {
-      html.classList.add("hidescroll");
-    } else {
-      // Enable scroll
-      html.classList.remove("hidescroll");
-    }
-  }, [activePopup]);
+  // useEffect(() => {
+  //   if (activePopup) {
+  //     html.classList.add("hidescroll");
+  //   } else {
+  //     html.classList.remove("hidescroll");
+  //   }
+  // }, [activePopup]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -148,7 +163,7 @@ const Home = ({
       >
         <MintPopup
           active={activePopup}
-          data={corePopupInfo}
+          data={mantaInfo}
           onClose={() => setActivePopup(false)}
         />
       </OutsideClickHandler>
@@ -157,6 +172,7 @@ const Home = ({
           <VideoWrapper
             handleRegister={handleRegister}
             handleDownload={handleDownload}
+            allStarData={allStarData}
           />
           <LiveEvents />
           <WodBuilders />

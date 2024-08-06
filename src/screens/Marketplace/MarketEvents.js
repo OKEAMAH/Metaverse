@@ -33,6 +33,7 @@ import seiLogo from "./assets/seiLogo.svg";
 import multiversLogo from "./assets/multiversLogo.svg";
 
 import coreLogo from "./assets/coreLogo.svg";
+import mantaLogo from "./assets/mantaLogo2.png";
 import victionLogo from "./assets/victionLogo.svg";
 import immutableLogo from "./assets/immutableLogo.svg";
 
@@ -79,6 +80,7 @@ import seiThumb from "../Account/src/Components/WalletBalance/assets/seiThumb.pn
 import multiversThumb from "../Account/src/Components/WalletBalance/assets/multiversThumb.png";
 import immutableThumb from "../Account/src/Components/WalletBalance/assets/immutableThumb.png";
 import coreThumb from "../Account/src/Components/WalletBalance/assets/coreThumb.png";
+import mantaThumb from "../Account/src/Components/WalletBalance/assets/mantaThumb.png";
 
 import grayDollar from "../Account/src/Components/WalletBalance/assets/grayDollar.svg";
 import closeMark from "../Account/src/Components/WalletBalance/assets/closeMark.svg";
@@ -89,7 +91,15 @@ import discord from "./assets/greenDiscord.svg";
 import upcomingDailyBonus from "./assets/upcomingDailyBonus.png";
 import upcomingDoge from "./assets/upcomingDoge.webp";
 import upcomingSkale from "./assets/upcomingSkale.webp";
+import upcomingCookie from "./assets/cookieBg.webp";
+import upcomingCookieMobile from "./assets/cookieMobileBg.webp";
+
+import upcomingMidle from "./assets/midleBg.webp";
+import upcomingMidleMobile from "./assets/midleBgMobile.webp";
+
+
 import upcomingSkaleMobile from "./assets/upcomingSkaleMobile.webp";
+import upcomingBnb from "./assets/upcomingBnb.png";
 
 import upcomingBabyDoge from "./assets/upcomingBabyDoge.webp";
 import upcomingBabyDogeMobile from "./assets/upomingBabyDogeMobile.webp";
@@ -99,15 +109,18 @@ import upcomingCmc from "./assets/upcomingCmc.webp";
 import upcomingDyp2 from "./assets/dypiusBgPic2.webp";
 import immutableBg from "./assets/immutableBg.webp";
 import seiBg from "./assets/seiBg.webp";
+import bnbPopupImage from "./assets/bnbPopupImage.png";
 import coreBg from "./assets/coreBg.webp";
 import victionBg from "./assets/victionBg.webp";
 import multiversBg from "./assets/multiversBg.webp";
+import mantaBg from "./assets/mantaBg.webp";
+import mantaMobileBg from "./assets/mantaMobileBg.png";
 import immutableMobileBg from "./assets/immutableActive.webp";
 import seiMobileBg from "./assets/seiActive.webp";
 import coreMobileBg from "./assets/coreActive.webp";
 import victionMobileBg from "./assets/victionActive.webp";
 import multiversMobileBg from "./assets/multiversActive.webp";
-
+import bnbLogo from "./assets/bnbIcon.svg";
 import dailyBonus from "./assets/dailyBonus.webp";
 import MintPopup from "../../components/TimepieceMint/MintPopup";
 
@@ -208,9 +221,27 @@ const MarketEvents = ({
   const [dypiusPremiumPoints, setdypiusPremiumPoints] = useState(0);
   const [skaleEarnUsd, setSkaleEarnUsd] = useState(0);
   const [skaleEarnToken, setSkaleEarnToken] = useState(0);
+  const [bnbEarnToken, setBnbEarnToken] = useState(0);
+  const [bnbEarnUsd, setBnbEarnUsd] = useState(0);
+  const [bnbPoints, setBnbPoints] = useState(0);
   const [skalePoints, setSkalePoints] = useState(0);
   const [dailyBonusPopup, setDailyBonusPopup] = useState(false);
-  const [activePopup, setActivePopup] = useState(false);
+  const [coreEarnUsd, setCoreEarnUsd] = useState(0);
+  const [corePrice, setCorePrice] = useState(0);
+  const [coreEarnToken, setCoreEarnToken] = useState(0);
+  const [corePoints, setCorePoints] = useState(0);
+  const [victionEarnUsd, setVictionEarnUsd] = useState(0);
+  const [victionPrice, setVictionPrice] = useState(0);
+  const [victionEarnToken, setVictionEarnToken] = useState(0);
+  const [victionPoints, setVictionPoints] = useState(0);
+  const [mantaPrice, setMantaPrice] = useState(0);
+  const [mantaEarnToken, setMantaEarnToken] = useState(0);
+  const [mantaEarnUsd, setMantaEarnUsd] = useState(0);
+  const [mantaPoints, setMantaPoints] = useState(0);
+  const [multiversEarnUsd, setmultiversEarnUsd] = useState(0);
+  const [multiversPrice, setmultiversPrice] = useState(0);
+  const [multiversEarnToken, setmultiversEarnToken] = useState(0);
+  const [multiversPoints, setmultiversPoints] = useState(0);
 
   const selected = useRef(null);
   const { email } = useAuth();
@@ -224,6 +255,47 @@ const MarketEvents = ({
       });
   };
 
+  const fetchCorePrice = async () => {
+    await axios
+      .get(
+        `https://pro-api.coingecko.com/api/v3/simple/price?ids=core&vs_currencies=usd&x_cg_pro_api_key=CG-4cvtCNDCA4oLfmxagFJ84qev`
+      )
+      .then((obj) => {
+        setCorePrice(obj.data.core.usd);
+      });
+  };
+
+  const fetchMantaPrice = async () => {
+    await axios
+      .get(
+        `https://pro-api.coingecko.com/api/v3/simple/price?ids=manta-network&vs_currencies=usd&x_cg_pro_api_key=CG-4cvtCNDCA4oLfmxagFJ84qev`
+      )
+      .then((obj) => {
+        setMantaPrice(obj.data["manta-network"].usd);
+      });
+  };
+
+
+  const fetchVictionPrice = async () => {
+    await axios
+      .get(
+        `https://pro-api.coingecko.com/api/v3/simple/price?ids=tomochain&vs_currencies=usd&x_cg_pro_api_key=CG-4cvtCNDCA4oLfmxagFJ84qev`
+      )
+      .then((obj) => {
+        setVictionPrice(obj.data.tomochain.usd);
+      });
+  };
+
+  const fetchEgldPrice = async () => {
+    await axios
+      .get(
+        `https://pro-api.coingecko.com/api/v3/simple/price?ids=tomochain&vs_currencies=usd&x_cg_pro_api_key=CG-4cvtCNDCA4oLfmxagFJ84qev`
+      )
+      .then((obj) => {
+        setmultiversPrice(obj.data.tomochain.usd);
+      });
+  };
+
   let coingeckoLastDay = new Date("2023-12-24T16:00:00.000+02:00");
   let confluxLastDay = new Date("2023-11-06T16:00:00.000+02:00");
   let gateLastDay = new Date("2023-11-20T16:00:00.000+02:00");
@@ -233,6 +305,9 @@ const MarketEvents = ({
   let dogeLastDay = new Date("2024-04-02T13:00:00.000+02:00");
   let cmcLastDay = new Date("2024-04-11T13:00:00.000+02:00");
   let skaleLastDay = new Date("2024-07-14T13:00:00.000+02:00");
+  let bnbLastDay = new Date("2024-09-10T13:00:00.000+02:00");
+  let coreLastDay = new Date("2024-10-01T14:00:00.000+02:00");
+  let mantaLastDay = new Date("2024-10-30T14:00:00.000+02:00");
 
   const dailyBonusMintData = {
     title: "Daily Bonus",
@@ -244,59 +319,112 @@ const MarketEvents = ({
     // {
     //   title: "MultiversX",
     //   logo: multiversLogo,
-    //   eventStatus: "Coming Soon",
+    //   eventStatus: "Live",
     //   totalRewards: "$20,000 in EGLD Rewards",
     //   myEarnings: 0.0,
     //   eventType: "Explore & Find",
-    //   eventDate: "XXX XX, XXXX",
+    //   eventDate: "Jul 01, 2024",
     //   backgroundImage: multiversBg,
     //   popupInfo: {
     //     title: "MultiversX",
     //     chain: "MultiversX Chain",
     //     linkState: "multiversx",
     //     rewards: "EGLD",
-    //     status: "Coming Soon",
+    //     status: "Live",
     //     id: "event16",
     //     eventType: "Explore & Find",
     //     totalRewards: "$20,000 in EGLD Rewards",
-    //     eventDuration: dypius2LastDay,
+    //     eventDuration: coreLastDay,
     //     minRewards: "1",
     //     maxRewards: "100",
     //     minPoints: "5,000",
     //     maxPoints: "50,000",
     //     learnMore:
-    //       "/news/65dc8229039c5118d5c8782b/Dypius-Treasure-Hunt:-Magic-Egg-is-Live",
-    //     eventDate: "XXX XX, XXXX",
+    //       "",
+    //     eventDate: "Jul 01, 2024",
     //   },
     // },
     // {
-    //   title: "VICTION",
-    //   logo: victionLogo,
-    //   eventStatus: "Coming Soon",
-    //   totalRewards: "$20,000 in VIC Rewards",
+    //   title: "Manta",
+    //   logo: mantaLogo,
+    //   eventStatus: "Live",
+    //   totalRewards: "$20,000 in MANTA Rewards",
     //   myEarnings: 0.0,
-    //   eventType: "Explore & Find",
-    //   eventDate: "XXX XX, XXXX",
-    //   backgroundImage: victionBg,
+    //   eventType: "Explore & Mine",
+    //   eventDate: "Aug 01, 2024",
+    //   backgroundImage: mantaBg,
     //   popupInfo: {
-    //     title: "VICTION",
-    //     chain: "VICTION Chain",
-    //     linkState: "viction",
-    //     rewards: "VIC",
-    //     status: "Coming Soon",
-    //     id: "event14",
-    //     eventType: "Explore & Find",
-    //     totalRewards: "$20,000 in VIC Rewards",
-    //     eventDuration: dypius2LastDay,
-    //     minRewards: "1",
-    //     maxRewards: "100",
+    //     title: "Manta",
+    //     chain: "Manta",
+    //     linkState: "manta",
+    //     rewards: "MANTA",
+    //     status: "Live",
+    //     id: "event21",
+    //     eventType: "Explore & Mine",
+    //     totalRewards: "$20,000 in MANTA Rewards",
+    //     eventDuration: mantaLastDay,
+    //     minRewards: "0.5",
+    //     maxRewards: "20",
     //     minPoints: "5,000",
     //     maxPoints: "50,000",
-    //     learnMore:
-    //       "/news/65dc8229039c5118d5c8782b/Dypius-Treasure-Hunt:-Magic-Egg-is-Live",
-    //     eventDate: "XXX XX, XXXX",
+    //     learnMore: "",
+    //     eventDate: "Aug 01, 2024",
     //   },
     // },
+    {
+      title: "CORE",
+      logo: coreLogo,
+      eventStatus: "Live",
+      totalRewards: "$20,000 in CORE Rewards",
+      myEarnings: 0.0,
+      eventType: "Explore & Mine",
+      eventDate: "Jul 01, 2024",
+      backgroundImage: coreBg,
+      popupInfo: {
+        title: "CORE",
+        chain: "CORE Chain",
+        linkState: "core",
+        rewards: "CORE",
+        status: "Live",
+        id: "event12",
+        eventType: "Explore & Mine",
+        totalRewards: "$20,000 in CORE Rewards",
+        eventDuration: coreLastDay,
+        minRewards: "0.5",
+        maxRewards: "20",
+        minPoints: "5,000",
+        maxPoints: "50,000",
+        learnMore: "",
+        eventDate: "Jul 01, 2024",
+      },
+    },
+    {
+      title: "VICTION",
+      logo: victionLogo,
+      eventStatus: "Live",
+      totalRewards: "$20,000 in VIC Rewards",
+      myEarnings: 0.0,
+      eventType: "Explore & Find",
+      eventDate: "Jul 01, 2024",
+      backgroundImage: victionBg,
+      popupInfo: {
+        title: "VICTION",
+        chain: "VICTION Chain",
+        linkState: "viction",
+        rewards: "VIC",
+        status: "Live",
+        id: "event14",
+        eventType: "Explore & Find",
+        totalRewards: "$20,000 in VIC Rewards",
+        eventDuration: coreLastDay,
+        minRewards: "0.5",
+        maxRewards: "20",
+        minPoints: "5,000",
+        maxPoints: "50,000",
+        learnMore: "",
+        eventDate: "Jul 01, 2024",
+      },
+    },
     // {
     //   title: "SEI",
     //   logo: seiLogo,
@@ -325,40 +453,38 @@ const MarketEvents = ({
     //     eventDate: "XXX XX, XXXX",
     //   },
     // },
-    // {
-    //   title: "CORE",
-    //   logo: coreLogo,
-    //   eventStatus: "Coming Soon",
-    //   totalRewards: "$20,000 in CORE Rewards",
-    //   myEarnings: 0.0,
-    //   eventType: "Explore & Find",
-    //   eventDate: "XXX XX, XXXX",
-    //   backgroundImage: coreBg,
-    //   popupInfo: {
-    //     title: "CORE",
-    //     chain: "CORE Chain",
-    //     linkState: "core",
-    //     rewards: "CORE",
-    //     status: "Coming Soon",
-    //     id: "event12",
-    //     eventType: "Explore & Find",
-    //     totalRewards: "$20,000 in SEI Rewards",
-    //     eventDuration: dypius2LastDay,
-    //     minRewards: "1",
-    //     maxRewards: "100",
-    //     minPoints: "5,000",
-    //     maxPoints: "50,000",
-    //     learnMore:
-    //       "/news/65dc8229039c5118d5c8782b/Dypius-Treasure-Hunt:-Magic-Egg-is-Live",
-    //     eventDate: "XXX XX, XXXX",
-    //   },
-    // },
-   
 
+    {
+      title: "BNB Chain",
+      logo: bnbLogo,
+      eventStatus: "Live",
+      totalRewards: "$20,000 in BNB Rewards",
+      myEarnings: 0.0,
+      eventType: "Explore & Mine",
+      eventDate: "Jun 12, 2024",
+      backgroundImage: upcomingBnb,
+      popupInfo: {
+        title: "BNB Chain",
+        chain: "BNB Chain",
+        linkState: "bnb",
+        rewards: "BNB",
+        status: "Live",
+        id: "event20",
+        eventType: "Explore & Mine",
+        totalRewards: "$20,000 in BNB Rewards",
+        eventDuration: bnbLastDay,
+        minRewards: "0.5",
+        maxRewards: "20",
+        minPoints: "5,000",
+        maxPoints: "50,000",
+        learnMore: "/news",
+        eventDate: "Jun 12, 2024",
+      },
+    },
     {
       title: "SKALE",
       logo: skaleLogo,
-      eventStatus: "Live",
+      eventStatus: "Expired",
       totalRewards: "$20,000 in SKL Rewards",
       myEarnings: 0.0,
       eventType: "Explore & Mine",
@@ -369,7 +495,7 @@ const MarketEvents = ({
         chain: "SKALE Nebula Hub",
         linkState: "skale",
         rewards: "SKL",
-        status: "Live",
+        status: "Expired",
         id: "event11",
         eventType: "Explore & Mine",
         totalRewards: "$20,000 in SKL Rewards",
@@ -383,7 +509,7 @@ const MarketEvents = ({
         eventDate: "Apr 15, 2024",
       },
     },
-     {
+    {
       title: "Dypius Premium",
       logo: dypiusPremium36,
       eventStatus: "Expired",
@@ -689,7 +815,7 @@ const MarketEvents = ({
       "Unlock unique rewards during the event",
     ],
     price: 2100,
-    usdPrice: 50,
+    usdPrice: 100,
     link: "https://www.worldofdypians.com/news/644e343627cca74b2d4a60b1/Golden-Pass-Event",
     background: "newGoldenBg.webp",
     mobileBackground: "goldenBgMobile.webp",
@@ -822,7 +948,7 @@ const MarketEvents = ({
   const fetchSkalePrice = async () => {
     await axios
       .get(
-        `https://api.coingecko.com/api/v3/simple/price?ids=skale&vs_currencies=usd`
+        `https://pro-api.coingecko.com/api/v3/simple/price?ids=skale&vs_currencies=usd&x_cg_pro_api_key=CG-4cvtCNDCA4oLfmxagFJ84qev`
       )
       .then((obj) => {
         setSkalePrice(obj.data.skale.usd);
@@ -881,6 +1007,24 @@ const MarketEvents = ({
           const skaleEvent = responseData.events.filter((obj) => {
             return obj.betapassId === "skale";
           });
+          const bnbEvent = responseData.events.filter((obj) => {
+            return obj.betapassId === "bnb";
+          });
+
+          const coreEvent = responseData.events.filter((obj) => {
+            return obj.betapassId === "core";
+          });
+
+          const victionEvent = responseData.events.filter((obj) => {
+            return obj.betapassId === "viction";
+          });
+          const mantaEvent = responseData.events.filter((obj) => {
+            return obj.betapassId === "manta";
+          });
+
+          const multiversEvent = responseData.events.filter((obj) => {
+            return obj.betapassId === "multivers";
+          });
 
           const gateEvent = responseData.events.filter((obj) => {
             return obj.betapassId === "gate";
@@ -915,6 +1059,56 @@ const MarketEvents = ({
             setdypiusPremiumPoints(pointsdypius);
             setdypiusPremiumEarnUsd(userEarnedusd);
             setdypiusPremiumEarnTokens(userEarnedusd / bnbPrice);
+          }
+          if (bnbEvent && bnbEvent[0]) {
+            const userEarnedusd =
+              bnbEvent[0].reward.earn.total /
+              bnbEvent[0].reward.earn.multiplier;
+            const pointsBnb = bnbEvent[0].reward.earn.totalPoints;
+
+            setBnbPoints(pointsBnb);
+            setBnbEarnUsd(userEarnedusd);
+            setBnbEarnToken(userEarnedusd / bnbPrice);
+          }
+
+          if (coreEvent && coreEvent[0]) {
+            const userEarnedusd =
+              coreEvent[0].reward.earn.total /
+              coreEvent[0].reward.earn.multiplier;
+            const pointsCore = coreEvent[0].reward.earn.totalPoints;
+            setCorePoints(pointsCore);
+            setCoreEarnUsd(userEarnedusd);
+            setCoreEarnToken(userEarnedusd / corePrice);
+          }
+
+          if (victionEvent && victionEvent[0]) {
+            const userEarnedusd =
+              victionEvent[0].reward.earn.total /
+              victionEvent[0].reward.earn.multiplier;
+            const pointsViction = victionEvent[0].reward.earn.totalPoints;
+            setVictionPoints(pointsViction);
+            setVictionEarnUsd(userEarnedusd);
+            setVictionEarnToken(userEarnedusd / victionPrice);
+          }
+
+          if (mantaEvent && mantaEvent[0]) {
+            const userEarnedusd =
+              mantaEvent[0].reward.earn.total /
+              mantaEvent[0].reward.earn.multiplier;
+            const pointsManta = mantaEvent[0].reward.earn.totalPoints;
+            setMantaPoints(pointsManta);
+            setMantaEarnUsd(userEarnedusd);
+            setMantaEarnToken(userEarnedusd / mantaPrice);
+          }
+
+          if (multiversEvent && multiversEvent[0]) {
+            const userEarnedusd =
+              multiversEvent[0].reward.earn.total /
+              multiversEvent[0].reward.earn.multiplier;
+            const pointsmultivers = multiversEvent[0].reward.earn.totalPoints;
+            setmultiversPoints(pointsmultivers);
+            setmultiversEarnUsd(userEarnedusd);
+            setmultiversEarnToken(userEarnedusd / multiversPrice);
           }
 
           if (dypEvent && dypEvent[0]) {
@@ -1028,10 +1222,14 @@ const MarketEvents = ({
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title = "Events";
-  }, []);
-
-  useEffect(() => {
     getTokenDatabnb();
+    fetchVictionPrice();
+    fetchEgldPrice();
+    fetchCorePrice();
+    fetchMantaPrice()
+  }, []);
+  
+  useEffect(() => {
     if (windowSize.width < 786) {
       window.scrollTo(0, 750);
     }
@@ -1079,7 +1277,7 @@ const MarketEvents = ({
     ) {
       fetchTreasureHuntData(email, data.getPlayer.wallet.publicAddress);
     }
-  }, [email, data, cfxPrice, bnbPrice, skalePrice, dyptokenDatabnb]);
+  }, [email, data, cfxPrice, bnbPrice, skalePrice, dyptokenDatabnb, mantaPrice]);
 
   useEffect(() => {
     setActiveTab(tabState);
@@ -1119,7 +1317,7 @@ const MarketEvents = ({
                     </NavLink>
                   </div>
                   <div className="position-relative">
-                     <div className="new-upcoming-tag d-flex align-items-center justify-content-center px-1">
+                  <div className="new-upcoming-tag d-flex align-items-center justify-content-center px-1">
                       <span className="mb-0">New</span>
                     </div>
                     <NavLink
@@ -1267,7 +1465,7 @@ const MarketEvents = ({
                   <div id="selected-package" ref={selected}>
                     {selectedPackage === "treasure-hunt" ? (
                       <div className="col-xxl-9 col-xl-10 m-auto d-flex flex-column gap-4">
-                        {dummyBetaPassData2.slice(0, 1).map((item, index) => (
+                        {dummyBetaPassData2.slice(0, 3).map((item, index) => (
                           <BetaEventCard
                             data={item}
                             key={index}
@@ -1278,7 +1476,6 @@ const MarketEvents = ({
                             userEarnUsd={
                               item.title === "CoinMarketCap"
                                 ? cmcuserEarnUsd
-                                
                                 : item.title === "SKALE"
                                 ? skaleEarnUsd
                                 : 0
@@ -1349,21 +1546,98 @@ const MarketEvents = ({
               )}
               {activeTab === "upcoming" && (
                 <div className="d-flex flex-column gap-4">
-                  <div className="border-0 upcoming-mint-wrapper upcoming-core-event d-flex flex-column flex-lg-row align-items-center justify-content-between px-0">
+                  <div className="border-0 upcoming-mint-wrapper upcoming-manta-event d-flex flex-column flex-lg-row align-items-center justify-content-between px-0">
                     <div className="d-flex flex-column gap-2 ps-3 pe-3 pe-lg-0 pt-3 pt-lg-0 pb-3 pb-lg-0">
-                      <h6 className="upcoming-mint-title">CORE</h6>
+                      <h6 className="upcoming-mint-title">Manta</h6>
                       <p className="upcoming-mint-desc">
-                        Join the CORE Treasure Hunt event for a chance to grab a
-                        share of the $20,000 CORE reward pool.
+                        Join the Manta Treasure Hunt event for a chance
+                        to grab a share of the $20,000 MANTA reward pool.
                       </p>
                     </div>
                     <img
-                      src={coreBg}
+                      src={mantaBg}
                       alt=""
                       className="upcoming-mint-img d-none d-lg-block"
                     />
                     <img
-                      src={coreMobileBg}
+                      src={mantaMobileBg}
+                      alt=""
+                      className="upcoming-mint-img d-block d-lg-none d-md-none"
+                    />
+                  </div>
+                  <div className="border-0 upcoming-mint-wrapper upcoming-skale-event d-flex flex-column flex-lg-row align-items-center justify-content-between px-0">
+                    <div className="d-flex flex-column gap-2 ps-3 pe-3 pe-lg-0 pt-3 pt-lg-0 pb-3 pb-lg-0">
+                      <h6 className="upcoming-mint-title">Skale</h6>
+                      <p className="upcoming-mint-desc">
+                        Join the Skale Treasure Hunt event for a chance to grab a
+                        share of the $20,000 SKL reward pool.
+                      </p>
+                    </div>
+                    <img
+                      src={upcomingSkale}
+                      alt=""
+                      className="upcoming-mint-img d-none d-lg-block"
+                    />
+                    <img
+                      src={upcomingSkaleMobile}
+                      alt=""
+                      className="upcoming-mint-img d-block d-lg-none d-md-none"
+                    />
+                  </div>
+                  <div className="border-0 upcoming-mint-wrapper upcoming-cookie-event d-flex flex-column flex-lg-row align-items-center justify-content-between px-0">
+                    <div className="d-flex flex-column gap-2 ps-3 pe-3 pe-lg-0 pt-3 pt-lg-0 pb-3 pb-lg-0">
+                      <h6 className="upcoming-mint-title">Cookie3</h6>
+                      <p className="upcoming-mint-desc">
+                        Join the Cookie3 Treasure Hunt event for a chance to grab a
+                        share of the $20,000 COOKIE reward pool.
+                      </p>
+                    </div>
+                    <img
+                      src={upcomingCookie}
+                      alt=""
+                      className="upcoming-mint-img d-none d-lg-block"
+                    />
+                    <img
+                      src={upcomingCookieMobile}
+                      alt=""
+                      className="upcoming-mint-img d-block d-lg-none d-md-none"
+                    />
+                  </div>
+                  <div className="border-0 upcoming-mint-wrapper upcoming-midle-event d-flex flex-column flex-lg-row align-items-center justify-content-between px-0">
+                    <div className="d-flex flex-column gap-2 ps-3 pe-3 pe-lg-0 pt-3 pt-lg-0 pb-3 pb-lg-0">
+                      <h6 className="upcoming-mint-title">Midle</h6>
+                      <p className="upcoming-mint-desc">
+                        Join the Midle Treasure Hunt event for a chance to grab a
+                        share of the $20,000 reward pool.
+                      </p>
+                    </div>
+                    <img
+                      src={upcomingMidle}
+                      alt=""
+                      className="upcoming-mint-img d-none d-lg-block"
+                    />
+                    <img
+                      src={upcomingMidleMobile}
+                      alt=""
+                      className="upcoming-mint-img d-block d-lg-none d-md-none"
+                    />
+                  </div>
+
+                  <div className="border-0 upcoming-mint-wrapper upcoming-multivers-event d-flex flex-column flex-lg-row align-items-center justify-content-between px-0">
+                    <div className="d-flex flex-column gap-2 ps-3 pe-3 pe-lg-0 pt-3 pt-lg-0 pb-3 pb-lg-0">
+                      <h6 className="upcoming-mint-title">MultiversX</h6>
+                      <p className="upcoming-mint-desc">
+                        Join the MultiversX Treasure Hunt event for a chance to
+                        grab a share of the $20,000 ELGD reward pool.
+                      </p>
+                    </div>
+                    <img
+                      src={multiversBg}
+                      alt=""
+                      className="upcoming-mint-img d-none d-lg-block"
+                    />
+                    <img
+                      src={multiversMobileBg}
                       alt=""
                       className="upcoming-mint-img d-block d-lg-none d-md-none"
                     />
@@ -1387,45 +1661,6 @@ const MarketEvents = ({
                       className="upcoming-mint-img d-block d-lg-none d-md-none"
                     />
                   </div>
-                  <div className="border-0 upcoming-mint-wrapper upcoming-viction-event d-flex flex-column flex-lg-row align-items-center justify-content-between px-0">
-                    <div className="d-flex flex-column gap-2 ps-3 pe-3 pe-lg-0 pt-3 pt-lg-0 pb-3 pb-lg-0">
-                      <h6 className="upcoming-mint-title">VICTION</h6>
-                      <p className="upcoming-mint-desc">
-                        Join the Viction Treasure Hunt event for a chance to
-                        grab a share of the $20,000 VIC reward pool.
-                      </p>
-                    </div>
-                    <img
-                      src={victionBg}
-                      alt=""
-                      className="upcoming-mint-img d-none d-lg-block"
-                    />
-                    <img
-                      src={victionMobileBg}
-                      alt=""
-                      className="upcoming-mint-img d-block d-lg-none d-md-none"
-                    />
-                  </div>
-                  <div className="border-0 upcoming-mint-wrapper upcoming-multivers-event d-flex flex-column flex-lg-row align-items-center justify-content-between px-0">
-                    <div className="d-flex flex-column gap-2 ps-3 pe-3 pe-lg-0 pt-3 pt-lg-0 pb-3 pb-lg-0">
-                      <h6 className="upcoming-mint-title">MultiversX</h6>
-                      <p className="upcoming-mint-desc">
-                        Join the MultiversX Treasure Hunt event for a chance to
-                        grab a share of the $20,000 EGLD reward pool.
-                      </p>
-                    </div>
-                    <img
-                      src={multiversBg}
-                      alt=""
-                      className="upcoming-mint-img d-none d-lg-block"
-                    />
-                    <img
-                      src={multiversMobileBg}
-                      alt=""
-                      className="upcoming-mint-img d-block d-lg-none d-md-none"
-                    />
-                  </div>
-
                 </div>
               )}
               {activeTab === "past" && (
@@ -1438,7 +1673,7 @@ const MarketEvents = ({
                 // </div>
                 <div className="col-xxl-9 col-xl-10 m-auto d-flex flex-column gap-4">
                   {dummyBetaPassData2
-                    .slice(1, dummyBetaPassData2.length)
+                    .slice(3, dummyBetaPassData2.length)
                     .map((item, index) => (
                       <BetaEventCard
                         data={item}
@@ -1463,6 +1698,10 @@ const MarketEvents = ({
                             ? dypiusEarnTokens
                             : item.title === "Dypius Premium"
                             ? dypiusPremiumEarnUsd
+                            : item.title === "BNB Chain"
+                            ? bnbEarnUsd
+                            : item.title === "Manta"
+                            ? mantaEarnUsd
                             : 0
                         }
                       />
@@ -1554,13 +1793,16 @@ const MarketEvents = ({
                         ? victionThumb
                         : dummyEvent.linkState === "multiversx"
                         ? multiversThumb
+                        : dummyEvent.linkState === "bnb"
+                        ? bnbPopupImage
+                        : dummyEvent.linkState === "manta"
+                        ? mantaThumb
                         : eventPopupImage
                     }
                     alt=""
                     style={{
                       width: 80,
                       height: 80,
-                  
                     }}
                   />
                   <div className="d-flex flex-column justify-content-between">
@@ -1612,7 +1854,7 @@ const MarketEvents = ({
             </div>
             <div className="d-flex align-items-center justify-content-between mb-3">
               <h6 className="how-it-works mb-0">How it works?</h6>
-              {dummyEvent.status === "Live" && (
+              {dummyEvent.status === "Live" && dummyEvent.learnMore !== "" && (
                 <NavLink
                   to={dummyEvent.learnMore}
                   className="events-page-details d-flex align-items-center gap-2"
@@ -1649,6 +1891,30 @@ const MarketEvents = ({
                       placement on the global leaderboard. Remember to log in to
                       the game daily and venture into the Coin98 area to uncover
                       hidden treasures.
+                    </p>
+                  ) : dummyEvent.id === "event20" ? (
+                    <p className="popup-event-desc">
+                      To participate in the event, players are required to&nbsp;
+                      <b>hold a BNB Chain Beta Pass NFT</b>. You can get the BNB
+                      Chain Beta Pass NFT from the World of Dypians Marketplace.
+                      By engaging in the game on a daily basis and exploring the
+                      BNB Chain area, players not only stand a chance to secure
+                      daily rewards in BNB, but also earn points for their
+                      placement on the global leaderboard. Remember to log in to
+                      the game daily and venture into the BNB Chain area to
+                      uncover hidden treasures.
+                    </p>
+                  ) : dummyEvent.id === "event21" ? (
+                    <p className="popup-event-desc">
+                      To participate in the event, players are required to&nbsp;
+                      <b>hold a Manta Beta Pass NFT</b>. You can get the
+                      Manta Beta Pass NFT from the World of Dypians
+                      Marketplace. By engaging in the game on a daily basis and
+                      exploring the Manta area, players not only stand a
+                      chance to secure daily rewards in MANTA, but also earn
+                      points for their placement on the global leaderboard.
+                      Remember to log in to the game daily and venture into the
+                      Manta area to uncover hidden treasures.
                     </p>
                   ) : dummyEvent.id === "event3" ? (
                     <p className="popup-event-desc">
@@ -1832,13 +2098,13 @@ const MarketEvents = ({
                           ? "CFX"
                           : dummyEvent.id === "event2"
                           ? "C98"
-                          : dummyEvent.id === "event3"
-                          ? "BNB"
                           : dummyEvent.id === "event5"
                           ? "DYP"
                           : dummyEvent.id === "event6" ||
                             dummyEvent.id === "event8" ||
-                            dummyEvent.id === "event9"
+                            dummyEvent.id === "event9" ||
+                            dummyEvent.id === "event20" ||
+                            dummyEvent.id === "event3"
                           ? "BNB"
                           : dummyEvent.id === "event7"
                           ? "DOGE"
@@ -1853,7 +2119,9 @@ const MarketEvents = ({
                           : dummyEvent.id === "event12"
                           ? "CORE"
                           : dummyEvent.id === "event16"
-                          ? "ELGD"
+                          ? "EGLD"
+                          : dummyEvent.id === "event21"
+                          ? "MANTA"
                           : "ETH"}{" "}
                         rewards
                       </li>
@@ -1881,6 +2149,8 @@ const MarketEvents = ({
                 ? "Conflux Network"
                 : dummyEvent.id === "event2"
                 ? "Coin98"
+                : dummyEvent.id === "event20"
+                ? "BNB Chain"
                 : dummyEvent.id === "event3"
                 ? "CoinGecko"
                 : dummyEvent.id === "event5" || dummyEvent.id === "event9"
@@ -1903,6 +2173,8 @@ const MarketEvents = ({
                 ? "CORE"
                 : dummyEvent.id === "event16"
                 ? "MultiversX"
+                : dummyEvent.id === "event21"
+                ? "Manta"
                 : "Base Network"}
             </h6>
             {dummyEvent.id === "event1" ? (
@@ -1928,6 +2200,38 @@ const MarketEvents = ({
                 mission is to fulfill untapped demand and enhance in-demand
                 utilities in the DeFi space, helping people to access DeFi
                 services effortlessly.
+              </p>
+            ) : dummyEvent.id === "event20" ? (
+              <p
+                className="popup-event-desc"
+                // style={{ fontSize: "12px", fontWeight: "500" }}
+              >
+                BNB Chain is a high-performance blockchain designed to support
+                the expansive growth of decentralized applications. It offers a
+                robust infrastructure that combines high throughput, low
+                latency, and low fees, making it the ideal platform for DeFi,
+                NFTs, and gaming. With BNB Chain, developers can leverage
+                advanced functionalities such as cross-chain compatibility,
+                on-chain governance, and scalable smart contracts. The ecosystem
+                empowers projects to build and scale efficiently, ensuring fast,
+                secure, and decentralized solutions without compromising on user
+                experience or innovation.
+              </p>
+            ) : dummyEvent.id === "event21" ? (
+              <p
+                className="popup-event-desc"
+                // style={{ fontSize: "12px", fontWeight: "500" }}
+              >
+                Manta is the multi-modular ecosystem for zero-knowledge
+                (ZK) applications. Manta was created by a team of
+                experienced founders from prestigious institutions, including
+                Harvard, MIT, and Algorand. Manta has received
+                investments from many top web3 investment funds, including
+                Binance Labs and Polychain Capital. It has grown through
+                participation in the best web3 accelerators, including Alliance
+                DAO and Berkeley Blockchain Xcelerator. Manta is poised
+                to bring the next generation of web3 users and usher in a new
+                chapter of web3 zkApp applications.
               </p>
             ) : dummyEvent.id === "event3" ? (
               <p
@@ -2054,7 +2358,7 @@ const MarketEvents = ({
                 // style={{ fontSize: "12px", fontWeight: "500" }}
               >
                 Core DAO started as a community looking for better solutions,
-                and that’s what it remains. With principles grounded in the
+                and that's what it remains. With principles grounded in the
                 premises of both Bitcoin and Ethereum, our power comes from
                 embracing multiple ideas and communities. The opposite of a
                 winner-take-all mentality - Core is focused instead on platform
@@ -2091,6 +2395,8 @@ const MarketEvents = ({
                     ? "https://twitter.com/CoinMarketCap"
                     : dummyEvent.id === "event11"
                     ? "https://twitter.com/SkaleNetwork"
+                    : dummyEvent.id === "event20"
+                    ? "https://x.com/BNBChain"
                     : dummyEvent.id === "event14"
                     ? "https://viction.link/twitter"
                     : dummyEvent.id === "event15"
@@ -2101,6 +2407,8 @@ const MarketEvents = ({
                     ? "https://twitter.com/Coredao_Org"
                     : dummyEvent.id === "event16"
                     ? "https://twitter.com/MultiversX"
+                    : dummyEvent.id === "event21"
+                    ? "https://x.com/mantanetwork"
                     : "https://twitter.com/buildonbase"
                 }
                 target="_blank"
@@ -2126,6 +2434,8 @@ const MarketEvents = ({
                     ? "https://discord.gg/dogecoin"
                     : dummyEvent.id === "event11"
                     ? "https://t.me/skaleofficial"
+                    : dummyEvent.id === "event20"
+                    ? "https://t.me/bnbchain"
                     : dummyEvent.id === "event14"
                     ? "https://viction.link/telegram"
                     : dummyEvent.id === "event15"
@@ -2136,6 +2446,8 @@ const MarketEvents = ({
                     ? "https://t.me/CoreDAOTelegram"
                     : dummyEvent.id === "event16"
                     ? "https://t.me/MultiversX"
+                    : dummyEvent.id === "event21"
+                    ? "https://www.t.me/mantanetworkofficial"
                     : "https://base.org/discord"
                 }
                 target="_blank"
@@ -2176,10 +2488,14 @@ const MarketEvents = ({
                     ? "https://www.immutable.com/"
                     : dummyEvent.id === "event13"
                     ? "https://www.sei.io/"
+                    : dummyEvent.id === "event20"
+                    ? "https://www.bnbchain.org/en"
                     : dummyEvent.id === "event12"
                     ? "https://coredao.org/"
                     : dummyEvent.id === "event16"
                     ? "https://multiversx.com/"
+                    : dummyEvent.id === "event21"
+                    ? "https://manta.network/"
                     : "https://base.org/"
                 }
                 target="_blank"
@@ -2218,6 +2534,16 @@ const MarketEvents = ({
                         ? dypiusPremiumPoints
                         : dummyEvent.id === "event11"
                         ? skalePoints
+                        : dummyEvent.id === "event20"
+                        ? bnbPoints
+                        : dummyEvent.id === "event16"
+                        ? multiversPoints
+                        : dummyEvent.id === "event14"
+                        ? victionPoints
+                        : dummyEvent.id === "event12"
+                        ? corePoints
+                        : dummyEvent.id === "event21"
+                        ? mantaPoints
                         : 0,
                       0
                     )}
@@ -2257,6 +2583,16 @@ const MarketEvents = ({
                         ? dypiusPremiumEarnUsd
                         : dummyEvent.id === "event11"
                         ? skaleEarnUsd
+                        : dummyEvent.id === "event12"
+                        ? coreEarnUsd
+                        : dummyEvent.id === "event16"
+                        ? multiversEarnUsd
+                        : dummyEvent.id === "event14"
+                        ? victionEarnUsd
+                        : dummyEvent.id === "event20"
+                        ? bnbEarnUsd
+                        : dummyEvent.id === "event21"
+                        ? mantaEarnUsd
                         : 0,
                       2
                     )}
@@ -2280,6 +2616,16 @@ const MarketEvents = ({
                               ? dypiusPremiumEarnTokens
                               : dummyEvent.id === "event11"
                               ? skaleEarnToken
+                              : dummyEvent.id === "event12"
+                              ? coreEarnToken
+                              : dummyEvent.id === "event16"
+                              ? multiversEarnToken
+                              : dummyEvent.id === "event14"
+                              ? victionEarnToken
+                              : dummyEvent.id === "event20"
+                              ? bnbEarnToken
+                              : dummyEvent.id === "event21"
+                              ? mantaEarnToken
                               : 0,
                             2
                           )}
@@ -2299,6 +2645,8 @@ const MarketEvents = ({
                             ? "DOGE"
                             : dummyEvent.id === "event11"
                             ? "SKL"
+                            : dummyEvent.id === "event20"
+                            ? "BNB"
                             : dummyEvent.id === "event14"
                             ? "VIC"
                             : dummyEvent.id === "event15"
@@ -2308,7 +2656,9 @@ const MarketEvents = ({
                             : dummyEvent.id === "event12"
                             ? "CORE"
                             : dummyEvent.id === "event16"
-                            ? "ELGD"
+                            ? "EGLD"
+                            : dummyEvent.id === "event21"
+                            ? "MANTA"
                             : "ETH"}
                         </>
                       )}

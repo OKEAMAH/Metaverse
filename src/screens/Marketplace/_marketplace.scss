@@ -1235,7 +1235,7 @@
 }
 
 .nft-page-wrapperbnb {
-  background: url(./assets/bnbprogramBg.webp);
+  background: url(./assets/wodbnb.webp);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -2176,6 +2176,33 @@ line-height: normal;
     aspect-ratio: 1/1;
   }
 }
+.past-viction-mint {
+  background-image: url("./assets/victionPastMint.webp");
+  width: 100%;
+  aspect-ratio: 2.22/1;
+  background-size: 100% 100%;
+  position: relative;
+
+  @media screen and (max-width: 786px) {
+    background-image: url("./assets/victionPastMintMobile.webp");
+    aspect-ratio: 1/1;
+  }
+}
+
+
+.past-bnb-mint {
+  background-image: url("./assets/bnbMintDesktop.webp");
+  width: 100%;
+  aspect-ratio: 2.22/1;
+  background-size: 100% 100%;
+  position: relative;
+
+  @media screen and (max-width: 786px) {
+    background-image: url("./assets/bnbMintMobile.webp");
+    aspect-ratio: 1/1;
+  }
+}
+
 
 
 .sold-out-tag {
@@ -2267,6 +2294,19 @@ line-height: normal;
   }
 }
 
+.past-bnb-mint-amount {
+  color: #ffd600;
+  text-align: center;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 800;
+  margin: 0;
+  @media screen and (max-width: 400px) {
+    font-size: 26px;
+  }
+}
+
+
 
 .past-conflux-mint-desc {
   color: #fff;
@@ -2285,6 +2325,21 @@ line-height: normal;
 .past-skale-mint-desc {
   color: #fff;
   text-shadow: 0px 3px 4px rgba(17, 80, 23, 0.7);
+  font-family: Poppins;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.72px;
+  @media screen and (max-width: 400px) {
+    font-size: 26px;
+  }
+}
+
+
+.past-bnb-mint-desc {
+  color: #fff;
+  text-shadow: 0px 3px 4px rgb(255 232 67 / 70%);
   font-family: Poppins;
   font-size: 40px;
   font-style: normal;
@@ -2735,6 +2790,26 @@ line-height: normal;
   background: linear-gradient(to bottom, #1c1a39 15.48%, #ffc800 254.86%);
 }
 
+.bnb-eventwrapper {
+  border-radius: 20px;
+  background: linear-gradient(to bottom, #2e2216 15.48%, #ffc800 254.86%);
+}
+
+.core-eventwrapper {
+  border-radius: 20px;
+  background: linear-gradient(to bottom, #3b230b 15.48%, #ff9900 254.86%);
+}
+
+.viction-eventwrapper {
+  border-radius: 20px;
+  background: linear-gradient(to bottom, #111f49 15.48%, #b400ff 254.86%);
+}
+
+.multivers-eventwrapper {
+  border-radius: 20px;
+  background: linear-gradient(to bottom, #1e162e 15.48%, #00ff66 254.86%);
+}
+
 .coingecko-eventh6 {
   color: #fff;
   font-size: 14px;
@@ -2966,6 +3041,12 @@ line-height: normal;
 
 .mint-8 {
   background: linear-gradient(90deg, #181b38 0%, #5daaa6 168.67%);
+}
+.mint-bnb {
+  background: linear-gradient(90deg, #181B38 0%, rgba(6, 136, 255, 0.05) 168.67%);
+}
+.mint-manta {
+  background: linear-gradient(90deg, #181B38 0%, #BE2CB0 168.67%);
 }
 
 .active-mint-title {
@@ -3828,8 +3909,19 @@ background: linear-gradient(90deg, #7F43FF 1.45%, #C01BDB 96.22%);
 
 .upcoming-skale-event {
   border-radius: 20px;
-  background: linear-gradient(90deg, #181B38 0%, #002C39 168.67%);
+  background: linear-gradient(90deg, #181B38 0%, #002C39 168.67%) !important;
 }
+
+.upcoming-cookie-event {
+  border-radius: 20px;
+  background: linear-gradient(90deg, #181B38 0%, rgba(55, 113, 55, 0.5) 168.67%) !important;
+}
+
+.upcoming-midle-event {
+  border-radius: 20px;
+  background: linear-gradient(90deg, #181B38 0%, rgba(176, 106, 63, 0.5) 168.67%) !important;
+}
+
 
 .upcoming-sei-event {
   border-radius: 20px;
@@ -3845,6 +3937,10 @@ background: linear-gradient(90deg, #7F43FF 1.45%, #C01BDB 96.22%);
   border-radius: 20px;
   background: linear-gradient(90deg, #181b38 0%, rgba(108, 44, 190, 1) 168.67%) !important;
 }
+.upcoming-manta-event {
+  border-radius: 20px;
+  background: linear-gradient(90deg, #181b38 0%, #BE2CB0 168.67%) !important;
+}
 
 .upcoming-immutable-event {
   border-radius: 20px;
@@ -3854,6 +3950,10 @@ background: linear-gradient(90deg, #7F43FF 1.45%, #C01BDB 96.22%);
 .upcoming-multivers-event {
   border-radius: 20px;
   background: linear-gradient(90deg, #181b38 0%, rgba(44, 102, 190, 1) 168.67%) !important;
+}
+.upcoming-manta-event {
+  border-radius: 20px;
+  background: linear-gradient(90deg, #181b38 0%, #BE2CB0 168.67%) !important;
 }
 
 

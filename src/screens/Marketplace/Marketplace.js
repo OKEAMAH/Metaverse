@@ -284,26 +284,107 @@ const Marketplace = ({
       window.config.nft_skale_address
     );
 
-    const confluxresult = await confluxContract.methods.totalSupply().call() .catch((e) => {
-      console.error(e);
-      return 0;
-    });;
-    const gateresult = await gateContract.methods.totalSupply().call() .catch((e) => {
-      console.error(e);
-      return 0;
-    });;
-    const dogeresult = await dogeContract.methods.totalSupply().call() .catch((e) => {
-      console.error(e);
-      return 0;
-    });;
-    const cmcresult = await cmcContract.methods.totalSupply().call() .catch((e) => {
-      console.error(e);
-      return 0;
-    });;
-    const skaleresult = await skaleContract.methods.totalSupply().call() .catch((e) => {
-      console.error(e);
-      return 0;
-    });;
+    const bnbContract = new window.bscWeb3.eth.Contract(
+      window.BNB_NFT_ABI,
+      window.config.nft_bnb_address
+    );
+
+    const victionContract = new window.victionWeb3.eth.Contract(
+      window.VICTION_NFT_ABI,
+      window.config.nft_viction_address
+    );
+
+    const coreContract = new window.coreWeb3.eth.Contract(
+      window.CORE_NFT_ABI,
+      window.config.nft_core_address
+    );
+
+    const multiversContract = new window.bscWeb3.eth.Contract(
+      window.MULTIVERS_NFT_ABI,
+      window.config.nft_multivers_address
+    );
+    
+    const mantaContract = new window.mantaWeb3.eth.Contract(
+      window.MANTA_NFT_ABI,
+      window.config.nft_manta_address
+    );
+
+
+    const confluxresult = await confluxContract.methods
+      .totalSupply()
+      .call()
+      .catch((e) => {
+        console.error(e);
+        return 0;
+      });
+    const gateresult = await gateContract.methods
+      .totalSupply()
+      .call()
+      .catch((e) => {
+        console.error(e);
+        return 0;
+      });
+    const dogeresult = await dogeContract.methods
+      .totalSupply()
+      .call()
+      .catch((e) => {
+        console.error(e);
+        return 0;
+      });
+    const cmcresult = await cmcContract.methods
+      .totalSupply()
+      .call()
+      .catch((e) => {
+        console.error(e);
+        return 0;
+      });
+    const skaleresult = await skaleContract.methods
+      .totalSupply()
+      .call()
+      .catch((e) => {
+        console.error(e);
+        return 0;
+      });
+
+    const bnbresult = await bnbContract.methods
+      .totalSupply()
+      .call()
+      .catch((e) => {
+        console.error(e);
+        return 0;
+      });
+
+    const coreresult = await coreContract.methods
+      .totalSupply()
+      .call()
+      .catch((e) => {
+        console.error(e);
+        return 0;
+      });
+
+    const victionresult = await victionContract.methods
+      .totalSupply()
+      .call()
+      .catch((e) => {
+        console.error(e);
+        return 0;
+      });
+
+    const multiversresult = await multiversContract.methods
+      .totalSupply()
+      .call()
+      .catch((e) => {
+        console.error(e);
+        return 0;
+      });
+
+      const mantaresult = await mantaContract.methods
+      .totalSupply()
+      .call()
+      .catch((e) => {
+        console.error(e);
+        return 0;
+      });
 
     //20000 = 10000 caws + 1000 genesis + 9000 coingecko
     setTotalSupply(
@@ -313,7 +394,12 @@ const Marketplace = ({
         parseInt(gateresult) +
         parseInt(dogeresult) +
         parseInt(cmcresult) +
-        Number(skaleresult) +
+        parseInt(skaleresult) +
+        parseInt(bnbresult) +
+        parseInt(coreresult) +
+        parseInt(victionresult) +
+        parseInt(multiversresult)  +
+        parseInt(mantaresult) +
         20000
     );
   };
@@ -1208,7 +1294,7 @@ const Marketplace = ({
               <div className='leftwrapper'></div>
               <div className="rightwrapper"></div>
             </div> */}
-     
+
             <div
               className="row mx-1 justify-content-center d-flex my-4 align-items-start py-5 gap-4 my-4"
               style={{ minHeight: "420px" }}
@@ -1219,18 +1305,18 @@ const Marketplace = ({
                   <span>Live</span>
                 </div>
                 <div className="w-100 mt-0 px-0 d-flex flex-column gap-3">
-                  {/* <div className="d-flex flex-column gap-2 w-100 flex-wrapper">
+                  <div className="d-flex flex-column gap-2 w-100 flex-wrapper">
                     <NavLink
-                      to={"/marketplace/mint/skale"}
+                      to={"/marketplace/mint/opbnbchain"}
                       className="w-100 m-0 d-flex flex-column gap-5"
                     >
-                      <div className="p-4 mint-wrappernew market-mint-skale w-100 m-0 d-flex flex-column gap-4 justify-content-start staking-height staking-height2 h-auto">
+                      <div className="p-4 mint-wrappernew market-mint-opbnb w-100 m-0 d-flex flex-column gap-4 justify-content-start staking-height staking-height2 h-auto">
                         <div className="d-flex align-items-center justify-content-center homepage-nft-mint-tag px-3 py-1">
                           <span>NFT Minting</span>
                         </div>
                         <div className="d-flex flex-column gap-2 mb-3">
                         <h6 className="newminttitlehome m-0 position-relative">
-                          SKALE Beta
+                          opBNB Beta
                         </h6>
                         <h6 className="newminttitlehome m-0 position-relative">
                           Pass
@@ -1238,7 +1324,7 @@ const Marketplace = ({
                   
                       </div>
                     </NavLink>
-                    <NavLink to="/marketplace/mint/skale">
+                    <NavLink to="/marketplace/mint/opbnbchain">
                       <span
                         className="detailsgreen-txt d-flex align-items-center gap-2 justify-content-center m-auto"
                         style={{ width: "fit-content" }}
@@ -1246,8 +1332,36 @@ const Marketplace = ({
                         Mint now <img src={greenArrow} alt="" />{" "}
                       </span>
                     </NavLink>
-                  </div> */}
-                  <div className="d-flex flex-column gap-2 w-100">
+                  </div>
+                  <div className="d-flex flex-column gap-2 w-100 flex-wrapper">
+                  <NavLink
+                      to={"/marketplace/mint/core"}
+                      className="w-100 m-0 d-flex flex-column gap-5"
+                    >
+                      <div className="p-4 mint-wrappernew market-mint-core w-100 m-0 d-flex flex-column gap-4 justify-content-start staking-height staking-height2 h-auto">
+                        <div className="d-flex align-items-center justify-content-center homepage-nft-mint-tag px-3 py-1">
+                          <span>NFT Minting</span>
+                        </div>
+                        <div className="d-flex flex-column gap-2 mb-3">
+                        <h6 className="newminttitlehome m-0 position-relative">
+                          CORE Beta
+                        </h6>
+                        <h6 className="newminttitlehome m-0 position-relative">
+                          Pass
+                        </h6></div>
+                  
+                      </div>
+                    </NavLink>
+                    <NavLink to="/marketplace/mint/core">
+                      <span
+                        className="detailsgreen-txt d-flex align-items-center gap-2 justify-content-center m-auto"
+                        style={{ width: "fit-content" }}
+                      >
+                        Mint now <img src={greenArrow} alt="" />{" "}
+                      </span>
+                    </NavLink>
+                  </div>
+                  {/* <div className="d-flex flex-column gap-2 w-100">
                     <NavLink
                       to={"/marketplace/mint/timepiece"}
                       className="w-100 m-0 d-flex flex-column gap-5"
@@ -1257,10 +1371,9 @@ const Marketplace = ({
                           <span>NFT Minting</span>
                         </div>
                         <div className="d-flex flex-column gap-2 mb-3">
-                        <h6 className="newminttitlehome m-0 position-relative">
-                          CAWS Timepiece
-                        </h6>
-                        
+                          <h6 className="newminttitlehome m-0 position-relative">
+                            CAWS Timepiece
+                          </h6>
                         </div>
                         <div className="d-flex flex-column gap-4 p-3 pt-xxl-0 pt-lg-0 col-12 col-md-9 col-lg-7  justify-content-between align-items-start position-relative">
                           <div className="mint-benefits-grid">
@@ -1295,7 +1408,7 @@ const Marketplace = ({
                         Mint now <img src={greenArrow} alt="" />{" "}
                       </span>
                     </NavLink>
-                  </div>
+                  </div> */}
                 </div>
                 <div className="w-100 d-flex flex-column gap-2">
                   <NavLink

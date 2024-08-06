@@ -22,6 +22,8 @@ import skale from "../Header/assets/skale.svg";
 import sei from "../Header/assets/sei.svg";
 import viction from "../Header/assets/viction.svg";
 import core from "../Header/assets/core.svg";
+import manta from "../Header/assets/manta.png";
+import immutable from "../Header/assets/immutableLogo.svg";
 
 import error from "../Header/assets/error.svg";
 import dropdown from "../Header/assets/dropdown.svg";
@@ -53,8 +55,10 @@ const MobileNavbar = ({
   const [confluxState, setConfluxState] = useState(false);
   const [skaleState, setSkaleState] = useState(false);
   const [coreState, setCoreState] = useState(false);
+  const [mantaState, setMantaState] = useState(false);
   const [victionState, setVictionState] = useState(false);
   const [seiState, setSeiState] = useState(false);
+  const [immutableState, setImmutableState] = useState(false);
   
 
 
@@ -82,7 +86,9 @@ const MobileNavbar = ({
         setopBnbState(false);
         setSkaleState(false);
         setVictionState(false);
-        setSeiState(false)
+        setSeiState(false);
+        setImmutableState(false);
+        setMantaState(false);
       } else if (chainId === 43114) {
         setAvaxState(true);
         setBnbState(false);
@@ -92,7 +98,10 @@ const MobileNavbar = ({
         setSkaleState(false);
         setCoreState(false);
         setVictionState(false);
-        setSeiState(false)
+        setSeiState(false);
+        setImmutableState(false);
+        setMantaState(false);
+
       } else if (chainId === 8453) {
         setAvaxState(false);
         setBnbState(false);
@@ -102,7 +111,10 @@ const MobileNavbar = ({
         setSkaleState(false);
         setCoreState(false);
         setVictionState(false);
-        setSeiState(false)
+        setSeiState(false);
+        setImmutableState(false);
+        setMantaState(false);
+
       } else if (chainId === 56) {
         setAvaxState(false);
         setBnbState(true);
@@ -112,7 +124,10 @@ const MobileNavbar = ({
         setSkaleState(false);
         setCoreState(false);
         setVictionState(false);
-        setSeiState(false)
+        setSeiState(false);
+        setImmutableState(false);
+        setMantaState(false);
+
       } else if (chainId === 204) {
         setAvaxState(false);
         setBnbState(false);
@@ -122,7 +137,10 @@ const MobileNavbar = ({
         setSkaleState(false);
         setCoreState(false);
         setVictionState(false);
-        setSeiState(false)
+        setSeiState(false);
+        setImmutableState(false);
+        setMantaState(false);
+
       } else if (chainId === 1030) {
         setAvaxState(false);
         setBnbState(false);
@@ -133,8 +151,11 @@ const MobileNavbar = ({
         setSkaleState(false);
         setCoreState(false);
         setVictionState(false);
-        setSeiState(false)
-      } else if (chainId === 1482601649 ) {
+        setSeiState(false);
+        setImmutableState(false);
+        setMantaState(false);
+
+      } else if (chainId === 1482601649) {
         setAvaxState(false);
         setBnbState(false);
         setEthState(false);
@@ -144,32 +165,68 @@ const MobileNavbar = ({
         setSkaleState(true);
         setCoreState(false);
         setVictionState(false);
-        setSeiState(false)
-      } 
-      // else if (chainId === 1116 ) {
-      //   setAvaxState(false);
-      //   setBnbState(false);
-      //   setEthState(false);
-      //   setBaseState(false);
-      //   setConfluxState(false);
-      //   setopBnbState(false);
-      //   setSkaleState(false);
-      //   setCoreState(true);
-      //   setVictionState(false);
-      //   setSeiState(false)
-      // }
-      // else if (chainId === 88 ) {
-      //   setAvaxState(false);
-      //   setBnbState(false);
-      //   setEthState(false);
-      //   setBaseState(false);
-      //   setConfluxState(false);
-      //   setopBnbState(false);
-      //   setSkaleState(false);
-      //   setCoreState(false);
-      //   setVictionState(true);
-      //   setSeiState(false)
-      // }
+        setSeiState(false);
+        setImmutableState(false);
+        setMantaState(false);
+
+      } else if (chainId === 1116) {
+        setAvaxState(false);
+        setBnbState(false);
+        setEthState(false);
+        setBaseState(false);
+        setConfluxState(false);
+        setopBnbState(false);
+        setSkaleState(false);
+        setCoreState(true);
+        setVictionState(false);
+        setSeiState(false);
+        setImmutableState(false);
+        setMantaState(false);
+
+      } else if (chainId === 88) {
+        setAvaxState(false);
+        setBnbState(false);
+        setEthState(false);
+        setBaseState(false);
+        setConfluxState(false);
+        setopBnbState(false);
+        setSkaleState(false);
+        setCoreState(false);
+        setVictionState(true);
+        setSeiState(false);
+        setImmutableState(false);
+        setMantaState(false);
+
+      } else if (chainId === 13371) {
+        setAvaxState(false);
+        setBnbState(false);
+        setEthState(false);
+        setBaseState(false);
+        setConfluxState(false);
+        setopBnbState(false);
+        setSkaleState(false);
+        setCoreState(false);
+        setVictionState(false);
+        setSeiState(false);
+        setImmutableState(true);
+        setMantaState(false);
+
+      }
+      else if (chainId === 169) {
+        setAvaxState(false);
+        setBnbState(false);
+        setEthState(false);
+        setBaseState(false);
+        setConfluxState(false);
+        setopBnbState(false);
+        setSkaleState(false);
+        setCoreState(false);
+        setVictionState(false);
+        setSeiState(false);
+        setImmutableState(false);
+        setMantaState(true);
+
+      }
       // else if (chainId === 713715 ) {
       //   setAvaxState(false);
       //   setBnbState(false);
@@ -191,10 +248,14 @@ const MobileNavbar = ({
         setSkaleState(false);
         setCoreState(false);
         setVictionState(false);
-        setSeiState(false)
+        setSeiState(false);
+        setImmutableState(false);
+        setMantaState(false);
+
       }
     }
   };
+
 
   const handleEthPool = async () => {
     if (window.ethereum) {
@@ -225,6 +286,24 @@ const MobileNavbar = ({
           });
       } else {
         handleSwitchChainGateWallet(1116);
+      }
+    } else {
+      window.alertify.error("No web3 detected. Please install Metamask!");
+    }
+  };
+
+  const handleMantaPool = async () => {
+    if (window.ethereum) {
+      if (!window.gatewallet) {
+        await handleSwitchNetworkhook("0xa9")
+          .then(() => {
+            handleSwitchNetwork(169);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      } else {
+        handleSwitchChainGateWallet(169);
       }
     } else {
       window.alertify.error("No web3 detected. Please install Metamask!");
@@ -374,6 +453,25 @@ const MobileNavbar = ({
     }
   };
 
+
+  const handleImmutablePool = async () => {
+    if (window.ethereum) {
+      if (!window.gatewallet) {
+        await handleSwitchNetworkhook("0x343b")
+          .then(() => {
+            handleSwitchNetwork(13371);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      } else {
+        handleSwitchChainGateWallet();
+      }
+    } else {
+      window.alertify.error("No web3 detected. Please install Metamask!");
+    }
+  };
+
   useEffect(() => {
     if (chainId === 1) {
       handleSwitchNetwork(1);
@@ -464,10 +562,14 @@ const MobileNavbar = ({
                         ? conflux
                         : skaleState === true
                         ? skale
-                        // : coreState === true
-                        // ? core
-                        // : victionState === true
-                        // ? viction
+                        : coreState === true
+                        ? core
+                        : victionState === true
+                        ? viction
+                        : immutableState === true
+                        ? immutable
+                        : mantaState === true
+                        ? manta
                         // : seiState === true
                         // ? sei
                         : error
@@ -491,10 +593,14 @@ const MobileNavbar = ({
                             ? "Conflux"
                             : skaleState === true
                             ? "SKALE"
-                            // : coreState === true
-                            // ? "CORE"
-                            // : victionState === true
-                            // ? "Viction"
+                            : coreState === true
+                            ? "CORE"
+                            : victionState === true
+                            ? "Viction"
+                            : immutableState === true
+                            ? "Immutable"
+                            : mantaState === true
+                            ? "Manta"
                             // : seiState === true
                             // ? "Sei"
                             : "Unsupported"}
@@ -512,14 +618,18 @@ const MobileNavbar = ({
                     <img src={bnb} alt="" />
                     BNB Chain
                   </Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleMantaPool()}>
+                    <img src={manta} alt="" />
+                    Manta
+                  </Dropdown.Item>
                   <Dropdown.Item onClick={() => handleOpBnbPool()}>
                     <img src={bnb} alt="" />
                     opBNB Chain
                   </Dropdown.Item>
-                  {/* <Dropdown.Item onClick={() => handleCorePool()}>
+                  <Dropdown.Item onClick={() => handleCorePool()}>
                     <img src={core} width={20} height={20} alt="" />
                     CORE
-                  </Dropdown.Item> */}
+                  </Dropdown.Item>
                   <Dropdown.Item onClick={() => handleSkalePool()}>
                     <img src={skale} alt="" />
                     SKALE
@@ -527,6 +637,10 @@ const MobileNavbar = ({
                   <Dropdown.Item onClick={() => handleConfluxPool()}>
                     <img src={conflux} alt="" />
                     Conflux
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleImmutablePool()}>
+                    <img src={immutable} width={20} height={20} alt="" />
+                    Immutable
                   </Dropdown.Item>
                   <Dropdown.Item onClick={() => handleBasePool()}>
                     <img src={base} alt="" />
@@ -536,10 +650,10 @@ const MobileNavbar = ({
                     <img src={sei} width={20} height={20} alt="" />
                     Sei
                   </Dropdown.Item> */}
-                  {/* <Dropdown.Item onClick={() => handleVictionPool()}>
+                  <Dropdown.Item onClick={() => handleVictionPool()}>
                     <img src={viction} width={20} height={20} alt="" />
                     Viction
-                  </Dropdown.Item> */}
+                  </Dropdown.Item>
                   <Dropdown.Item onClick={() => handleAvaxPool()}>
                     <img src={avax} alt="" />
                     Avalanche

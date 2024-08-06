@@ -28,7 +28,11 @@ import { Skeleton } from "@mui/material";
 import ActiveProfileEvent from "./ActiveProfileEvent";
 import UpcomingProfileEvent from "./UpcomingProfileEvent";
 import ExpiredProfileEvent from "./ExpiredProfileEvent";
+import stakeNft from "./newAssets/stakeNft.png";
+import mintColl from "./newAssets/mintColl.png";
+
 import eventPopupImage from "./assets/eventPopupImage.png";
+import bnbPopupImage from "./assets/bnbPopupImage.png";
 import OutsideClickHandler from "react-outside-click-handler";
 import confluxActive from "../../../../Marketplace/assets/confluxActive.png";
 import coin98Active from "../../../../Marketplace/assets/coin98Active.png";
@@ -71,6 +75,7 @@ const WalletBalance = ({
   dypBalanceavax,
   isVerified,
   email,
+  myNFTSBNB,
   // handleConnectWallet,
   handleShowWalletPopup,
   idypBalance,
@@ -104,13 +109,16 @@ const WalletBalance = ({
   mySkaleNfts,
   myCoreNfts,
   myVictionNfts,
+  myImmutableNfts,
   latestVersion,
   MyNFTSLandBNB,
   MyNFTSCawsBNB,
   MyNFTSLandAvax,
   MyNFTSCawsAvax,
   MyNFTSLandBase,
+  myNFTSopBNB,
   MyNFTSCawsBase,
+  myMultiversNfts,myMantaNfts
 }) => {
   const [userRank, setUserRank] = useState("");
   const [genesisRank, setGenesisRank] = useState("");
@@ -132,7 +140,7 @@ const WalletBalance = ({
   const [dyptokenDatabnb, setDypTokenDatabnb] = useState([]);
   const [idyptokenDataAvax, setIDypTokenDataAvax] = useState([]);
   const [dyptokenDataAvax, setDypTokenDataAvax] = useState([]);
-  const [filterTitle, setFilterTitle] = useState("Balance");
+  const [filterTitle, setFilterTitle] = useState("Collected");
   const [nftItems, setNftItems] = useState([]);
 
   const [collectedItems, setcollectedItems] = useState([]);
@@ -451,6 +459,7 @@ const WalletBalance = ({
     let dogeNftsArray = [];
     let cmcNftsArray = [];
     let victionNftsArray = [];
+    let immutableNftsArray = [];
     let coreNftsArray = [];
     let cawsBnbArray = [];
     let cawsAvaxArray = [];
@@ -459,6 +468,11 @@ const WalletBalance = ({
     let landBnbArray = [];
     let landBaseArray = [];
     let skaleNftsArray = [];
+    let bnbNftsArray = [];
+    let opbnbNftsArray = [];
+    let multiversNftsArray = [];
+    let mantaNftsArray = [];
+
 
     // console.log(allListed, "allListed");
 
@@ -522,6 +536,38 @@ const WalletBalance = ({
               tokenId: i,
               type: "landbnb",
               chain: 56,
+              isStaked: false,
+              isListed: false,
+            });
+          })
+        );
+      }
+
+      if (myNFTSBNB && myNFTSBNB.length > 0) {
+        await Promise.all(
+          myNFTSBNB.map(async (i) => {
+            bnbNftsArray.push({
+              nftAddress: window.config.nft_bnb_address,
+              buyer: coinbase,
+              tokenId: i,
+              type: "bnb",
+              chain: 56,
+              isStaked: false,
+              isListed: false,
+            });
+          })
+        );
+      }
+
+      if (myNFTSopBNB && myNFTSopBNB.length > 0) {
+        await Promise.all(
+          myNFTSopBNB.map(async (i) => {
+            opbnbNftsArray.push({
+              nftAddress: window.config.nft_opbnb_address,
+              buyer: coinbase,
+              tokenId: i,
+              type: "opbnb",
+              chain: 204,
               isStaked: false,
               isListed: false,
             });
@@ -736,6 +782,53 @@ const WalletBalance = ({
           })
         );
       }
+      if (myImmutableNfts && myImmutableNfts > 0) {
+        await Promise.all(
+          [...Array(myImmutableNfts)].map((i) => {
+            immutableNftsArray.push({
+              nftAddress: window.config.nft_immutable_address,
+              buyer: coinbase,
+              tokenId: i,
+              type: "immutable",
+              chain: 13371,
+              isStaked: false,
+              isListed: false,
+            });
+          })
+        );
+      }
+
+      if (myMultiversNfts && myMultiversNfts.length > 0) {
+        await Promise.all(
+          myMultiversNfts.map(async (i) => {
+            multiversNftsArray.push({
+              nftAddress: window.config.nft_multivers_address,
+              buyer: coinbase,
+              tokenId: i,
+              type: "multivers",
+              chain: 56,
+              isStaked: false,
+              isListed: false,
+            });
+          })
+        );
+      }
+
+      if (myMantaNfts && myMantaNfts.length > 0) {
+        await Promise.all(
+          myMantaNfts.map(async (i) => {
+            mantaNftsArray.push({
+              nftAddress: window.config.nft_manta_address,
+              buyer: coinbase,
+              tokenId: i,
+              type: "manta",
+              chain: 169,
+              isStaked: false,
+              isListed: false,
+            });
+          })
+        );
+      }
 
       if (mySkaleNfts && mySkaleNfts.length > 0) {
         await Promise.all(
@@ -907,25 +1000,31 @@ const WalletBalance = ({
       setmyNftsOffer(recievedOffers);
 
       finalCollection = [
-        ...cawsAvaxArray,
-        ...cawsBnbArray,
-        ...cawsBaseArray,
-        ...landAvaxArray,
-        ...landBnbArray,
-        ...landBaseArray,
-        ...coingeckoNftsArray,
+        ...bnbNftsArray,
+        ...opbnbNftsArray,
+        ...multiversNftsArray,
         ...victionNftsArray,
+        ...immutableNftsArray,
+        ...mantaNftsArray,
         ...coreNftsArray,
         ...confluxNftsArray,
         ...gateNftsArray,
         ...baseNftsArray,
         ...dogeNftsArray,
         ...cmcNftsArray,
+        ...coingeckoNftsArray,
         ...skaleNftsArray,
         ...finalTimepieceArray,
         ...finalLandArray,
         ...finalCawsArray,
         ...stakeArray,
+        ...coingeckoNftsArray,
+        ...cawsAvaxArray,
+        ...cawsBnbArray,
+        ...cawsBaseArray,
+        ...landAvaxArray,
+        ...landBnbArray,
+        ...landBaseArray,
       ];
 
       setcollectedItems(finalCollection);
@@ -1126,6 +1225,14 @@ const WalletBalance = ({
         (item) => item.nftAddress === window.config.nft_skale_address
       );
 
+      let bnbFilter = collectedItems.filter(
+        (item) => item.nftAddress === window.config.nft_bnb_address
+      );
+
+      let opbnbFilter = collectedItems.filter(
+        (item) => item.nftAddress === window.config.nft_opbnb_address
+      );
+
       let coreFilter = collectedItems.filter(
         (item) => item.nftAddress === window.config.nft_core_address
       );
@@ -1134,17 +1241,33 @@ const WalletBalance = ({
         (item) => item.nftAddress === window.config.nft_viction_address
       );
 
+      let immutableFilter = collectedItems.filter(
+        (item) => item.nftAddress === window.config.nft_immutable_address
+      );
+
+      let multiversFilter = collectedItems.filter(
+        (item) => item.nftAddress === window.config.nft_multivers_address
+      );
+
+      let mantaFilter = collectedItems.filter(
+        (item) => item.nftAddress === window.config.nft_manta_address
+      );
+
       const allBetapassArray = [
         ...coingeckoFilter,
         ...confluxFilter,
         ...gateFilter,
         ...dogeFilter,
+        ...mantaFilter,
         ...cmcFilter,
         ...baseFilter,
         ...skaleFilter,
         ...victionFilter,
+        ...immutableFilter,
+        ...multiversFilter,
         ...coreFilter,
-
+        ...bnbFilter,
+        ...opbnbFilter,
       ];
       setcollectedItemsFiltered(allBetapassArray);
     } else if (filter1 === "timepiece" && filter2 === "all") {
@@ -1522,17 +1645,6 @@ const WalletBalance = ({
               <div className="account-nft-sort-wrapper d-flex align-items-center gap-3 px-3 py-2 ms-0">
                 <h6
                   className={`account-nft-sort ${
-                    filterTitle === "Balance" && "nft-sort-selected"
-                  } `}
-                  onClick={() => {
-                    sortNfts("balance");
-                    setShowNfts(false);
-                  }}
-                >
-                  Balance
-                </h6>
-                <h6
-                  className={`account-nft-sort ${
                     filterTitle === "Collected" && "nft-sort-selected"
                   } `}
                   onClick={() => {
@@ -1586,6 +1698,17 @@ const WalletBalance = ({
                   }}
                 >
                   Offers made
+                </h6>
+                <h6
+                  className={`account-nft-sort ${
+                    filterTitle === "Balance" && "nft-sort-selected"
+                  } `}
+                  onClick={() => {
+                    sortNfts("balance");
+                    setShowNfts(false);
+                  }}
+                >
+                  Balance
                 </h6>
               </div>
 
@@ -1895,12 +2018,24 @@ const WalletBalance = ({
                                   ? `https://dypmeta.s3.us-east-2.amazonaws.com/doge+nft+50x50.png`
                                   : item.type === "skale"
                                   ? `https://dypmeta.s3.us-east-2.amazonaws.com/SKALE+Beta+Pass+50x50.png`
+                                  : item.type === "bnb"
+                                  ? `https://dypmeta.s3.us-east-2.amazonaws.com/bnb+nft+50.png`
+                                  : item.type === "opbnb"
+                                  ? `https://dypmeta.s3.us-east-2.amazonaws.com/opBNB+NFT+50.png`
+                                  : item.type === "manta"
+                                  ? `https://dypmeta.s3.us-east-2.amazonaws.com/manta+nft+50.png`
                                   : item.type === "cmc"
                                   ? `https://dypmeta.s3.us-east-2.amazonaws.com/CMC+Beta+Pass+NFT+50x50px.png`
                                   : item.type === "core"
                                   ? `https://dypmeta.s3.us-east-2.amazonaws.com/CORE+50.png`
                                   : item.type === "viction"
                                   ? `https://dypmeta.s3.us-east-2.amazonaws.com/Viction+50.png`
+                                  : item.type === "immutable"
+                                  ? `https://dypmeta.s3.us-east-2.amazonaws.com/immutable+50.png`
+                                  : item.type === "multivers"
+                                  ? `https://dypmeta.s3.us-east-2.amazonaws.com/MultiversX+NFT+50.png`
+                                  : item.type === "manta"
+                                  ? `https://dypmeta.s3.us-east-2.amazonaws.com/MultiversX+NFT+50.png`
                                   : item.type === "base"
                                   ? `https://dypmeta.s3.us-east-2.amazonaws.com/base+50px.png`
                                   : item.type === "gate"
@@ -1930,6 +2065,8 @@ const WalletBalance = ({
                                   ? "BSBP"
                                   : item.type === "doge"
                                   ? "DCBP"
+                                  : item.type === "doge"
+                                  ? "BNBBP"
                                   : item.type === "skale"
                                   ? "SKBP"
                                   : item.type === "cmc"
@@ -1938,10 +2075,22 @@ const WalletBalance = ({
                                   ? "COBP"
                                   : item.type === "viction"
                                   ? "VCBP"
+                                  : item.type === "immutable"
+                                  ? "IMXBP"
+                                  : item.type === "multivers"
+                                  ? "MXBP"
+                                  : item.type === "manta"
+                                  ? "MNBP"
                                   : item.type === "gate"
                                   ? "GTBP"
-                                  : "Timepiece"}{" "}
-                                #{item.tokenId}
+                                  : item.type === "bnb"
+                                  ? "BNBBP"
+                                  : item.type === "opbnb"
+                                  ? "opBNBBP"
+                                  : "Timepiece"}
+                                  
+                                  { item.type === "immutable" ? '' : `#${item.tokenId}`}
+                                
                               </h6>
                               {/* <span className="account-nft-type">
                               {item.type === "caws"
@@ -2885,17 +3034,32 @@ const WalletBalance = ({
                                   window.config.nft_skale_address
                                 ? "skale"
                                 : nft.nftAddress ===
+                                  window.config.nft_bnb_address
+                                ? "bnb"
+                                : nft.nftAddress ===
+                                  window.config.nft_opbnb_address
+                                ? "opbnb"
+                                : nft.nftAddress ===
                                   window.config.nft_cmc_address
                                 ? "cmc"
                                 : nft.nftAddress ===
                                   window.config.nft_coingecko_address
                                 ? "coingecko"
                                 : nft.nftAddress ===
-                                window.config.nft_core_address
-                              ? "core"
-                              : nft.nftAddress ===
-                              window.config.nft_viction_address
-                            ? "viction"
+                                  window.config.nft_core_address
+                                ? "core"
+                                : nft.nftAddress ===
+                                  window.config.nft_viction_address
+                                ? "viction"
+                                : nft.nftAddress ===
+                                  window.config.nft_immutable_address
+                                ? "immutable"
+                                : nft.nftAddress ===
+                                  window.config.nft_multivers_address
+                                ? "multivers"
+                                : nft.nftAddress ===
+                                  window.config.nft_manta_address
+                                ? "manta"
                                 : "timepiece",
                             // isOwner:
                             //   isVerified && email
@@ -2960,6 +3124,15 @@ const WalletBalance = ({
                                       window.config.nft_skale_address
                                     ? `https://dypmeta.s3.us-east-2.amazonaws.com/SKALE+Beta+Pass+50x50.png`
                                     : nft.nftAddress ===
+                                      window.config.nft_bnb_address
+                                    ? `https://dypmeta.s3.us-east-2.amazonaws.com/bnb+nft+50.png`
+                                    : nft.nftAddress ===
+                                      window.config.nft_manta_address
+                                    ? `https://dypmeta.s3.us-east-2.amazonaws.com/manta+nft+50.png`
+                                    : nft.nftAddress ===
+                                      window.config.nft_opbnb_address
+                                    ? `https://dypmeta.s3.us-east-2.amazonaws.com/opBNB+NFT+50.png`
+                                    : nft.nftAddress ===
                                       window.config.nft_cmc_address
                                     ? `https://dypmeta.s3.us-east-2.amazonaws.com/CMC+Beta+Pass+NFT+50x50px.png`
                                     : nft.nftAddress ===
@@ -2968,6 +3141,12 @@ const WalletBalance = ({
                                     : nft.nftAddress ===
                                       window.config.nft_viction_address
                                     ? `https://dypmeta.s3.us-east-2.amazonaws.com/Viction+50.png`
+                                    : nft.nftAddress ===
+                                    window.config.nft_immutable_address
+                                  ? `https://dypmeta.s3.us-east-2.amazonaws.com/immutable+50.png`
+                                    : nft.nftAddress ===
+                                      window.config.nft_multivers_address
+                                    ? `https://dypmeta.s3.us-east-2.amazonaws.com/MultiversX+NFT+50.png`
                                     : nft.nftAddress ===
                                       window.config.nft_coingecko_address
                                     ? `https://dypmeta.s3.us-east-2.amazonaws.com/50x50_cg_pass.png`
@@ -3015,16 +3194,32 @@ const WalletBalance = ({
                                       window.config.nft_skale_address
                                     ? "SKBP"
                                     : nft.nftAddress ===
+                                      window.config.nft_bnb_address
+                                    ? "BNBBP"
+                                    : nft.nftAddress ===
+                                      window.config.nft_opbnb_address
+                                    ? "opBNBBP"
+                                    : nft.nftAddress ===
                                       window.config.nft_cmc_address
                                     ? "CMCBP"
                                     : nft.nftAddress ===
-                                    window.config.nft_core_address
-                                  ? "COBP"
-                                  : nft.nftAddress ===
-                                  window.config.nft_viction_address
-                                ? "VCBP"
+                                      window.config.nft_core_address
+                                    ? "COBP"
+                                    : nft.nftAddress ===
+                                      window.config.nft_viction_address
+                                    ? "VCBP"
+                                    : nft.nftAddress ===
+                                      window.config.nft_immutable_address
+                                    ? "IMXBP"
+                                    : nft.nftAddress ===
+                                      window.config.nft_multivers_address
+                                    ? "MXBP"
+                                    : nft.nftAddress ===
+                                      window.config.nft_manta_address
+                                    ? "MNBP"
                                     : "CAWS Timepiece"}{" "}
-                                  #{nft.tokenId}
+                                   { nft.nftAddress ===
+                                      window.config.nft_immutable_address ? '' : `#${nft.tokenId}`}
                                 </h6>
                                 {/* <span className="account-nft-type">
                             {nft.nftAddress ===
@@ -3175,17 +3370,32 @@ const WalletBalance = ({
                                   window.config.nft_skale_address
                                 ? "skale"
                                 : nft.nftAddress ===
+                                  window.config.nft_bnb_address
+                                ? "bnb"
+                                : nft.nftAddress ===
+                                  window.config.nft_opbnb_address
+                                ? "opbnb"
+                                : nft.nftAddress ===
                                   window.config.nft_cmc_address
                                 ? "cmc"
                                 : nft.nftAddress ===
                                   window.config.nft_coingecko_address
                                 ? "coingecko"
                                 : nft.nftAddress ===
-                                window.config.nft_core_address
-                              ? "core"
-                              : nft.nftAddress ===
-                              window.config.nft_viction_address
-                            ? "viction"
+                                  window.config.nft_core_address
+                                ? "core"
+                                : nft.nftAddress ===
+                                  window.config.nft_viction_address
+                                ? "viction"
+                                : nft.nftAddress ===
+                                window.config.nft_immutable_address
+                              ? "immutable"
+                                : nft.nftAddress ===
+                                  window.config.nft_multivers_address
+                                ? "multivers"
+                                : nft.nftAddress ===
+                                  window.config.nft_manta_address
+                                ? "manta"
                                 : "timepiece",
                             // isOwner:
                             //   isVerified && email
@@ -3252,6 +3462,12 @@ const WalletBalance = ({
                                       window.config.nft_skale_address
                                     ? `https://dypmeta.s3.us-east-2.amazonaws.com/SKALE+Beta+Pass+50x50.png`
                                     : nft.nftAddress ===
+                                      window.config.nft_bnb_address
+                                    ? `https://dypmeta.s3.us-east-2.amazonaws.com/bnb+nft+50.png`
+                                    : nft.nftAddress ===
+                                      window.config.nft_opbnb_address
+                                    ? `https://dypmeta.s3.us-east-2.amazonaws.com/opBNB+NFT+50.png`
+                                    : nft.nftAddress ===
                                       window.config.nft_cmc_address
                                     ? `https://dypmeta.s3.us-east-2.amazonaws.com/CMC+Beta+Pass+NFT+50x50px.png`
                                     : nft.nftAddress ===
@@ -3260,6 +3476,15 @@ const WalletBalance = ({
                                     : nft.nftAddress ===
                                       window.config.nft_viction_address
                                     ? `https://dypmeta.s3.us-east-2.amazonaws.com/Viction+50.png`
+                                    : nft.nftAddress ===
+                                      window.config.nft_immutable_address
+                                    ? `https://dypmeta.s3.us-east-2.amazonaws.com/immutable+50.png`
+                                    : nft.nftAddress ===
+                                      window.config.nft_multivers_address
+                                    ? `https://dypmeta.s3.us-east-2.amazonaws.com/MultiversX+NFT+50.png`
+                                    : nft.nftAddress ===
+                                      window.config.nft_manta_address
+                                    ? `https://dypmeta.s3.us-east-2.amazonaws.com/manta+nft+50.png`
                                     : nft.nftAddress ===
                                       window.config.nft_coingecko_address
                                     ? `https://dypmeta.s3.us-east-2.amazonaws.com/50x50_cg_pass.png`
@@ -3309,6 +3534,12 @@ const WalletBalance = ({
                                       window.config.nft_skale_address
                                     ? "SKBP"
                                     : nft.nftAddress ===
+                                      window.config.nft_bnb_address
+                                    ? "BNBBP"
+                                    : nft.nftAddress ===
+                                      window.config.nft_opbnb_address
+                                    ? "opBNBBP"
+                                    : nft.nftAddress ===
                                       window.config.nft_cmc_address
                                     ? "CMCBP"
                                     : nft.nftAddress ===
@@ -3317,8 +3548,18 @@ const WalletBalance = ({
                                     : nft.nftAddress ===
                                       window.config.nft_viction_address
                                     ? "VCBP"
+                                    : nft.nftAddress ===
+                                    window.config.nft_immutable_address
+                                  ? "IMXBP"
+                                    : nft.nftAddress ===
+                                      window.config.nft_multivers_address
+                                    ? "MXBP"
+                                    : nft.nftAddress ===
+                                      window.config.nft_manta_address
+                                    ? "MNBP"
                                     : "CAWS Timepiece"}{" "}
-                                  #{nft.tokenId}
+                                    { nft.nftAddress ===
+                                      window.config.nft_immutable_address ? '' : `#${nft.tokenId}`}
                                 </h6>
                                 {/* <span className="account-nft-type">
                             {nft.nftAddress ===

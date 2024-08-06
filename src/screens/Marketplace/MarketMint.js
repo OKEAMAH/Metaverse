@@ -21,6 +21,8 @@ import Slider from "react-slick";
 import nextArrow from "./assets/nextArrow1.svg";
 import confluxActive from "./assets/confluxActive.png";
 import coin98Active from "./assets/coin98Active.png";
+import bnbActive from "./assets/bnbActive.png";
+import mantaActive from "./assets/mantaActive.png";
 import coingeckoActive from "./assets/coingeckoActive.png";
 import skaleActive from "./assets/upcomingSkaleMobile.webp";
 import immutableActive from "./assets/immutableActive.webp";
@@ -28,7 +30,7 @@ import coreActive from "./assets/coreActive.webp";
 import victionActive from "./assets/victionActive.webp";
 import seiActive from "./assets/seiActive.webp";
 import multiversActive from "./assets/multiversActive.webp";
-
+import mantaLogo from "./assets/mantaLogo.png";
 import timepieceActive from "./assets/timepieceActive.png";
 import gateActive from "./assets/gateActive.png";
 import kucoinActive from "./assets/kucoinActive.png";
@@ -44,16 +46,20 @@ import multiversLogo from "./assets/multiversLogo.svg";
 
 import seiBg from "./assets/seiBg.webp";
 import coreBg from "./assets/coreBg.webp";
+import mantaBg from "./assets/mantaBg.webp";
+
 import victionBg from "./assets/victionBg.webp";
 import multiversBg from "./assets/multiversBg.webp";
 import immutableMobileBg from "./assets/immutableActive.webp";
 import seiMobileBg from "./assets/seiActive.webp";
 import coreMobileBg from "./assets/coreActive.webp";
+import mantaMobileBg from "./assets/mantaMobileBg.png";
+
 import victionMobileBg from "./assets/victionActive.webp";
 import multiversMobileBg from "./assets/multiversActive.webp";
 
 import avaxLogo from "./assets/avaxLogo.svg";
-import bnbLogo from "./assets/bnbLogo.svg";
+import bnbLogo from "./assets/bnbIcon.svg";
 import wodLogo from "./assets/wodIcon.png";
 import openSeaLogo from "./assets/openSeaLogo.png";
 import BetaEventCard from "./components/BetaEventCard";
@@ -104,6 +110,7 @@ const MarketMint = ({
   totalseiNft,
   totalVictionNft,
   totalImmutableNft,
+  immutableMintAllowed,
   totalMultiversNft,
   totalCoreNft,
   myVictionNfts,
@@ -111,6 +118,19 @@ const MarketMint = ({
   myImmutableNfts,
   myCoreNfts,
   myseiNfts,
+  myBnbNFTsCreated,
+  handleBnbNftMint,
+  bnbMintAllowed,
+  totalBnbNft,
+  myBnbNfts,
+  myOpbnbNfts,
+  myopbnbNFTsCreated,
+  opbnbMintAllowed,
+  totalopbnbNft,
+  totalMantaNft,
+  mantaMintAllowed,
+  myMantaNfts,
+  myMantaNFTsCreated,
 }) => {
   // const avaxData = {
   //   id: "avax",
@@ -181,16 +201,40 @@ const MarketMint = ({
     mobileBg: "seiMobileBg.webp",
   };
 
-  const victionData = {
-    id: "viction",
-    cardTitle: "Viction Beta Pass",
-    title: "Viction Beta Pass",
-    background: "viction-mint-bg",
-    mobileBg: "victionMobileBg.webp",
+  // const victionData = {
+  //   id: "viction",
+  //   cardTitle: "Viction Beta Pass",
+  //   title: "Viction Beta Pass",
+  //   background: "viction-mint-bg",
+  //   mobileBg: "victionMobileBg.webp",
+  // };
+
+  const bnbData = {
+    id: "bnb",
+    cardTitle: "BNB Chain Beta Pass",
+    title: "BNB Chain Beta Pass",
+    background: "bnb-mint-bg",
+    mobileBg: "bnbMobileBg.webp",
+  };
+
+  const opbnbData = {
+    id: "opbnb",
+    cardTitle: "opBNB Chain Beta Pass",
+    title: "opBNB Chain Beta Pass",
+    background: "opbnb-mint-bg",
+    mobileBg: "opbnbMobile.webp",
+  };
+  const mantaData = {
+    id: "manta",
+    cardTitle: "Manta Beta Pass",
+    title: "Manta Beta Pass",
+    background: "manta-mint-bg",
+    mobileBg: "mantaBgMobile.webp",
   };
 
   const windowSize = useWindowSize();
   const params = useParams();
+  const location = useLocation();
   const [viewCollection, setViewCollection] = useState(false);
   const [nftCount, setNftCount] = useState(1);
   const [nftStatus, setNftStatus] = useState("*50 NFT limit");
@@ -209,11 +253,12 @@ const MarketMint = ({
   const [confluxSold, setconfluxSold] = useState(0);
   const [baseSold, setcBaseSold] = useState(0);
   const [skaleSold, setskaleSold] = useState(0);
+  const [bnbNftsSold, setbnbNftsSold] = useState(0);
 
   const [activeSlide, setActiveSlide] = useState(0);
   const [showFirstNext, setShowFirstNext] = useState(0);
-  const [selectedMint, setSelectedMint] = useState(timepieceData);
-  const [mintTitle, setMintTitle] = useState("timepiece");
+  const [selectedMint, setSelectedMint] = useState(opbnbData);
+  const [mintTitle, setMintTitle] = useState("opbnbchain");
   const [sliderCut, setSliderCut] = useState();
   const [confluxLive, setConfluxLive] = useState(false);
   const slider = useRef(null);
@@ -262,25 +307,57 @@ const MarketMint = ({
         return 0;
       });
     setskaleSold(skaleresult);
+
+    const bnbnftContract = new window.bscWeb3.eth.Contract(
+      window.BNB_NFT_ABI,
+      window.config.nft_bnb_address
+    );
+
+    const bnbresult = await bnbnftContract.methods
+      .totalSupply()
+      .call()
+      .catch((e) => {
+        console.error(e);
+        return 0;
+      });
+
+    setbnbNftsSold(bnbresult);
   };
 
   useEffect(() => {
-    //if (params.id === "skale") {
-    //  setSelectedMint(baseData);
-    //  setMintTitle("skale");
-    //} else if (params.id === "timepiece") {
-    setSelectedMint(timepieceData);
-    setMintTitle("timepiece");
-    //}
+    if (
+      location.pathname.includes("bnbchain") &&
+      !location.pathname.includes("opbnbchain")
+    ) {
+      setSelectedMint(bnbData);
+      setMintTitle("bnbchain");
+    } else if (location.pathname.includes("core")) {
+      setSelectedMint(coreData);
+      setMintTitle("core");
+    } else if (location.pathname.includes("opbnbchain")) {
+      setSelectedMint(opbnbData);
+      setMintTitle("opbnbchain");
+    } else if (location.pathname.includes("timepiece")) {
+      setSelectedMint(timepieceData);
+      setMintTitle("timepiece");
+    } else if (location.pathname.includes("immutable")) {
+      setSelectedMint(immutableData);
+      setMintTitle("immutable");
+    } else if (location.pathname.includes("manta")) {
+      setSelectedMint(mantaData);
+      setMintTitle("manta");
+    }
     getTotalSupply();
-  }, []);
+  }, [location]);
 
   useEffect(() => {
     html.classList.remove("hidescroll");
   }, []);
 
   let countToLiveConflux = new Date("2023-10-10T11:00:00.000+02:00");
-  let countToExpireConflux = new Date("2024-05-06T14:00:00.000+02:00");
+  let countToExpireConflux = new Date("2024-08-05T16:00:00.000+02:00");
+  let countToExpireOpbnb = new Date("2024-08-06T24:00:00.000+02:00");
+  let countToExpireManta = new Date("2024-08-15T24:00:00.000+02:00");
 
   const dummyCards = [
     // {
@@ -341,6 +418,61 @@ const MarketMint = ({
     //   data: baseData,
     //   class: "mint-skale",
     // },
+
+    // {
+    //   title: "MultiversX Pass",
+    //   eventId: "multiversx",
+    //   desc: "Gain entry to metaverse, and join exclusive MultiversX event with special ticket.",
+    //   img: multiversActive,
+    //   data: multiversData,
+    //   class: "mint-multivers",
+    // },
+
+    // {
+    //   title: "Viction Pass",
+    //   eventId: "viction",
+    //   desc: "Gain entry to metaverse, and join exclusive Viction event with special ticket.",
+    //   img: victionActive,
+    //   data: victionData,
+    //   class: "mint-viction",
+    // },
+
+    // {
+    //   title: "SEI Pass",
+    //   eventId: "sei",
+    //   desc: "Gain entry to metaverse, and join exclusive SEI event with special ticket.",
+    //   img: seiActive,
+    //   data: seiData,
+    //   class: "mint-sei",
+    // },
+    // {
+    //   title: "BNB Chain Pass",
+    //   eventId: "bnbchain",
+    //   desc: "Gain entry to metaverse, and join exclusive BNB Chain event with special ticket.",
+    //   img: bnbActive,
+    //   data: bnbData,
+    //   class: "mint-bnb",
+    //   id: "bnb",
+    // },
+
+    // {
+    //   title: "Manta Pass",
+    //   eventId: "manta",
+    //   desc: "Gain entry to metaverse, and join exclusive Manta event with special ticket.",
+    //   img: mantaActive,
+    //   data: mantaData,
+    //   class: "mint-manta",
+    //   id: "manta",
+    // },
+    {
+      title: "opBNB Chain Pass",
+      eventId: "opbnbchain",
+      desc: "Gain entry to metaverse, and join exclusive opBNB Chain event with special ticket.",
+      img: bnbActive,
+      data: opbnbData,
+      class: "mint-bnb",
+      id: "opbnb",
+    },
     {
       title: "Immutable Pass",
       eventId: "immutable",
@@ -350,14 +482,6 @@ const MarketMint = ({
       class: "mint-immutable",
     },
     {
-      title: "MultiversX Pass",
-      eventId: "multiversx",
-      desc: "Gain entry to metaverse, and join exclusive MultiversX event with special ticket.",
-      img: multiversActive,
-      data: multiversData,
-      class: "mint-multivers",
-    },
-    {
       title: "CORE Pass",
       eventId: "core",
       desc: "Gain entry to metaverse, and join exclusive CORE event with special ticket.",
@@ -365,25 +489,6 @@ const MarketMint = ({
       data: coreData,
       class: "mint-core",
     },
-
-    {
-      title: "Viction Pass",
-      eventId: "viction",
-      desc: "Gain entry to metaverse, and join exclusive Viction event with special ticket.",
-      img: victionActive,
-      data: victionData,
-      class: "mint-viction",
-    },
-
-    {
-      title: "SEI Pass",
-      eventId: "sei",
-      desc: "Gain entry to metaverse, and join exclusive SEI event with special ticket.",
-      img: seiActive,
-      data: seiData,
-      class: "mint-sei",
-    },
-
     {
       title: "CAWS Timepiece",
       eventId: "timepiece",
@@ -577,6 +682,22 @@ const MarketMint = ({
             setactiveButton(true);
             setStatus("");
           }
+        } else if (selectedMint.id === "bnb") {
+          if (chainId !== 56) {
+            setactiveButton(false);
+            setStatus("Switch to BNB to continue minting.");
+          } else if (chainId === 56) {
+            setactiveButton(true);
+            setStatus("");
+          }
+        } else if (selectedMint.id === "opbnb") {
+          if (chainId !== 204) {
+            setactiveButton(false);
+            setStatus("Switch to opBNB Chain to continue minting.");
+          } else if (chainId === 204) {
+            setactiveButton(true);
+            setStatus("");
+          }
         } else if (selectedMint.id === "core") {
           if (chainId !== 1116) {
             setactiveButton(false);
@@ -590,6 +711,22 @@ const MarketMint = ({
             setactiveButton(false);
             setStatus("Switch to Viction to continue minting.");
           } else if (chainId === 88) {
+            setactiveButton(true);
+            setStatus("");
+          }
+        } else if (selectedMint.id === "immutable") {
+          if (chainId !== 13371) {
+            setactiveButton(false);
+            setStatus("Switch to Immutable to continue minting.");
+          } else if (chainId === 13371) {
+            setactiveButton(true);
+            setStatus("");
+          }
+        } else if (selectedMint.id === "manta") {
+          if (chainId !== 169) {
+            setactiveButton(false);
+            setStatus("Switch to Manta to continue minting.");
+          } else if (chainId === 169) {
             setactiveButton(true);
             setStatus("");
           }
@@ -675,6 +812,8 @@ const MarketMint = ({
                     } px-3 py-2`}
                     onClick={() => setActiveTab("live")}
                   >
+                    {" "}
+                    
                     Live
                   </h6>
                   <h6
@@ -683,7 +822,6 @@ const MarketMint = ({
                     } px-3 py-2`}
                     onClick={() => setActiveTab("upcoming")}
                   >
-                    {" "}
                     <div className="new-upcoming-tag d-flex align-items-center justify-content-center px-1">
                       <span className="mb-0">New</span>
                     </div>
@@ -703,43 +841,45 @@ const MarketMint = ({
 
               {activeTab === "live" && (
                 <>
-                  {/* <div className="pb-5 px-0 position-relative">
-                    {activeSlide > 0 && (
-                      <div className="prev-arrow-nft" onClick={firstPrev}>
-                        <img src={nextArrow} alt="" />
-                      </div>
-                    )}
-                    {showFirstNext === activeSlide
-                      ? null
-                      : dummyCards.length > sliderCut && (
-                          <div className="next-arrow-nft" onClick={firstNext}>
-                            <img src={nextArrow} alt="1" />
-                          </div>
-                        )}
-                    {windowSize.width < 480 && (
-                      <>
+                  {dummyCards.length > 1 && (
+                    <div className="pb-5 px-0 position-relative">
+                      {activeSlide > 0 && (
                         <div className="prev-arrow-nft" onClick={firstPrev}>
                           <img src={nextArrow} alt="" />
                         </div>
-                        <div className="next-arrow-nft" onClick={firstNext}>
-                          <img src={nextArrow} alt="1" />
-                        </div>
-                      </>
-                    )}
-                    <Slider ref={(c) => (slider.current = c)} {...settings}>
-                      {dummyCards.map((item, index) => (
-                        <EventSliderCard
-                          key={index}
-                          data={item}
-                          onSelectCard={() => {
-                            setSelectedMint(item.data);
-                            setMintTitle(item.eventId);
-                          }}
-                          mintTitle={mintTitle}
-                        />
-                      ))}
-                    </Slider>
-                  </div> */}
+                      )}
+                      {showFirstNext === activeSlide
+                        ? null
+                        : dummyCards.length > sliderCut && (
+                            <div className="next-arrow-nft" onClick={firstNext}>
+                              <img src={nextArrow} alt="1" />
+                            </div>
+                          )}
+                      {windowSize.width < 480 && (
+                        <>
+                          <div className="prev-arrow-nft" onClick={firstPrev}>
+                            <img src={nextArrow} alt="" />
+                          </div>
+                          <div className="next-arrow-nft" onClick={firstNext}>
+                            <img src={nextArrow} alt="1" />
+                          </div>
+                        </>
+                      )}
+                      <Slider ref={(c) => (slider.current = c)} {...settings}>
+                        {dummyCards.map((item, index) => (
+                          <EventSliderCard
+                            key={index}
+                            data={item}
+                            onSelectCard={() => {
+                              setSelectedMint(item.data);
+                              setMintTitle(item.eventId);
+                            }}
+                            mintTitle={mintTitle}
+                          />
+                        ))}
+                      </Slider>
+                    </div>
+                  )}
                   {selectedMint && (
                     <>
                       <div className="col-12 col-md-12 col-xxl-3 ps-2 ps-lg-0 staking-height-2">
@@ -757,6 +897,20 @@ const MarketMint = ({
                               selectedMint.id === "skale" && (
                                 <div className="totalcreated">
                                   <span>{myskaleNFTsCreated.length}</span>
+                                </div>
+                              )}
+                            {showBadge &&
+                              myopbnbNFTsCreated.length > 0 &&
+                              selectedMint.id === "opbnb" && (
+                                <div className="totalcreated">
+                                  <span>{myopbnbNFTsCreated.length}</span>
+                                </div>
+                              )}
+                            {showBadge &&
+                              myMantaNFTsCreated.length > 0 &&
+                              selectedMint.id === "manta" && (
+                                <div className="totalcreated">
+                                  <span>{myMantaNFTsCreated.length}</span>
                                 </div>
                               )}
                             <div
@@ -778,6 +932,9 @@ const MarketMint = ({
                                   : selectedMint.id === "core" &&
                                     totalCoreNft > 0
                                   ? "core-active"
+                                  : selectedMint.id === "manta" &&
+                                    totalMantaNft > 0
+                                  ? "manta-active"
                                   : selectedMint.id === "viction" &&
                                     totalVictionNft > 0
                                   ? "viction-active"
@@ -793,10 +950,15 @@ const MarketMint = ({
                                   : selectedMint.id === "multiversx" &&
                                     totalMultiversNft > 0
                                   ? "multivers-active"
+                                  : selectedMint.id === "bnb" && totalBnbNft > 0
+                                  ? "bnb-active"
+                                  : selectedMint.id === "opbnb" &&
+                                    totalopbnbNft > 0
+                                  ? "opbnb-active"
                                   : selectedMint.id === "multiversx" &&
                                     totalMultiversNft === 0
                                   ? "conflux-empty"
-                                  : "multivers-active"
+                                  : "conflux-empty"
                               } d-flex justify-content-center align-items-center p-3 position-relative`}
                               style={{ height: 312 }}
                             >
@@ -811,7 +973,7 @@ const MarketMint = ({
                               className="genesis-desc position-relative"
                               style={{ bottom: "5px" }}
                             >
-                              <h6 className="font-organetto land-desc w-75">
+                              <h6 className="font-organetto land-desc">
                                 {selectedMint?.cardTitle}
                               </h6>
                             </div>
@@ -846,12 +1008,12 @@ const MarketMint = ({
                               </button>
                             </div>
                           )}
-                          {selectedMint.id === "multiversx" && (
+                          {selectedMint.id === "bnb" && (
                             <div
                               className={
                                 isConnected === false ||
                                 activeButton === false ||
-                                totalMultiversNft === 0
+                                totalBnbNft === 0
                                   ? "linear-border-disabled"
                                   : "linear-border"
                               }
@@ -860,20 +1022,20 @@ const MarketMint = ({
                                 className={`btn ${
                                   isConnected === false ||
                                   activeButton === false ||
-                                  totalMultiversNft === 0
+                                  totalBnbNft === 0
                                     ? "outline-btn-disabled"
                                     : "outline-btn"
                                 } px-5 w-100`}
                                 disabled={
                                   isConnected === false ||
                                   activeButton === false ||
-                                  totalMultiversNft === 0
+                                  totalBnbNft === 0
                                 }
-                                to={`/marketplace/nft/${myMultiversNfts[0]}/${window.config.nft_multivers_address}`}
+                                to={`/marketplace/nft/${myBnbNfts[0]}/${window.config.nft_bnb_address}`}
                                 onClick={() => {
                                   updateViewCount(
-                                    myMultiversNfts[0],
-                                    window.config.nft_multivers_address
+                                    myBnbNfts[0],
+                                    window.config.nft_bnb_address
                                   );
                                 }}
                               >
@@ -881,6 +1043,43 @@ const MarketMint = ({
                               </NavLink>
                             </div>
                           )}
+
+                          {selectedMint.id === "opbnb" && (
+                            <div
+                              className={
+                                isConnected === false ||
+                                activeButton === false ||
+                                totalopbnbNft === 0
+                                  ? "linear-border-disabled"
+                                  : "linear-border"
+                              }
+                            >
+                              <NavLink
+                                className={`btn ${
+                                  isConnected === false ||
+                                  activeButton === false ||
+                                  totalopbnbNft === 0
+                                    ? "outline-btn-disabled"
+                                    : "outline-btn"
+                                } px-5 w-100`}
+                                disabled={
+                                  isConnected === false ||
+                                  activeButton === false ||
+                                  totalopbnbNft === 0
+                                }
+                                to={`/marketplace/nft/${myOpbnbNfts[0]}/${window.config.nft_opbnb_address}`}
+                                onClick={() => {
+                                  updateViewCount(
+                                    myOpbnbNfts[0],
+                                    window.config.nft_opbnb_address
+                                  );
+                                }}
+                              >
+                                View NFT
+                              </NavLink>
+                            </div>
+                          )}
+
                           {selectedMint.id === "core" && (
                             <div
                               className={
@@ -974,10 +1173,10 @@ const MarketMint = ({
                                   activeButton === false ||
                                   myImmutableNfts.length === 0
                                 }
-                                to={`/marketplace/nft/${myImmutableNfts[0]}/${window.config.nft_immutable_address}`}
+                                to={`/marketplace/nft/${totalImmutableNft}/${window.config.nft_immutable_address}`}
                                 onClick={() => {
                                   updateViewCount(
-                                    myImmutableNfts[0],
+                                    totalImmutableNft,
                                     window.config.nft_immutable_address
                                   );
                                 }}
@@ -1014,6 +1213,41 @@ const MarketMint = ({
                                   updateViewCount(
                                     myVictionNfts[0],
                                     window.config.nft_viction_address
+                                  );
+                                }}
+                              >
+                                View NFT
+                              </NavLink>
+                            </div>
+                          )}
+                          {selectedMint.id === "manta" && (
+                            <div
+                              className={
+                                isConnected === false ||
+                                activeButton === false ||
+                                myMantaNfts.length === 0
+                                  ? "linear-border-disabled"
+                                  : "linear-border"
+                              }
+                            >
+                              <NavLink
+                                className={`btn ${
+                                  isConnected === false ||
+                                  activeButton === false ||
+                                  myMantaNfts.length === 0
+                                    ? "outline-btn-disabled"
+                                    : "outline-btn"
+                                } px-5 w-100`}
+                                disabled={
+                                  isConnected === false ||
+                                  activeButton === false ||
+                                  myMantaNfts.length === 0
+                                }
+                                to={`/marketplace/nft/${myMantaNfts[0]}/${window.config.nft_manta_address}`}
+                                onClick={() => {
+                                  updateViewCount(
+                                    myMantaNfts[0],
+                                    window.config.nft_manta_address
                                   );
                                 }}
                               >
@@ -1065,6 +1299,18 @@ const MarketMint = ({
                                   />
                                   <span className="mint-benefits-title">
                                     Minting is available on SKALE
+                                  </span>
+                                </div>
+                              ) : mintTitle === "manta" ? (
+                                <div className="d-flex align-items-center gap-2">
+                                  <img
+                                    src={blockChainIcon}
+                                    width={40}
+                                    height={40}
+                                    alt=""
+                                  />
+                                  <span className="mint-benefits-title">
+                                    Minting is available on Manta
                                   </span>
                                 </div>
                               ) : mintTitle === "coingecko" ||
@@ -1206,7 +1452,8 @@ const MarketMint = ({
                                 />
                               </div>
                             </div>
-                            {mintTitle === "timepiece" ? (
+                            {mintTitle === "timepiece" ||
+                            mintTitle === "bnbchain" ? (
                               <span
                                 className="limit-span position-relative"
                                 style={{
@@ -1226,6 +1473,14 @@ const MarketMint = ({
                                 Available only on Conflux Network
                                 <img src={confluxLogo} alt="" />
                               </span>
+                            ) : mintTitle === "manta" ? (
+                              <span
+                                className="limit-span position-relative d-flex align-items-center gap-2"
+                                style={{ bottom: "0px" }}
+                              >
+                                Available only on Manta
+                                <img src={mantaLogo} alt="" />
+                              </span>
                             ) : mintTitle === "avax" ? (
                               <span
                                 className="limit-span position-relative d-flex align-items-center gap-2"
@@ -1239,13 +1494,30 @@ const MarketMint = ({
                                   height={16}
                                 />
                               </span>
-                            ) : mintTitle === "skale" ? (
+                            ) : // : mintTitle === "skale" ? (
+                            //   <span
+                            //     className="limit-span position-relative d-flex align-items-center gap-2"
+                            //     style={{ bottom: "0px" }}
+                            //   >
+                            //     Available only on SEI
+                            //     <img src={seiLogo} alt="" />
+                            //   </span>
+                            // )
+                            mintTitle === "bnbchain" ? (
                               <span
                                 className="limit-span position-relative d-flex align-items-center gap-2"
                                 style={{ bottom: "0px" }}
                               >
-                                Available only on SEI
-                                <img src={seiLogo} alt="" />
+                                Available only on BNB Chain
+                                <img src={bnbLogo} alt="" />
+                              </span>
+                            ) : mintTitle === "opbnbchain" ? (
+                              <span
+                                className="limit-span position-relative d-flex align-items-center gap-2"
+                                style={{ bottom: "0px" }}
+                              >
+                                Available only on opBNB Chain
+                                <img src={bnbLogo} alt="" />
                               </span>
                             ) : mintTitle === "multiversx" ? (
                               <span
@@ -1445,8 +1717,14 @@ const MarketMint = ({
                                         ? coreMintAllowed
                                         : mintTitle === "viction"
                                         ? victionMintAllowed
+                                        : mintTitle === "bnbchain"
+                                        ? bnbMintAllowed
+                                        : mintTitle === "manta"
+                                        ? mantaMintAllowed
                                         : mintTitle === "multiversx"
                                         ? 1
+                                        : mintTitle === "immutable"
+                                        ? immutableMintAllowed
                                         : 0}{" "}
                                       NFT
                                     </h6>
@@ -1458,7 +1736,13 @@ const MarketMint = ({
                                   </span>
                                   <div className="d-flex align-items-center gap-2">
                                     <Countdown
-                                      date={countToExpireConflux}
+                                      date={
+                                        mintTitle === "core"
+                                          ? countToExpireConflux
+                                          : mintTitle === "manta"
+                                          ? countToExpireManta
+                                          : countToExpireOpbnb
+                                      }
                                       renderer={renderer2}
                                     />
                                   </div>
@@ -1484,6 +1768,12 @@ const MarketMint = ({
                                 ? "Immutable"
                                 : mintTitle === "multiversx"
                                 ? "MultiversX"
+                                : mintTitle === "bnbchain"
+                                ? "BNB Chain"
+                                : mintTitle === "opbnbchain"
+                                ? "opBNB Chain"
+                                : mintTitle === "manta"
+                                ? "Manta"
                                 : "SEI"}
                               <img
                                 style={{ width: 24, height: 24 }}
@@ -1498,6 +1788,11 @@ const MarketMint = ({
                                     ? coreLogo
                                     : mintTitle === "immutable"
                                     ? immutableLogo
+                                    : mintTitle === "manta"
+                                    ? mantaLogo
+                                    : mintTitle === "bnbchain" ||
+                                      mintTitle === "opbnbchain"
+                                    ? bnbLogo
                                     : seiLogo
                                 }
                                 alt=""
@@ -1517,14 +1812,14 @@ const MarketMint = ({
                             )}
                             <hr className="gray-divider" />
                             <div className="d-flex w-100 justify-content-center">
-                              {selectedMint.id === "viction" && (
+                              {selectedMint.id === "bnb" && (
                                 <div
                                   className={
-                                    (isConnected === true && chainId !== 88) ||
+                                    (isConnected === true && chainId !== 56) ||
                                     (status !== "Connect your wallet." &&
                                       status !== "") ||
                                     mintloading === "error" ||
-                                    victionMintAllowed === 0
+                                    bnbMintAllowed === 0
                                       ? "linear-border-disabled"
                                       : "linear-border"
                                   }
@@ -1534,15 +1829,15 @@ const MarketMint = ({
                                       mintloading === "error"
                                         ? "filled-error-btn"
                                         : (isConnected === true &&
-                                            chainId !== 88) ||
+                                            chainId !== 56) ||
                                           (status !== "Connect your wallet." &&
                                             status !== "") ||
-                                          victionMintAllowed === 0
+                                          bnbMintAllowed === 0
                                         ? "outline-btn-disabled"
                                         : "filled-btn"
                                     }  px-4 w-100`}
                                     onClick={() => {
-                                      isConnected === true && chainId === 88
+                                      isConnected === true && chainId === 56
                                         ? handleMint()
                                         : showWalletConnect();
                                     }}
@@ -1550,10 +1845,10 @@ const MarketMint = ({
                                       mintloading === "error" ||
                                       mintloading === "success" ||
                                       (isConnected === true &&
-                                        chainId !== 88) ||
+                                        chainId !== 56) ||
                                       (status !== "Connect your wallet." &&
                                         status !== "") ||
-                                      victionMintAllowed === 0
+                                      bnbMintAllowed === 0
                                         ? true
                                         : false
                                     }
@@ -1565,7 +1860,7 @@ const MarketMint = ({
                                     }}
                                   >
                                     {(isConnected === false ||
-                                      chainId !== 88) && (
+                                      chainId !== 56) && (
                                       <img
                                         src={
                                           mouseOver === false
@@ -1581,11 +1876,11 @@ const MarketMint = ({
                                     )}{" "}
                                     {mintloading === "initial" &&
                                     isConnected === true &&
-                                    chainId === 88 ? (
+                                    chainId === 56 ? (
                                       "Mint"
                                     ) : mintloading === "mint" &&
                                       isConnected === true &&
-                                      chainId === 88 ? (
+                                      chainId === 56 ? (
                                       <>
                                         <div
                                           className="spinner-border "
@@ -1598,16 +1893,16 @@ const MarketMint = ({
                                       </>
                                     ) : mintloading === "error" &&
                                       isConnected === true &&
-                                      chainId === 88 ? (
+                                      chainId === 56 ? (
                                       "Failed"
                                     ) : mintloading === "success" &&
                                       isConnected === true &&
                                       activeButton ===
                                         (isConnected === true &&
-                                          chainId === 88) ? (
+                                          chainId === 56) ? (
                                       "Success"
                                     ) : isConnected === true &&
-                                      chainId !== 88 ? (
+                                      chainId !== 56 ? (
                                       " Switch Chain"
                                     ) : (
                                       "Connect wallet"
@@ -1615,7 +1910,104 @@ const MarketMint = ({
                                   </button>
                                 </div>
                               )}
-
+                              {selectedMint.id === "opbnb" && (
+                                <div
+                                  className={
+                                    (isConnected === true && chainId !== 204) ||
+                                    (status !== "Connect your wallet." &&
+                                      status !== "") ||
+                                    mintloading === "error" ||
+                                    opbnbMintAllowed === 0
+                                      ? "linear-border-disabled"
+                                      : "linear-border"
+                                  }
+                                >
+                                  <button
+                                    className={`btn ${
+                                      mintloading === "error"
+                                        ? "filled-error-btn"
+                                        : (isConnected === true &&
+                                            chainId !== 204) ||
+                                          (status !== "Connect your wallet." &&
+                                            status !== "") ||
+                                          opbnbMintAllowed === 0
+                                        ? "outline-btn-disabled"
+                                        : "filled-btn"
+                                    }  px-4 w-100`}
+                                    onClick={() => {
+                                      isConnected === true && chainId === 204
+                                        ? handleMint()
+                                        : showWalletConnect();
+                                    }}
+                                    disabled={
+                                      mintloading === "error" ||
+                                      mintloading === "success" ||
+                                      (isConnected === true &&
+                                        chainId !== 204) ||
+                                      (status !== "Connect your wallet." &&
+                                        status !== "") ||
+                                      opbnbMintAllowed === 0
+                                        ? true
+                                        : false
+                                    }
+                                    onMouseEnter={() => {
+                                      setMouseOver(true);
+                                    }}
+                                    onMouseLeave={() => {
+                                      setMouseOver(false);
+                                    }}
+                                  >
+                                    {(isConnected === false ||
+                                      chainId !== 204) && (
+                                      <img
+                                        src={
+                                          mouseOver === false
+                                            ? blackWallet
+                                            : whitewallet
+                                        }
+                                        alt=""
+                                        style={{
+                                          width: "23px",
+                                          height: "23px",
+                                        }}
+                                      />
+                                    )}{" "}
+                                    {mintloading === "initial" &&
+                                    isConnected === true &&
+                                    chainId === 204 ? (
+                                      "Mint"
+                                    ) : mintloading === "mint" &&
+                                      isConnected === true &&
+                                      chainId === 204 ? (
+                                      <>
+                                        <div
+                                          className="spinner-border "
+                                          role="status"
+                                          style={{
+                                            height: "1.5rem",
+                                            width: "1.5rem",
+                                          }}
+                                        ></div>
+                                      </>
+                                    ) : mintloading === "error" &&
+                                      isConnected === true &&
+                                      chainId === 204 ? (
+                                      "Failed"
+                                    ) : mintloading === "success" &&
+                                      isConnected === true &&
+                                      activeButton ===
+                                        (isConnected === true &&
+                                          chainId === 204) ? (
+                                      "Success"
+                                    ) : isConnected === true &&
+                                      chainId !== 204 ? (
+                                      " Switch Chain"
+                                    ) : (
+                                      "Connect wallet"
+                                    )}
+                                  </button>
+                                </div>
+                              )}
                               {selectedMint.id === "core" && (
                                 <div
                                   className={
@@ -1715,7 +2107,104 @@ const MarketMint = ({
                                   </button>
                                 </div>
                               )}
-
+                              {selectedMint.id === "viction" && (
+                                <div
+                                  className={
+                                    (isConnected === true && chainId !== 88) ||
+                                    (status !== "Connect your wallet." &&
+                                      status !== "") ||
+                                    mintloading === "error" ||
+                                    totalVictionNft > 0
+                                      ? "linear-border-disabled"
+                                      : "linear-border"
+                                  }
+                                >
+                                  <button
+                                    className={`btn ${
+                                      mintloading === "error"
+                                        ? "filled-error-btn"
+                                        : (isConnected === true &&
+                                            chainId !== 88) ||
+                                          (status !== "Connect your wallet." &&
+                                            status !== "") ||
+                                          totalVictionNft > 0
+                                        ? "outline-btn-disabled"
+                                        : "filled-btn"
+                                    }  px-4 w-100`}
+                                    onClick={() => {
+                                      isConnected === true && chainId === 88
+                                        ? handleMint()
+                                        : showWalletConnect();
+                                    }}
+                                    disabled={
+                                      mintloading === "error" ||
+                                      mintloading === "success" ||
+                                      (isConnected === true &&
+                                        chainId !== 88) ||
+                                      (status !== "Connect your wallet." &&
+                                        status !== "") ||
+                                      totalVictionNft > 0
+                                        ? true
+                                        : false
+                                    }
+                                    onMouseEnter={() => {
+                                      setMouseOver(true);
+                                    }}
+                                    onMouseLeave={() => {
+                                      setMouseOver(false);
+                                    }}
+                                  >
+                                    {(isConnected === false ||
+                                      chainId !== 88) && (
+                                      <img
+                                        src={
+                                          mouseOver === false
+                                            ? blackWallet
+                                            : whitewallet
+                                        }
+                                        alt=""
+                                        style={{
+                                          width: "23px",
+                                          height: "23px",
+                                        }}
+                                      />
+                                    )}{" "}
+                                    {mintloading === "initial" &&
+                                    isConnected === true &&
+                                    chainId === 88 ? (
+                                      "Mint"
+                                    ) : mintloading === "mint" &&
+                                      isConnected === true &&
+                                      chainId === 88 ? (
+                                      <>
+                                        <div
+                                          className="spinner-border"
+                                          role="status"
+                                          style={{
+                                            height: "1.5rem",
+                                            width: "1.5rem",
+                                          }}
+                                        ></div>
+                                      </>
+                                    ) : mintloading === "error" &&
+                                      isConnected === true &&
+                                      chainId === 88 ? (
+                                      "Failed"
+                                    ) : mintloading === "success" &&
+                                      isConnected === true &&
+                                      activeButton ===
+                                        (isConnected === true &&
+                                          chainId === 88) ? (
+                                      "Success"
+                                    ) : isConnected === true &&
+                                      chainId !== 88 ? (
+                                      " Switch Chain"
+                                    ) : (
+                                      "Connect wallet"
+                                    )}
+                                  </button>
+                                </div>
+                              )}
                               {selectedMint.id === "sei" && (
                                 <div
                                   className={
@@ -1811,7 +2300,6 @@ const MarketMint = ({
                                   </button>
                                 </div>
                               )}
-
                               {selectedMint.id === "immutable" && (
                                 <div
                                   className={
@@ -1839,7 +2327,7 @@ const MarketMint = ({
                                     }  px-4 w-100`}
                                     onClick={() => {
                                       isConnected === true && chainId === 13371
-                                        ? handleBaseNftMint()
+                                        ? handleMint()
                                         : showWalletConnect();
                                     }}
                                     disabled={
@@ -1907,7 +2395,6 @@ const MarketMint = ({
                                   </button>
                                 </div>
                               )}
-
                               {selectedMint.id === "multiversx" && (
                                 <div
                                   className={
@@ -2001,6 +2488,104 @@ const MarketMint = ({
                                   </button>
                                 </div>
                               )}
+                              {selectedMint.id === "manta" && (
+                                <div
+                                  className={
+                                    (isConnected === true && chainId !== 169) ||
+                                    (status !== "Connect your wallet." &&
+                                      status !== "") ||
+                                    mintloading === "error" ||
+                                    totalMantaNft > 0
+                                      ? "linear-border-disabled"
+                                      : "linear-border"
+                                  }
+                                >
+                                  <button
+                                    className={`btn ${
+                                      mintloading === "error"
+                                        ? "filled-error-btn"
+                                        : (isConnected === true &&
+                                            chainId !== 169) ||
+                                          (status !== "Connect your wallet." &&
+                                            status !== "") ||
+                                          totalMantaNft > 0
+                                        ? "outline-btn-disabled"
+                                        : "filled-btn"
+                                    }  px-4 w-100`}
+                                    onClick={() => {
+                                      isConnected === true && chainId === 169
+                                        ? handleMint()
+                                        : showWalletConnect();
+                                    }}
+                                    disabled={
+                                      mintloading === "error" ||
+                                      mintloading === "success" ||
+                                      (isConnected === true &&
+                                        chainId !== 169) ||
+                                      (status !== "Connect your wallet." &&
+                                        status !== "") ||
+                                      totalMantaNft > 0
+                                        ? true
+                                        : false
+                                    }
+                                    onMouseEnter={() => {
+                                      setMouseOver(true);
+                                    }}
+                                    onMouseLeave={() => {
+                                      setMouseOver(false);
+                                    }}
+                                  >
+                                    {(isConnected === false ||
+                                      chainId !== 169) && (
+                                      <img
+                                        src={
+                                          mouseOver === false
+                                            ? blackWallet
+                                            : whitewallet
+                                        }
+                                        alt=""
+                                        style={{
+                                          width: "23px",
+                                          height: "23px",
+                                        }}
+                                      />
+                                    )}{" "}
+                                    {mintloading === "initial" &&
+                                    isConnected === true &&
+                                    chainId === 169 ? (
+                                      "Mint"
+                                    ) : mintloading === "mint" &&
+                                      isConnected === true &&
+                                      chainId === 169 ? (
+                                      <>
+                                        <div
+                                          className="spinner-border"
+                                          role="status"
+                                          style={{
+                                            height: "1.5rem",
+                                            width: "1.5rem",
+                                          }}
+                                        ></div>
+                                      </>
+                                    ) : mintloading === "error" &&
+                                      isConnected === true &&
+                                      chainId === 169 ? (
+                                      "Failed"
+                                    ) : mintloading === "success" &&
+                                      isConnected === true &&
+                                      activeButton ===
+                                        (isConnected === true &&
+                                          chainId === 169) ? (
+                                      "Success"
+                                    ) : isConnected === true &&
+                                      chainId !== 169 ? (
+                                      " Switch Chain"
+                                    ) : (
+                                      "Connect wallet"
+                                    )}
+                                  </button>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -2019,21 +2604,21 @@ const MarketMint = ({
                 //   </div>
                 // </div>
                 <div className="d-flex flex-column gap-4">
-                  <div className="upcoming-mint-wrapper upcoming-core-event d-flex flex-column flex-lg-row align-items-center justify-content-between px-0">
+                  <div className="upcoming-mint-wrapper upcoming-manta-event d-flex flex-column flex-lg-row align-items-center justify-content-between px-0">
                     <div className="d-flex flex-column gap-2 ps-3 pe-3 pe-lg-0 pt-3 pt-lg-0 pb-3 pb-lg-0">
-                      <h6 className="upcoming-mint-title">CORE Beta Pass</h6>
+                      <h6 className="upcoming-mint-title">Manta Beta Pass</h6>
                       <p className="upcoming-mint-desc">
                         Get access to a special ticket to enter the metaverse
-                        and participate in an exclusive event hosted by CORE
+                        and participate in an exclusive event hosted by Manta
                       </p>
                     </div>
                     <img
-                      src={coreBg}
+                      src={mantaBg}
                       alt=""
                       className="upcoming-mint-img d-none d-lg-block"
                     />
                     <img
-                      src={coreMobileBg}
+                      src={mantaMobileBg}
                       alt=""
                       className="upcoming-mint-img d-block d-lg-none d-md-none"
                     />
@@ -2058,25 +2643,6 @@ const MarketMint = ({
                     />
                   </div>
 
-                  <div className="upcoming-mint-wrapper upcoming-viction-event d-flex flex-column flex-lg-row align-items-center justify-content-between px-0">
-                    <div className="d-flex flex-column gap-2 ps-3 pe-3 pe-lg-0 pt-3 pt-lg-0 pb-3 pb-lg-0">
-                      <h6 className="upcoming-mint-title">Viction Beta Pass</h6>
-                      <p className="upcoming-mint-desc">
-                        Get access to a special ticket to enter the metaverse
-                        and participate in an exclusive event hosted by Viction
-                      </p>
-                    </div>
-                    <img
-                      src={victionBg}
-                      alt=""
-                      className="upcoming-mint-img d-none d-lg-block"
-                    />
-                    <img
-                      src={victionMobileBg}
-                      alt=""
-                      className="upcoming-mint-img d-block d-lg-none d-md-none"
-                    />
-                  </div>
                   <div className="upcoming-mint-wrapper upcoming-multivers-event d-flex flex-column flex-lg-row align-items-center justify-content-between px-0">
                     <div className="d-flex flex-column gap-2 ps-3 pe-3 pe-lg-0 pt-3 pt-lg-0 pb-3 pb-lg-0">
                       <h6 className="upcoming-mint-title">
@@ -2236,7 +2802,7 @@ const MarketMint = ({
                       <div className="sold-out-tag px-3 py-1">
                         <span className="sold-out-span">Sold Out</span>
                       </div>
-                      <div className="d-flex flex-column justify-content-between past-content-wrapper ">
+                      <div className="d-flex flex-column justify-content-between past-content-wrapper">
                         <h6 className="past-mint-title">Conflux Beta Pass</h6>
                         <div className="d-flex flex-column align-items-center rotatewrapper">
                           <h6 className="past-conflux-mint-amount">
@@ -2279,6 +2845,41 @@ const MarketMint = ({
                             {getFormattedNumber(skaleSold, 0)}
                           </h6>
                           <span className="past-skale-mint-desc">SOLD OUT</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-12 col-lg-6 mt-lg-5">
+                    <div className="past-bnb-mint p-4">
+                      <div className="sold-out-tag px-3 py-1">
+                        <span className="sold-out-span">Sold Out</span>
+                      </div>
+                      <div className="d-flex flex-column justify-content-between past-content-wrapper ">
+                        <h6 className="past-mint-title">BNB Chain Beta Pass</h6>
+                        <div className="d-flex flex-column align-items-center rotatewrapper">
+                          <h6 className="past-bnb-mint-amount">
+                            {getFormattedNumber(bnbNftsSold, 0)}
+                          </h6>
+                          <span className="past-bnb-mint-desc">SOLD OUT</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-12 col-lg-6 mt-lg-5">
+                    <div className="past-viction-mint p-4">
+                      <div className="sold-out-tag px-3 py-1">
+                        <span className="sold-out-span">Sold Out</span>
+                      </div>
+                      <div className="d-flex flex-column justify-content-between past-content-wrapper ">
+                        <h6 className="past-mint-title">VICTION Beta Pass</h6>
+                        <div className="d-flex flex-column align-items-center rotatewrapper">
+                          <h6
+                            className="past-bnb-mint-amount"
+                            style={{ color: "#901C77" }}
+                          >
+                            13,219
+                          </h6>
+                          <span className="past-bnb-mint-desc">SOLD OUT</span>
                         </div>
                       </div>
                     </div>
